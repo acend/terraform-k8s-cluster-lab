@@ -17,7 +17,7 @@ variable "rancher2_api_url" {
 
 variable "cluster_name" {
     type = string
-    default = "techlab"
+    default = "acend-lab-cluster"
 }
 
 variable "node_template_name" {

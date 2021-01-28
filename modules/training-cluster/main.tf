@@ -6,14 +6,16 @@ provider "rancher2" {
 }
 
 
+
 data "rancher2_node_template" "node_template" {
   name = var.node_template_name
 }
 
 
-data "rancher2_user" "acend-lab-user" {
+data "rancher2_user" "acend-training-user" {
     username = "acend-lab-user"
 }
+
 
 data "rancher2_role_template" "project-member" {
   name = "Project Member"
@@ -27,9 +29,14 @@ data "rancher2_role_template" "view-all-projects" {
   name = "View All Projects"
 }
 
+data "rancher2_role_template" "cluster-owner" {
+  name = "Cluster Owner"
+}
+
+
 data "rancher2_project" "system" {
   name = "System"
-  cluster_id = rancher2_cluster_sync.lab.id
+  cluster_id = rancher2_cluster_sync.training.id
 }
 
 
@@ -37,9 +44,9 @@ data "rancher2_catalog" "puzzle" {
     name = "puzzle"
 }
 
-resource "rancher2_cluster" "lab" {
+resource "rancher2_cluster" "training" {
   name = var.cluster_name
-  description = "Kubernetes Cluster for acend GmbH Lab"
+  description = "Kubernetes Cluster for acend GmbH Training"
   rke_config {
     network {
       plugin = "canal"
@@ -47,8 +54,8 @@ resource "rancher2_cluster" "lab" {
   }
 }
 
-resource "rancher2_node_pool" "lab" {
-  cluster_id =  rancher2_cluster.lab.id
+resource "rancher2_node_pool" "training" {
+  cluster_id =  rancher2_cluster.training.id
   name =  var.cluster_name
   hostname_prefix =   "${var.cluster_name}-"
   node_template_id = data.rancher2_node_template.node_template.id
@@ -58,40 +65,50 @@ resource "rancher2_node_pool" "lab" {
   worker = true
 }
 
-resource "rancher2_cluster_sync" "lab" {
-  cluster_id =  rancher2_cluster.lab.id
-  node_pool_ids = [rancher2_node_pool.lab.id]
+resource "rancher2_cluster_sync" "training" {
+  cluster_id =  rancher2_cluster.training.id
+  node_pool_ids = [rancher2_node_pool.training.id]
 }
 
-resource "rancher2_project" "lab" {
-  name = "lab"
-  cluster_id = rancher2_cluster_sync.lab.id
+resource "rancher2_project" "training" {
+  name = "Training"
+  cluster_id = rancher2_cluster_sync.training.id
 }
 
 
-resource "rancher2_cluster_role_template_binding" "telabchlab-view-nodes" {
+resource "rancher2_cluster_role_template_binding" "training-view-nodes" {
 
-  name = "lab-view-nodes"
-  cluster_id = rancher2_cluster_sync.lab.id
+  name = "training-view-nodes"
+  cluster_id = rancher2_cluster_sync.training.id
   role_template_id = data.rancher2_role_template.view-nodes.id
-  user_id = data.rancher2_user.acend-lab-user.id
+  user_id = data.rancher2_user.acend-training-user.id
 }
 
-resource "rancher2_cluster_role_template_binding" "lab-view-all-projects" {
+resource "rancher2_cluster_role_template_binding" "training-view-all-projects" {
 
-  name = "lab-view-all-projects"
-  cluster_id = rancher2_cluster_sync.lab.id
+  name = "training-view-all-projects"
+  cluster_id = rancher2_cluster_sync.training.id
   role_template_id = data.rancher2_role_template.view-all-projects.id
-  user_id = data.rancher2_user.acend-lab-user.id
+  user_id = data.rancher2_user.acend-training-user.id
 }
 
-resource "rancher2_project_role_template_binding" "lab-project-member" {
+resource "rancher2_cluster_role_template_binding" "cluster-owner" {
 
-  name = "lab-project-member"
-  project_id = rancher2_project.lab.id
+  name = "cluster-owner"
+  cluster_id = rancher2_cluster_sync.training.id
+  role_template_id = data.rancher2_role_template.cluster-owner.id
+
+  group_principal_id = var.cluster_owner_group
+}
+
+resource "rancher2_project_role_template_binding" "training-project-member" {
+
+  name = "training-project-member"
+  project_id = rancher2_project.training.id
   role_template_id = data.rancher2_role_template.project-member.id
-  user_id = data.rancher2_user.acend-lab-user.id
+  user_id = data.rancher2_user.acend-training-user.id
 }
+
 
 resource "rancher2_namespace" "cert-manager" {
 
@@ -101,7 +118,7 @@ resource "rancher2_namespace" "cert-manager" {
 
 resource "rancher2_app" "cloudscale-csi" {
 
-  depends_on = [rancher2_cluster_sync.lab]
+  depends_on = [rancher2_cluster_sync.training]
 
   catalog_name = data.rancher2_catalog.puzzle.name
   name = "cloudscale-csi"
@@ -116,21 +133,19 @@ resource "rancher2_app" "cloudscale-csi" {
 
 
 resource "local_file" "kube_config" {
-    content     = rancher2_cluster.lab.kube_config
+    content     = rancher2_cluster.training.kube_config
     filename = "${path.module}/output/kube.config"
+} 
+
+
+provider "kubernetes-alpha" {
+  config_path = local_file.kube_config.filename
 }
 
-provider "kubernetes" {
-  config_path = "${path.module}/output/kube.config"
-}
-
-provider "k8s" {
-  config_path = "${path.module}/output/kube.config"
-}
 
 provider "helm" {
   kubernetes {
-    config_path = "${path.module}/output/kube.config"
+    config_path = local_file.kube_config.filename
   }
 }
 
@@ -142,7 +157,7 @@ resource "helm_release" "certmanager" {
   name  = "certmanager"
   repository = "https://charts.jetstack.io" 
   chart = "cert-manager"
-  version    = "v1.0.3"
+  version    = "v1.1.0"
   namespace = "cert-manager"
 
   set {
@@ -162,19 +177,11 @@ resource "helm_release" "certmanager" {
 
 }
 
-
 data "template_file" "clusterissuer-letsencrypt-prod" {
-  template = "${file("${path.module}/manifests/letsencrypt-prod.yaml")}"
+  template = file("${path.module}/manifests/letsencrypt-prod.yaml")
 
   vars = {
     letsencrypt_email = var.letsencrypt_email
   }
 }
 
-
-resource "k8s_manifest" "clusterissuer-letsencrypt-prod" {
-
-  depends_on = [rancher2_cluster_sync.lab]
-  
-  content = data.template_file.clusterissuer-letsencrypt-prod.rendered
-}

@@ -17,7 +17,7 @@ variable "rancher2_api_url" {
 
 variable "cluster_name" {
     type = string
-    default = "acend-lab-cluster"
+    default = "acend-training-cluster"
 }
 
 variable "node_template_name" {
@@ -28,4 +28,9 @@ variable "node_template_name" {
 variable "letsencrypt_email" {
     type = string
     default = "sebastian@acend.ch"
+}
+
+variable "cluster_owner_group" {
+    type = string
+    default = ""
 }

@@ -2,4 +2,5 @@
 terraform.tfvars
 terraform.tfstate
 terraform.tfstate.backup
-modules/techlab-cluster/output/
+.terraform.lock.hcl
+modules/training-cluster/output/

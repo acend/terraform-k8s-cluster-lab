@@ -133,13 +133,13 @@ resource "rancher2_app" "cloudscale-csi" {
 
 
 resource "local_file" "kube_config" {
-    content     = rancher2_cluster.training.kube_config
+    content     = rancher2_cluster_sync.training
     filename = "${path.module}/output/kube.config"
 } 
 
 
-provider "kubernetes-alpha" {
-  config_path = local_file.kube_config.filename
+provider "k8s" {
+  config_path = "${path.module}/output/kube.config"
 }
 
 
@@ -184,4 +184,7 @@ data "template_file" "clusterissuer-letsencrypt-prod" {
     letsencrypt_email = var.letsencrypt_email
   }
 }
-
+#resource "k8s_manifest" "clusterissuer-letsencrypt-prod" {
+#  depends_on = [rancher2_cluster_sync.training]
+#  content = data.template_file.clusterissuer-letsencrypt-prod.rendered
+#}

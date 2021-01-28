@@ -133,7 +133,7 @@ resource "rancher2_app" "cloudscale-csi" {
 
 
 resource "local_file" "kube_config" {
-    content     = rancher2_cluster_sync.training
+    content     = rancher2_cluster_sync.training.kube_config
     filename = "${path.module}/output/kube.config"
 } 
 

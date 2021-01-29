@@ -6,6 +6,13 @@ provider "rancher2" {
 }
 
 
+locals {
+  kube_config = yamldecode(rancher2_cluster_sync.training.kube_config)
+  kube_host = local.kube_config.clusters[0].cluster.server
+  kube_token = local.kube_config.users[0].user.token
+
+}
+
 
 data "rancher2_node_template" "node_template" {
   name = var.node_template_name
@@ -131,3 +138,58 @@ resource "rancher2_app" "cloudscale-csi" {
   }
 }
 
+provider "k8s" {
+  #config_path = "${path.module}/output/kube.config"
+  host = local.kube_host
+  token = local.kube_token
+}
+
+
+provider "helm" {
+  kubernetes {
+    #config_path = "${path.module}/output/kube.config"
+    host = local.kube_host
+    token = local.kube_token
+  }
+}
+
+resource "helm_release" "certmanager" {
+
+  depends_on = [rancher2_namespace.cert-manager]
+
+
+  name  = "certmanager"
+  repository = "https://charts.jetstack.io" 
+  chart = "cert-manager"
+  version    = "v1.1.0"
+  namespace = "cert-manager"
+
+  set {
+    name  = "installCRDs"
+    value = true
+  }
+
+  set {
+    name = "ingressShim.defaultIssuerName"
+    value = "letsencrypt-prod"
+  }
+
+  set {
+    name = "ingressShim.defaultIssuerKind"
+    value = "ClusterIssuer"
+  }
+
+}
+
+data "template_file" "clusterissuer-letsencrypt-prod" {
+  template = file("${path.module}/manifests/letsencrypt-prod.yaml")
+
+  vars = {
+    letsencrypt_email = var.letsencrypt_email
+  }
+}
+
+resource "k8s_manifest" "clusterissuer-letsencrypt-prod" {
+  depends_on = [rancher2_cluster_sync.training]
+  content = data.template_file.clusterissuer-letsencrypt-prod.rendered
+}

@@ -13,7 +13,7 @@ terraform {
       source = "hashicorp/local"
     }
     rancher2 = {
-      source = "terraform-providers/rancher2"
+      source = "rancher/rancher2"
     }
     template = {
       source = "hashicorp/template"

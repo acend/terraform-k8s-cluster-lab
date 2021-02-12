@@ -191,6 +191,6 @@ data "template_file" "clusterissuer-letsencrypt-prod" {
 }
 
 resource "k8s_manifest" "clusterissuer-letsencrypt-prod" {
-  depends_on = [rancher2_cluster_sync.training]
+  depends_on = [rancher2_cluster_sync.training, helm_release.certmanager]
   content = data.template_file.clusterissuer-letsencrypt-prod.rendered
 }

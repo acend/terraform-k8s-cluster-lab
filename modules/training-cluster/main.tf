@@ -140,8 +140,9 @@ resource "rancher2_app" "cloudscale-csi" {
 
 provider "k8s" {
   #config_path = "${path.module}/output/kube.config"
-  host = local.kube_host
-  token = local.kube_token
+  host             = local.kube_host
+  token            = local.kube_token
+  load_config_file = "false"
 }
 
 

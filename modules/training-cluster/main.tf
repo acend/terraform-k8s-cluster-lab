@@ -131,7 +131,7 @@ resource "rancher2_app" "cloudscale-csi" {
   name = "cloudscale-csi"
   project_id = data.rancher2_project.system.id
   template_name = "cloudscale-csi"
-  template_version = "0.1.13"
+  template_version = "0.1.14"
   target_namespace = "kube-system"
   answers = {
     "cloudscale.access_token" = var.cloudscale_token

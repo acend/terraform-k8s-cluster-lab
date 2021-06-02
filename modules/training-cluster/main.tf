@@ -60,7 +60,7 @@ resource "rancher2_cluster" "training" {
     }
     services {
       kube_api {
-        extra_args {
+        extra_args = {
           feature-gates = "RemoveSelfLink=false"
         }
       }

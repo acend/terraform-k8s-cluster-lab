@@ -58,6 +58,13 @@ resource "rancher2_cluster" "training" {
     network {
       plugin = "canal"
     }
+    services {
+      kube_api {
+        extra_args {
+          feature-gates = "RemoveSelfLink=false"
+        }
+      }
+    }
   }
 }
 

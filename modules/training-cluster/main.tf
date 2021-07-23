@@ -80,18 +80,18 @@ resource "cloudscale_server" "node01" {
 
   user_data = data.template_file.cloudinit.rendered
 
-  provisioner "remote-exec" {
-    inline = [
-      "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
-    ]
-    on_failure = continue
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
+  #   ]
+  #   on_failure = continue
 
-    connection {
-      type     = "ssh"
-      user     = "ubuntu"
-      host     = self.public_ipv4_address
-    }
-  }
+  #   connection {
+  #     type     = "ssh"
+  #     user     = "ubuntu"
+  #     host     = self.public_ipv4_address
+  #   }
+  #}
 }
 
   resource "cloudscale_server" "node02" {
@@ -104,18 +104,18 @@ resource "cloudscale_server" "node01" {
 
   user_data = data.template_file.cloudinit.rendered
 
-  provisioner "remote-exec" {
-    inline = [
-      "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
-    ]
-    on_failure = continue
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
+  #   ]
+  #   on_failure = continue
 
-    connection {
-      type     = "ssh"
-      user     = "ubuntu"
-      host     = self.public_ipv4_address
-    }
-  }
+  #   connection {
+  #     type     = "ssh"
+  #     user     = "ubuntu"
+  #     host     = self.public_ipv4_address
+  #   }
+  # }
 
 }
 
@@ -129,20 +129,85 @@ resource "cloudscale_server" "node01" {
 
   user_data = data.template_file.cloudinit.rendered
 
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
+  #   ]
+  #   on_failure = continue
+
+  #   connection {
+  #     type     = "ssh"
+  #     user     = "ubuntu"
+  #     host     = self.public_ipv4_address
+  #   }
+  # }
+
+}
+
+resource "null_resource" "deploy-rancheragent-01" {
+
+  // Wait until all are ready
+  depends_on = [ cloudscale_server.node01, cloudscale_server.node02, cloudscale_server.node03]
+  triggers = {
+    cluster_instance_ids = cloudscale_server.node01.id
+  }
+
+  connection {
+    type = "ssh"
+    user = "ubuntu"
+    host = cloudscale_server.node01.public_ipv4_address
+  }
+
   provisioner "remote-exec" {
     inline = [
       "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
     ]
-    on_failure = continue
+  }
+}
 
-    connection {
-      type     = "ssh"
-      user     = "ubuntu"
-      host     = self.public_ipv4_address
-    }
+resource "null_resource" "deploy-rancheragent-02" {
+
+  // Wait until all are ready
+  depends_on = [ cloudscale_server.node01, cloudscale_server.node02, cloudscale_server.node03]
+  triggers = {
+    cluster_instance_ids = cloudscale_server.node02.id
   }
 
+  connection {
+    type = "ssh"
+    user = "ubuntu"
+    host = cloudscale_server.node02.public_ipv4_address
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
+    ]
+  }
 }
+
+resource "null_resource" "deploy-rancheragent-03" {
+
+  // Wait until all are ready
+  depends_on = [ cloudscale_server.node01, cloudscale_server.node02, cloudscale_server.node03]
+  triggers = {
+    cluster_instance_ids = cloudscale_server.node03.id
+  }
+
+  connection {
+    type = "ssh"
+    user = "ubuntu"
+    host = cloudscale_server.node03.public_ipv4_address
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
+    ]
+  }
+}
+
+
 
 # Add a Floating IPv4 address to web-worker01
 resource "cloudscale_floating_ip" "vip-v4" {
@@ -177,6 +242,7 @@ resource "cloudscale_floating_ip" "vip-v4" {
 resource "rancher2_cluster" "training" {
   name = var.cluster_name
   description = "Kubernetes Cluster for acend GmbH Training"
+
   rke_config {
 
     kubernetes_version = var.kubernetes_version
@@ -193,8 +259,16 @@ resource "rancher2_cluster" "training" {
   }
 }
 resource "rancher2_cluster_sync" "training" {
+
+  depends_on = [ null_resource.deploy-rancheragent-01, null_resource.deploy-rancheragent-02, null_resource.deploy-rancheragent-03]
+
+
   cluster_id =  rancher2_cluster.training.id
   state_confirm = 3
+
+  timeouts {
+    create = "30m"
+  }
 }
 
 resource "rancher2_project" "training" {
@@ -237,8 +311,6 @@ resource "rancher2_project_role_template_binding" "training-project-member" {
 
 resource "rancher2_app" "cloudscale-csi" {
 
-  depends_on = [rancher2_cluster_sync.training]
-
   catalog_name = data.rancher2_catalog.puzzle.name
   name = "cloudscale-csi"
   project_id = data.rancher2_project.system.id
@@ -251,8 +323,6 @@ resource "rancher2_app" "cloudscale-csi" {
 }
 
 resource "rancher2_app" "cloudscale-vip" {
-
-  depends_on = [rancher2_cluster_sync.training]
 
   catalog_name = data.rancher2_catalog.puzzle.name
   name = "cloudscale-vip-v4"
@@ -275,8 +345,10 @@ resource "rancher2_app" "cloudscale-vip" {
 module "training-cluster" {
   source = "./modules/cert-manager"
 
+  depends_on = [ rancher2_cluster_sync.training ]
+
   letsencrypt_email = var.letsencrypt_email
-  project_id = data.rancher2_project.system.id
+  rancher_system_project = data.rancher2_project.system
 
 
 }
@@ -284,7 +356,9 @@ module "training-cluster" {
 module "cilium" {
   source = "./modules/cilium"
 
-  project_id = data.rancher2_project.system.id
+  depends_on = [ rancher2_cluster_sync.training ]
+
+  rancher_system_project = data.rancher2_project.system
   public_ip = replace(cloudscale_floating_ip.vip-v4.network, "/32", "" )
 
   count = local.cilium_enabled

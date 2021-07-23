@@ -5,3 +5,6 @@ runcmd:
 
 mounts:
 - [ bpffs, /sys/fs/bpf, bpf, "default", 0, 0 ]
+
+package_update: true
+package_upgrade: true

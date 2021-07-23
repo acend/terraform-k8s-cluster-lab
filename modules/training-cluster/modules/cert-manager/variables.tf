@@ -1,5 +1,4 @@
-variable "project_id" {
-    type = string
+variable "rancher_system_project" {
 }
 
 variable "chart_version" {

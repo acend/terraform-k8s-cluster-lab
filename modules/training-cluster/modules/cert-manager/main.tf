@@ -1,7 +1,7 @@
 resource "rancher2_namespace" "cert-manager" {
 
   name = "cert-manager"
-  project_id = var.project_id
+  project_id = var.rancher_system_project.id
 }
 
 
@@ -42,5 +42,8 @@ data "template_file" "clusterissuer-letsencrypt-prod" {
 }
 
 resource "k8s_manifest" "clusterissuer-letsencrypt-prod" {
+
+  depends_on = [ helm_release.certmanager]
+
   content = data.template_file.clusterissuer-letsencrypt-prod.rendered
 }

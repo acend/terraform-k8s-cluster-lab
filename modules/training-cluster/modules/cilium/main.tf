@@ -1,7 +1,7 @@
 resource "rancher2_namespace" "cilium" {
 
   name = "cilium"
-  project_id = var.project_id
+  project_id = var.rancher_system_project.id
 }
 
 

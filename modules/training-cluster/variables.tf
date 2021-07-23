@@ -20,10 +20,6 @@ variable "cluster_name" {
     default = "acend-training-cluster"
 }
 
-variable "node_template_name" {
-    type = string
-    default = "acend GmbH - flex-8 - 50 GB Root"
-}
 
 variable "letsencrypt_email" {
     type = string
@@ -33,4 +29,29 @@ variable "letsencrypt_email" {
 variable "cluster_owner_group" {
     type = string
     default = ""
+}
+
+variable "network_plugin" {
+    description = "The Network Plugin to use"
+    type = string
+    default = "canal"
+}
+
+variable "kubernetes_version" {
+    type = string
+    default = "v1.20.8-rancher1-1"
+}
+
+variable "ssh_keys" {
+    type = list(string)
+    default = []
+}
+
+variable "rke_network_plugin" {
+    description = "Mapping to know what Network Plugin (if any) Rancher should install using RKE"
+    type = map
+    default = {
+        canal = "canal"
+        cilium = "none"
+    }
 }

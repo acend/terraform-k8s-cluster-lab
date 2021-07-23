@@ -1,0 +1,7 @@
+#cloud-config
+
+runcmd:
+  - curl -fsSL https://get.docker.com -o get-docker.sh; sh get-docker.sh
+
+mounts:
+- [ bpffs, /sys/fs/bpf, bpf, "default", 0, 0 ]

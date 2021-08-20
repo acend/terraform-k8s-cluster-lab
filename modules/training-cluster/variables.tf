@@ -1,57 +1,76 @@
 variable "rancher2_access_key" {
-    type = string
+  type = string
 }
 
 variable "rancher2_secret_key" {
-    type = string
+  type = string
 }
 
 variable "cloudscale_token" {
-    type = string
+  type = string
 }
 
 variable "rancher2_api_url" {
-    type = string
+  type = string
+}
+
+
+variable "node_flavor" {
+  description = "The cloudscale.ch VM flavor to use for the nodes."
+  type        = string
+  default     = "flex-8"
+}
+
+variable "node_count_master" {
+  description = "The number of master nodes to provision (will have roles control-plane, etcd, worker)"
+  type        = number
+  default     = 3
+}
+
+variable "node_count_worker" {
+  description = "The number of worker nodes to provision (will have role worker)"
+  type        = number
+  default     = 0
 }
 
 
 variable "cluster_name" {
-    type = string
-    default = "acend-training-cluster"
+  type    = string
+  default = "acend-training-cluster"
 }
 
 
 variable "letsencrypt_email" {
-    type = string
-    default = "sebastian@acend.ch"
+  type    = string
+  default = "sebastian@acend.ch"
 }
 
 variable "cluster_owner_group" {
-    type = string
-    default = ""
+  type    = string
+  default = ""
 }
 
 variable "network_plugin" {
-    description = "The Network Plugin to use"
-    type = string
-    default = "canal"
+  description = "The Network Plugin to use"
+  type        = string
+  default     = "canal"
 }
 
 variable "kubernetes_version" {
-    type = string
-    default = "v1.20.8-rancher1-1"
+  type    = string
+  default = "v1.20.8-rancher1-1"
 }
 
 variable "ssh_keys" {
-    type = list(string)
-    default = []
+  type    = list(string)
+  default = []
 }
 
 variable "rke_network_plugin" {
-    description = "Mapping to know what Network Plugin (if any) Rancher should install using RKE"
-    type = map
-    default = {
-        canal = "canal"
-        cilium = "none"
-    }
+  description = "Mapping to know what Network Plugin (if any) Rancher should install using RKE"
+  type        = map(any)
+  default = {
+    canal  = "canal"
+    cilium = "none"
+  }
 }

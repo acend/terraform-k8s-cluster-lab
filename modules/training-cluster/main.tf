@@ -274,8 +274,8 @@ resource "rancher2_app" "cloudscale-vip" {
     "keepalived.vip"              = replace(cloudscale_floating_ip.vip-v4.network, "/32", "")
     "keepalived.master_host"      = cloudscale_server.nodes-master[0].name
     "keepalived.unicast_peers[0]" = cloudscale_server.nodes-master[0].public_ipv4_address
-    "keepalived.unicast_peers[1]" = cloudscale_server.nodes-master[0].public_ipv4_address
-    "keepalived.unicast_peers[2]" = cloudscale_server.nodes-master[0].public_ipv4_address
+    "keepalived.unicast_peers[1]" = cloudscale_server.nodes-master[1].public_ipv4_address
+    "keepalived.unicast_peers[2]" = cloudscale_server.nodes-master[2].public_ipv4_address
   }
 }
 

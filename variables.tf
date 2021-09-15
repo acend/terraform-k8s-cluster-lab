@@ -16,8 +16,14 @@ variable "rancher2_api_url" {
   type = string
 }
 
-variable "node_flavor" {
-  description = "The cloudscale.ch VM flavor to use for the nodes."
+variable "node_flavor_master" {
+  description = "The cloudscale.ch VM flavor to use for the master nodes."
+  type        = string
+  default     = "flex-8"
+}
+
+variable "node_flavor_worker" {
+  description = "The cloudscale.ch VM flavor to use for the worker nodes."
   type        = string
   default     = "flex-8"
 }

@@ -72,7 +72,7 @@ data "template_file" "cloudinit" {
 
 resource "cloudscale_server" "nodes-master" {
   name           = "${var.cluster_name}-node-master-${count.index}"
-  flavor_slug    = var.node_flavor
+  flavor_slug    = var.node_flavor_master
   image_slug     = "ubuntu-20.04"
   volume_size_gb = 50
   ssh_keys       = var.ssh_keys
@@ -80,13 +80,21 @@ resource "cloudscale_server" "nodes-master" {
 
   user_data = data.template_file.cloudinit.rendered
 
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to volumes
+      # cloudscale-csi can add volumes
+      volumes[1]
+    ]
+  }
+
   count = var.node_count_master
 
 }
 
 resource "cloudscale_server" "nodes-worker" {
   name           = "${var.cluster_name}-node-worker-${count.index}"
-  flavor_slug    = var.node_flavor
+  flavor_slug    = var.node_flavor_worker
   image_slug     = "ubuntu-20.04"
   volume_size_gb = 50
   ssh_keys       = var.ssh_keys
@@ -252,7 +260,7 @@ resource "rancher2_app" "cloudscale-csi" {
   name             = "cloudscale-csi"
   project_id       = data.rancher2_project.system.id
   template_name    = "cloudscale-csi"
-  template_version = "0.2.0"
+  template_version = "0.2.3"
   target_namespace = "kube-system"
   answers = {
     "cloudscale.access_token" = var.cloudscale_token
@@ -276,6 +284,7 @@ resource "rancher2_app" "cloudscale-vip" {
     "keepalived.unicast_peers[0]" = cloudscale_server.nodes-master[0].public_ipv4_address
     "keepalived.unicast_peers[1]" = cloudscale_server.nodes-master[1].public_ipv4_address
     "keepalived.unicast_peers[2]" = cloudscale_server.nodes-master[2].public_ipv4_address
+    "nodeSelector.vip"            = "true"
   }
 }
 

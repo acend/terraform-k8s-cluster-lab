@@ -8,7 +8,8 @@ module "training-cluster" {
   rancher2_api_url    = var.rancher2_api_url
   cloudscale_token    = var.cloudscale_token
   cluster_owner_group = var.cluster_owner_group
-  node_flavor         = var.node_flavor
+  node_flavor_master  = var.node_flavor_master
+  node_flavor_worker  = var.node_flavor_worker
   node_count_master   = var.node_count_master
   node_count_worker   = var.node_count_worker
   network_plugin      = var.network_plugin

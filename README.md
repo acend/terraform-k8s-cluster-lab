@@ -5,30 +5,30 @@ This is currently desiged to run on our Rancher Control Plane and probably does 
 
 ## Requirements
 
-
-
 * Access to a Rancher Management Server with permissions to create a new cluster
 * A cloudscale.ch Account for the VM's
 
-
 ## Usage
 
-Set your credentials e.g. in a `terraform.tfvars` File or using environment variables
+Login into terraform cloud with your account using:
 
+```bash
+terraform login
 ```
-terraform init # only needed after initial checkout or when you add/change modules
+
+Set your credentials (for the cloud provider and Rancher) e.g. in a `terraform.tfvars` File or using environment variables.
+
+```bash
+terraform init -backend-config=backend.hcl # only needed after initial checkout or when you add/change modules
 terraform plan # to verify
 terraform apply
 ```
-
 
 ## Variables
 
 Make sure you have set at least the following variables. See `variables.tf` for all possible variables.
 
-
-
-```
+```hcl
 # An access key for a rancher control plane
 variable "rancher2_access_key" {
     type = string
@@ -60,13 +60,12 @@ variable "cluster_owner_group" {
     type = string
     default = ""
 }
-``` 
+```
 
 ### Deploy Cluster with Canal SDN
 
 canal is the default network plugin and is set with the variable `network_plugin=canal`
 
-
-### Deploy Cluster with Canal SDN
+### Deploy Cluster with Cilium SDN
 
 Change the variable `network_plugin` to `cilium` if you want to deploy Cilium as your SDN.

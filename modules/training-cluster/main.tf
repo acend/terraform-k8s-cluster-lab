@@ -66,8 +66,20 @@ data "rancher2_catalog" "puzzle" {
   name = "puzzle"
 }
 
-data "template_file" "cloudinit" {
+data "template_file" "cloudinit_master" {
   template = file("${path.module}/manifests/cloudinit.yaml")
+
+  vars = {
+    cluster_join_command = "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
+  }
+}
+
+data "template_file" "cloudinit_worker" {
+  template = file("${path.module}/manifests/cloudinit.yaml")
+
+  vars = {
+    cluster_join_command = "${rancher2_cluster.training.cluster_registration_token[0].node_command} --worker"
+  }
 }
 
 resource "cloudscale_server" "nodes-master" {
@@ -78,7 +90,7 @@ resource "cloudscale_server" "nodes-master" {
   ssh_keys       = var.ssh_keys
   use_ipv6       = true
 
-  user_data = data.template_file.cloudinit.rendered
+  user_data = data.template_file.cloudinit_master.rendered
 
   lifecycle {
     ignore_changes = [
@@ -100,58 +112,58 @@ resource "cloudscale_server" "nodes-worker" {
   ssh_keys       = var.ssh_keys
   use_ipv6       = true
 
-  user_data = data.template_file.cloudinit.rendered
+  user_data = data.template_file.cloudinit_worker.rendered
 
   count = var.node_count_worker
 
 }
 
 
-resource "null_resource" "deploy-rancheragent-master" {
+# resource "null_resource" "deploy-rancheragent-master" {
 
-  // Wait until all are ready
-  depends_on = [cloudscale_server.nodes-master]
-  triggers = {
-    cluster_instance_ids = cloudscale_server.nodes-master[count.index].id
-  }
+#   // Wait until all are ready
+#   depends_on = [cloudscale_server.nodes-master]
+#   triggers = {
+#     cluster_instance_ids = cloudscale_server.nodes-master[count.index].id
+#   }
 
-  connection {
-    type = "ssh"
-    user = "ubuntu"
-    host = cloudscale_server.nodes-master[count.index].public_ipv4_address
-  }
+#   connection {
+#     type = "ssh"
+#     user = "ubuntu"
+#     host = cloudscale_server.nodes-master[count.index].public_ipv4_address
+#   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
-    ]
-  }
+#   provisioner "remote-exec" {
+#     inline = [
+#       "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
+#     ]
+#   }
 
-  count = var.node_count_master
-}
+#   count = var.node_count_master
+# }
 
-resource "null_resource" "deploy-rancheragent-worker" {
+# resource "null_resource" "deploy-rancheragent-worker" {
 
-  // Wait until all are ready
-  depends_on = [cloudscale_server.nodes-worker]
-  triggers = {
-    cluster_instance_ids = cloudscale_server.nodes-worker[count.index].id
-  }
+#   // Wait until all are ready
+#   depends_on = [cloudscale_server.nodes-worker]
+#   triggers = {
+#     cluster_instance_ids = cloudscale_server.nodes-worker[count.index].id
+#   }
 
-  connection {
-    type = "ssh"
-    user = "ubuntu"
-    host = cloudscale_server.nodes-worker[count.index].public_ipv4_address
-  }
+#   connection {
+#     type = "ssh"
+#     user = "ubuntu"
+#     host = cloudscale_server.nodes-worker[count.index].public_ipv4_address
+#   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "${rancher2_cluster.training.cluster_registration_token[0].node_command} --worker"
-    ]
-  }
+#   provisioner "remote-exec" {
+#     inline = [
+#       "${rancher2_cluster.training.cluster_registration_token[0].node_command} --worker"
+#     ]
+#   }
 
-  count = var.node_count_worker
-}
+#   count = var.node_count_worker
+# }
 
 
 # Add a Floating IPv4 address to web-worker01
@@ -205,7 +217,7 @@ resource "rancher2_cluster" "training" {
 }
 resource "rancher2_cluster_sync" "training" {
 
-  depends_on = [null_resource.deploy-rancheragent-master]
+  depends_on = [cloudscale_server.nodes-master]
 
 
   cluster_id    = rancher2_cluster.training.id

@@ -100,7 +100,7 @@ resource "kubernetes_deployment" "theia" {
           name  = "welcome-msg"
 
           volume_mount {
-            name = shared-data
+            name = "shared-data"
             mount_path = "/home/project"
           }
 
@@ -131,11 +131,11 @@ resource "kubernetes_deployment" "theia" {
 
           port {
               container_port = 3000
-              protocol       = TCP
+              protocol       = "TCP"
           }
 
           volume_mount {
-            name = shared-data
+            name = "shared-data"
             mount_path = "/home/project"
           }
 
@@ -150,7 +150,7 @@ resource "kubernetes_deployment" "theia" {
 
           port {
             container_port = 2375
-            protocol       = TCP
+            protocol       = "TCP"
           }
 
           liveness_probe {
@@ -180,16 +180,13 @@ resource "kubernetes_deployment" "theia" {
           }
 
           volume_mount {
-            name = shared-data
+            name = "shared-data"
             mount_path = "/home/project"
           }
         } # dind container
 
         volume {
-            empty_dir {
-
-            }
-
+            empty_dir { }
             name = "shared_data"
         }
 
@@ -217,10 +214,10 @@ resource "kubernetes_ingress" "theia" {
     namespace = var.student-name
 
     annotations = {
-        kubernetes.io/ingress.class: "nginx"
-        ingress.kubernetes.io/ssl-redirect: "true"
-        nginx.ingress.kubernetes.io/auth-type: basic
-        nginx.ingress.kubernetes.io/auth-secret: basic-auth
+        kubernetes.io/ingress.class = "nginx"
+        ingress.kubernetes.io/ssl-redirect = "true"
+        nginx.ingress.kubernetes.io/auth-type = basic
+        nginx.ingress.kubernetes.io/auth-secret = basic-auth
     }
   }
 

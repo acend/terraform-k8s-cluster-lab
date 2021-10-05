@@ -283,7 +283,7 @@ module "webshell" {
 
   depends_on = [rancher2_cluster_sync.training]
 
-  rancher_training_project = data.rancher2_project.training
+  rancher_training_project = rancher2_project.training
   student-name             = "student${count.index + 1}"
 
 

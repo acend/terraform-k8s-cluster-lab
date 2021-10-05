@@ -10,3 +10,8 @@ variable "letsencrypt_email" {
   type    = string
   default = "info@acend.ch"
 }
+
+variable "acme-config" {
+  type    = string
+}
+

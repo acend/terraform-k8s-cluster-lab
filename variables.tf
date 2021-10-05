@@ -58,3 +58,7 @@ variable "ssh_keys" {
   type        = list(string)
   default     = []
 }
+
+variable "acme-config" {
+  type    = string
+}

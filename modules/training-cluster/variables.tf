@@ -51,6 +51,12 @@ variable "letsencrypt_email" {
   default = "sebastian@acend.ch"
 }
 
+variable "acme-config" {
+  type    = string
+}
+
+
+
 variable "cluster_owner_group" {
   type    = string
   default = ""

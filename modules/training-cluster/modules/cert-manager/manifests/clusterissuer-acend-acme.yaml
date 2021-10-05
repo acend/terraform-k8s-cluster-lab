@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: acend-acme
+spec:
+  acme:
+    email: info@acend.ch
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: acend-acme-clusterissuer-account-key
+    solvers:
+    - dns01:
+        acmeDNS:
+          accountSecretRef:
+            key: acmedns.json
+            name: acend-acme-config
+          host: https://acme-dns.k8s.puzzle.ch

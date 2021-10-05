@@ -119,53 +119,6 @@ resource "cloudscale_server" "nodes-worker" {
 }
 
 
-# resource "null_resource" "deploy-rancheragent-master" {
-
-#   // Wait until all are ready
-#   depends_on = [cloudscale_server.nodes-master]
-#   triggers = {
-#     cluster_instance_ids = cloudscale_server.nodes-master[count.index].id
-#   }
-
-#   connection {
-#     type = "ssh"
-#     user = "ubuntu"
-#     host = cloudscale_server.nodes-master[count.index].public_ipv4_address
-#   }
-
-#   provisioner "remote-exec" {
-#     inline = [
-#       "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
-#     ]
-#   }
-
-#   count = var.node_count_master
-# }
-
-# resource "null_resource" "deploy-rancheragent-worker" {
-
-#   // Wait until all are ready
-#   depends_on = [cloudscale_server.nodes-worker]
-#   triggers = {
-#     cluster_instance_ids = cloudscale_server.nodes-worker[count.index].id
-#   }
-
-#   connection {
-#     type = "ssh"
-#     user = "ubuntu"
-#     host = cloudscale_server.nodes-worker[count.index].public_ipv4_address
-#   }
-
-#   provisioner "remote-exec" {
-#     inline = [
-#       "${rancher2_cluster.training.cluster_registration_token[0].node_command} --worker"
-#     ]
-#   }
-
-#   count = var.node_count_worker
-# }
-
-
 # Add a Floating IPv4 address to web-worker01
 resource "cloudscale_floating_ip" "vip-v4" {
   server     = cloudscale_server.nodes-master[0].id
@@ -307,6 +260,8 @@ module "training-cluster" {
 
   letsencrypt_email      = var.letsencrypt_email
   rancher_system_project = data.rancher2_project.system
+
+  acme-config = var.acme-config
 
 
 }

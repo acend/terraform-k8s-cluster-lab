@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: acend-labapp-wildcard
+spec:
+  dnsNames:
+  - '*.labapp.acend.ch'
+  issuerRef:
+    kind: ClusterIssuer
+    name: acend-acme
+  secretName: labapp-wildcard
+  secretTemplate:
+    annotations:
+      kubed.appscode.com/sync: "certificate-labapp=true"
+

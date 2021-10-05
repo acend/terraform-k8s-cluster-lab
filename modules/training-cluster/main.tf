@@ -185,6 +185,29 @@ resource "rancher2_project" "training" {
   name       = "Training"
   cluster_id = rancher2_cluster_sync.training.id
 }
+
+resource "rancher2_project" "quotalab" {
+  name       = "kubernetes-quotalab"
+  cluster_id = rancher2_cluster_sync.training.id
+
+  resource_quota {
+    project_limit {
+      limits_cpu = "30000m"
+      limits_memory = "30000Mi"
+    }
+    namespace_default_limit {
+      requests_memory = "100Mi"
+      requests_cpu = "100Mi"
+    }
+  }
+  container_resource_limit {
+    limits_cpu = "100m"
+    limits_memory = "32Mi"
+    requests_cpu = "10m"
+    requests_memory = "16Mi"
+  }
+
+}
 resource "rancher2_cluster_role_template_binding" "training-view-nodes" {
 
   name             = "training-view-nodes"
@@ -218,6 +241,13 @@ resource "rancher2_project_role_template_binding" "training-project-member" {
   user_id          = data.rancher2_user.acend-training-user.id
 }
 
+resource "rancher2_project_role_template_binding" "quotalab-project-member" {
+
+  name             = "quotalab-project-member"
+  project_id       = rancher2_project.quotalab.id
+  role_template_id = data.rancher2_role_template.project-member.id
+  user_id          = data.rancher2_user.acend-training-user.id
+}
 
 resource "rancher2_app" "cloudscale-csi" {
 

@@ -60,7 +60,7 @@ resource "helm_release" "webshell" {
 
   set {
     name = "ingress.hosts[0].host"
-    value = "${var.student}.${var.domain}"
+    value = "${var.student-name}.${var.domain}"
   }
 
   set {
@@ -80,7 +80,7 @@ resource "helm_release" "webshell" {
 
   set {
     name = "ingress.tls[0].hosts[0]"
-    value = "${var.student}.${var.domain}"
+    value = "${var.student-name}.${var.domain}"
   }
 
 

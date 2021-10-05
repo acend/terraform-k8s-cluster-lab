@@ -87,7 +87,7 @@ variable "rke_network_plugin" {
   }
 }
 
-variable "count-student" {
+variable "count-students" {
   type        = number
   default     = 0
 }

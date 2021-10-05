@@ -1,5 +1,3 @@
-
-
 resource "rancher2_namespace" "student-namespace" {
 
   name       = var.student-name
@@ -10,243 +8,80 @@ resource "rancher2_namespace" "student-namespace" {
   }
 }
 
-resource "kubernetes_role_binding" "admin-rb" {
-  metadata {
-    name      = "${var.student-name}-rb"
-    namespace = var.student-name
-  }
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = "cluster-admin"
-  }
-
-  subject {
-    kind      = "ServiceAccount"
-    name      = "default"
-    namespace = var.student-name
-  }
+resource "random_password" "basic-auth-password" {
+  length           = 16
+  special          = true
+  override_special = "_%@"
 }
 
-resource "kubernetes_cluster_role_binding" "view-crb" {
-  metadata {
-    name = "${var.student-name}-crb"
-  }
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = "view"
-  }
+resource "helm_release" "webshell" {
 
-  subject {
-    kind      = "ServiceAccount"
-    name      = "default"
-    namespace = var.student-name
-  }
-}
+  depends_on = [rancher2_namespace.student-namespace]
 
-resource "kubernetes_service" "theia-svc" {
-  metadata {
-    name = "${var.student-name}-theia-svc"
-    namespace = var.student-name
-    labels = {
-      app = "theia"
-    }
-  }
-  spec {
-    selector = {
-      app = "theia"
-    }
 
-    port {
-      port        = 3000
-      target_port = 3000
-      name        = "web"
-      protocol    = "TCP"
-    }
+  name       = "webshell"
+  repository = var.chart-repository
+  namespace  = rancher2_namespace.student-namespace.name
 
-  }
-}
-
-resource "kubernetes_deployment" "theia" {
-  metadata {
-    name = "${var.student-name}-theia-deploy"
-    namespace = var.student-name
-    labels = {
-      app = "theia"
-    }
+  set {
+    name  = "student"
+    value = var.student-name
   }
 
-  spec {
-    replicas = 1
-
-    selector {
-      match_labels = {
-        app = "theia"
-      }
-    }
-
-    template {
-      metadata {
-        labels = {
-          app = "theia"
-        }
-      }
-
-      spec {
-
-        init_container {
-          image = "busybox"
-          name  = "welcome-msg"
-
-          volume_mount {
-            name = "shared-data"
-            mount_path = "/home/project"
-          }
-
-          command = ["sh", "-c", "echo Welcome to the acend theia ide > /home/project/welcome"]
-
-
-        } # init-container
-
-        container {
-          image = "quay.io/acend/theia:latest"
-          name  = "theia"
-
-          resources {
-            limits = {
-              cpu    = "500m"
-              memory = "500Mi"
-            }
-            requests = {
-              cpu    = "50m"
-              memory = "50Mi"
-            }
-          }
-
-          env {
-            name = student
-            value = var.student-name
-          }
-
-          port {
-              container_port = 3000
-              protocol       = "TCP"
-          }
-
-          volume_mount {
-            name = "shared-data"
-            mount_path = "/home/project"
-          }
-
-        } # thei container
-
-        container {
-          image = "docker:18.09.9-dind"
-          name  = "dind"
-
-          tty   = true
-          stdin = true
-
-          port {
-            container_port = 2375
-            protocol       = "TCP"
-          }
-
-          liveness_probe {
-            tcpSocket {
-                port = 2375
-            }
-
-            initial_delay_seconds = 5
-            timeout_seconds = 10
-          }
-
-          readiness_probe {
-            tcpSocket {
-                port = 2375
-            }
-
-            initial_delay_seconds = 2
-            timeout_seconds = 10
-          }
-
-          security_context {
-            allow_privilege_escalation = true
-            privileged = true
-            run_as_non_root = false
-            read_only_root_filesystem = false
-
-          }
-
-          volume_mount {
-            name = "shared-data"
-            mount_path = "/home/project"
-          }
-        } # dind container
-
-        volume {
-            empty_dir { }
-            name = "shared_data"
-        }
-
-
-      }
-    }
-  }
-}
-
-resource "kubernetes_resource_quota" "example" {
-  metadata {
-    name = "theia-rq"
-    namespace = var.student-name
-  }
-  spec {
-    hard = {
-      pods = 15
-    }
-  }
-}
-
-resource "kubernetes_ingress" "theia" {
-  metadata {
-    name = "theia-ing"
-    namespace = var.student-name
-
-    annotations = {
-        kubernetes.io/ingress.class = "nginx"
-        ingress.kubernetes.io/ssl-redirect = "true"
-        nginx.ingress.kubernetes.io/auth-type = basic
-        nginx.ingress.kubernetes.io/auth-secret = basic-auth
-    }
+  set {
+    name = "password"
+    value = random_password.basic-auth-password.result
   }
 
-  spec {
-    backend {
-      service_name = "${var.student-name}-theia-svc"
-      service_port = 3000
-    }
-
-    rule {
-      host = "$(var.student-name).${var.domain}"
-      http {
-        path {
-          backend {
-            service_name = "${var.student-name}-theia-svc"
-            service_port = 3000
-          }
-
-          path = "/"
-        }
-
-
-      }
-    }
-
-    tls {
-      secret_name = "labapp-wildcard"
-
-      hosts = ["$(var.student-name).${var.domain}"]
-    }
+  set {
+    name = "ingress.enabled"
+    value = "true"
   }
+
+  set {
+    name = "ingress.className"
+    value = "nginx"
+  }
+
+  set {
+    name = "ingress.annotations.ingress\\.kubernetes\\.io/ssl-redirect"
+    value = "true"
+  }
+
+  set {
+    name = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-type"
+    value = "basic"
+  }
+
+  set {
+    name = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-secret"
+    value = "basic-auth"
+  }
+
+  set {
+    name = "ingress.hosts[0].host"
+    value = "${var.student}.${var.domain}"
+  }
+
+  set {
+    name = "ingress.hosts[0].paths[0].path"
+    value = "/"
+  }
+
+  set {
+    name = "ingress.hosts[0].paths[0].pathType"
+    value = "ImplementationSpecific"
+  }
+
+  set {
+    name = "ingress.tls[0].secretName"
+    value = "labapp-wildcard"
+  }
+
+  set {
+    name = "ingress.tls[0].hosts[0]"
+    value = "${var.student}.${var.domain}"
+  }
+
+
 }

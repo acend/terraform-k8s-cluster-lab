@@ -3,5 +3,5 @@ output "vip_address" {
 }
 
 output "webshell-links" {
-  value = "${join("\n", module.webshell.*.student-direct-webshelllink)}"
+  value = module.webshell.*.student-direct-webshelllink
 }

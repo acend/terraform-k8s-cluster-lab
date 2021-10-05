@@ -287,6 +287,6 @@ module "webshell" {
   student-name             = "student${count.index + 1}"
 
 
-  count = var.count_students
+  count = var.count-students
 
 }

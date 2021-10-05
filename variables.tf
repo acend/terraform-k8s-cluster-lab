@@ -63,7 +63,7 @@ variable "acme-config" {
   type    = string
 }
 
-variable "count-student" {
+variable "count-students" {
   type        = number
   default     = 0
 }

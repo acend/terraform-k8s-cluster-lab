@@ -197,7 +197,7 @@ resource "rancher2_project" "quotalab" {
     }
     namespace_default_limit {
       requests_memory = "100Mi"
-      requests_cpu = "100Mi"
+      requests_cpu = "100m"
     }
   }
   container_resource_limit {

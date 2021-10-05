@@ -192,8 +192,8 @@ resource "rancher2_project" "quotalab" {
 
   resource_quota {
     project_limit {
-      limits_cpu = "30000m"
-      limits_memory = "30000Mi"
+      requests_cpu = "30000m"
+      requests_memory = "30000Mi"
     }
     namespace_default_limit {
       requests_memory = "100Mi"

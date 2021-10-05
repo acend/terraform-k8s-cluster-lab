@@ -20,6 +20,7 @@ resource "helm_release" "webshell" {
 
 
   name       = "webshell"
+  chart      = "webshell"
   repository = var.chart-repository
   namespace  = rancher2_namespace.student-namespace.name
 

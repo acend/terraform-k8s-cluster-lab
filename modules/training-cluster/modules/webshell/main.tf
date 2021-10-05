@@ -211,7 +211,7 @@ resource "kubernetes_resource_quota" "example" {
   }
 }
 
-esource "kubernetes_ingress" "theia" {
+resource "kubernetes_ingress" "theia" {
   metadata {
     name = "theia-ing"
     namespace = var.student-name

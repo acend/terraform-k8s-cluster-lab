@@ -44,8 +44,9 @@ resource "helm_release" "webshell" {
   }
 
   set {
-    name = "ingress.annotations.ingress\\.kubernetes\\.io/ssl-redirect"
+    name  = "ingress.annotations.ingress\\.kubernetes\\.io/ssl-redirect"
     value = "true"
+    type  = "string"
   }
 
   set {

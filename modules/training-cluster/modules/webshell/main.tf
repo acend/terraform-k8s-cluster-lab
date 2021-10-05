@@ -3,7 +3,7 @@ resource "rancher2_namespace" "student-namespace" {
   name       = var.student-name
   project_id = var.rancher_training_project.id
 
-  labels {
+  labels = {
       certificate-labapp = "true"
   }
 }

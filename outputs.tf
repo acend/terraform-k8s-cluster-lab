@@ -3,5 +3,6 @@ output "vip_address" {
 }
 
 output "webshell-infos" {
-  value = module.training-cluster.webshell-links
+  value     = module.training-cluster.webshell-links
+  sensitive = true
 }

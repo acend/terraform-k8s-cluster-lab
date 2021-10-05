@@ -7,5 +7,5 @@ output "student-username" {
 }
 
 output "student-direct-webshelllink" {
-  value = "https://${var.student-name}:${random_password.basic-auth-password.result}@${var.student-name}.${var.domain}"
+  value = nonsensitive("https://${var.student-name}:${random_password.basic-auth-password.result}@${var.student-name}.${var.domain}")
 }

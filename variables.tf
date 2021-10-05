@@ -62,3 +62,8 @@ variable "ssh_keys" {
 variable "acme-config" {
   type    = string
 }
+
+variable "count-students" {
+  type        = number
+  default     = 0
+}

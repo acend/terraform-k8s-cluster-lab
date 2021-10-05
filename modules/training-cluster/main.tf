@@ -278,3 +278,15 @@ module "cilium" {
 
 }
 
+module "webshell" {
+  source = "./modules/webshell"
+
+  depends_on = [rancher2_cluster_sync.training]
+
+  rancher_training_project = rancher2_project.training
+  student-name             = "student${count.index + 1}"
+
+
+  count = var.count-students
+
+}

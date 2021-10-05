@@ -86,3 +86,8 @@ variable "rke_network_plugin" {
     cilium = "none"
   }
 }
+
+variable "count-students" {
+  type        = number
+  default     = 0
+}

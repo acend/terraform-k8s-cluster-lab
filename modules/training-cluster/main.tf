@@ -31,6 +31,7 @@ locals {
   kube_host      = local.kube_config.clusters[0].cluster.server
   kube_token     = local.kube_config.users[0].user.token
   cilium_enabled = var.network_plugin == "cilium" ? 1 : 0
+  argocd_enabled = var.argocd-enabled ? 1 : 0
 }
 
 
@@ -55,12 +56,10 @@ data "rancher2_role_template" "cluster-owner" {
   name = "Cluster Owner"
 }
 
-
 data "rancher2_project" "system" {
   name       = "System"
   cluster_id = rancher2_cluster_sync.training.id
 }
-
 
 data "rancher2_catalog" "puzzle" {
   name = "puzzle"
@@ -292,8 +291,6 @@ module "training-cluster" {
   rancher_system_project = data.rancher2_project.system
 
   acme-config = var.acme-config
-
-
 }
 
 module "cilium" {
@@ -305,7 +302,6 @@ module "cilium" {
   public_ip              = replace(cloudscale_floating_ip.vip-v4.network, "/32", "")
 
   count = local.cilium_enabled
-
 }
 
 module "webshell" {
@@ -318,5 +314,13 @@ module "webshell" {
 
 
   count = var.count-students
+}
 
+module "argocd" {
+  source = "./modules/argocd"
+
+  rancher_training_project = rancher2_project.training
+  depends_on = [rancher2_cluster_sync.training]
+
+  count = local.argocd_enabled
 }

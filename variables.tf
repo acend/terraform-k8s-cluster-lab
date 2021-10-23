@@ -67,3 +67,8 @@ variable "count-students" {
   type        = number
   default     = 0
 }
+
+variable "argocd-enabled" {
+  type    = bool
+  default = false
+}

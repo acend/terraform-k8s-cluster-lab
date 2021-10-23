@@ -16,8 +16,6 @@ resource "random_password" "basic-auth-password" {
 
 resource "helm_release" "webshell" {
 
-  depends_on = [rancher2_namespace.student-namespace]
-
 
   name       = "webshell"
   chart      = var.chart-repository

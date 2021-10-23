@@ -15,9 +15,17 @@ module "training-cluster" {
   node_flavor_worker  = var.node_flavor_worker
   node_count_master   = var.node_count_master
   node_count_worker   = var.node_count_worker
-  network_plugin      = var.network_plugin
   ssh_keys            = var.ssh_keys
-  acme-config         = var.acme-config
-  count-students       = var.count-students
+  
+  # Network Plugin
+  network_plugin = var.network_plugin
 
+  # Cert-Manager
+  acme-config = var.acme-config
+
+  # Webshell
+  count-students = var.count-students
+
+  # Argocd
+  argocd-enabled = var.argocd-enabled
 }

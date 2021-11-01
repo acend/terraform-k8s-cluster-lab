@@ -9,6 +9,12 @@ resource "rancher2_namespace" "argocd-namespace" {
   }
 }
 
+
+resource "random_password" "student-password" {
+  length           = 16
+  special          = true
+}
+
 data "kubernetes_secret" "admin-secret" {
   metadata {
     name = "argocd-initial-admin-secret"
@@ -32,6 +38,11 @@ resource "helm_release" "argocd" {
   set {
     name  = "controller.metrics.enabled"
     value = "true"
+  }
+
+  set {
+    name = "server.config.url"
+    value = "https://argocd.labapp.acend.ch"
   }
 
   set {
@@ -99,11 +110,40 @@ resource "helm_release" "argocd" {
     value = "labapp-wildcard"
   }
 
-    set {
+  set {
     name = "server.ingressGrpc.https"
     value = "true"
   }
 
+  // Student Account
+  set {
+    name = "server.config.accounts\\.student"
+    value = "apiKey, login"
+  }
 
+  set {
+    name = "server.config.rbacConfig.policy\\.csv"
+    value = <<-EOT
+    p, role:org-admin, applications, *, */*, allow
+    p, role:org-admin, clusters, get, *, allow
+    p, role:org-admin, repositories, get, *, allow
+    p, role:org-admin, repositories, create, *, allow
+    p, role:org-admin, repositories, update, *, allow
+    p, role:org-admin, repositories, delete, *, allow
+
+    g, student role:org-admin
+
+    EOT
+  }
+
+  set {
+    name = "configs.secret.extra.accounts.student\\.password"
+    value = bcrypt(random_password.student-password.result)
+  }
+
+  set {
+    name = "configs.secret.extra.accounts.student\\.passwordMtime"
+    value = timestamp()
+  }
 
 }

@@ -117,7 +117,7 @@ resource "helm_release" "argocd" {
 
   // Student Account
   set {
-    name = "server.config.accounts\\.student"
+    name = "server.config.accounts.student"
     value = "apiKey, login"
   }
 
@@ -127,12 +127,12 @@ resource "helm_release" "argocd" {
   # }
 
   set {
-    name = "configs.secret.extra.accounts\\.student\\.password"
+    name = "configs.secret.extra.accounts.student.password"
     value = bcrypt(random_password.student-password.result)
   }
 
   set {
-    name = "configs.secret.extra.accounts\\.student\\.passwordMtime"
+    name = "configs.secret.extra.accounts.student.passwordMtime"
     value = timestamp()
   }
 

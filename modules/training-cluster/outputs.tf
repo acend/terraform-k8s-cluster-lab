@@ -5,3 +5,6 @@ output "vip_address" {
 output "webshell-links" {
   value = module.webshell.*.student-direct-webshelllink
 }
+output "argocd-admin-secret" {
+  value = module.argocd[0].admin-secret
+}

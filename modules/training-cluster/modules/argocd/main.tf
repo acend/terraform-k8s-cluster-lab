@@ -1,3 +1,4 @@
+
 resource "rancher2_namespace" "argocd-namespace" {
 
   name       = "argocd"
@@ -6,6 +7,17 @@ resource "rancher2_namespace" "argocd-namespace" {
   labels = {
       certificate-labapp = "true"
   }
+}
+
+data "kubernetes_secret" "admin-secret" {
+  metadata {
+    name = "argocd-initial-admin-secret"
+    namespace = rancher2_namespace.argocd-namespace.name
+  }
+
+  depends_on = [
+    helm_release.argocd
+  ]
 }
 
 resource "helm_release" "argocd" {
@@ -18,12 +30,22 @@ resource "helm_release" "argocd" {
 
 
   set {
-    name = "server.ingress.enabled"
+    name  = "controller.metrics.enabled"
     value = "true"
   }
 
   set {
-    name = "server.ingress.hosts[0]"
+    name  = "server.metrics.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "server.ingress.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "server.ingress.hosts[0]"
     value = "argocd.labapp.acend.ch"
   }
 
@@ -37,7 +59,10 @@ resource "helm_release" "argocd" {
     value = "labapp-wildcard"
   }
 
-  
+  set {
+    name = "server.ingress.https"
+    value = "true"
+  }
 
   set {
     name = "server.ingressGrpc.enabled"
@@ -57,6 +82,11 @@ resource "helm_release" "argocd" {
   set {
     name = "server.ingressGrpc.tls[0].secretName"
     value = "labapp-wildcard"
+  }
+
+    set {
+    name = "server.ingressGrpc.https"
+    value = "true"
   }
 
 

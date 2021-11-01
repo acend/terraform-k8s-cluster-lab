@@ -123,26 +123,16 @@ resource "helm_release" "argocd" {
 
   set {
     name = "server.config.rbacConfig.policy\\.csv"
-    value = <<-EOT
-    p, role:org-admin, applications, *, */*, allow
-    p, role:org-admin, clusters, get, *, allow
-    p, role:org-admin, repositories, get, *, allow
-    p, role:org-admin, repositories, create, *, allow
-    p, role:org-admin, repositories, update, *, allow
-    p, role:org-admin, repositories, delete, *, allow
-
-    g, student role:org-admin
-
-    EOT
+    value = file("${path.module}/manifests/policy.csv")
   }
 
   set {
-    name = "configs.secret.extra.accounts.student\\.password"
+    name = "configs.secret.extra.accounts\\.student\\.password"
     value = bcrypt(random_password.student-password.result)
   }
 
   set {
-    name = "configs.secret.extra.accounts.student\\.passwordMtime"
+    name = "configs.secret.extra.accounts\\.student\\.passwordMtime"
     value = timestamp()
   }
 

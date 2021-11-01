@@ -121,10 +121,10 @@ resource "helm_release" "argocd" {
     value = "apiKey, login"
   }
 
-  set {
-    name = "server.config.rbacConfig.policy\\.csv"
-    value = file("${path.module}/manifests/policy.csv")
-  }
+  # set {
+  #   name = "server.config.rbacConfig.policy\\.csv"
+  #   value = file("${path.module}/manifests/policy.csv")
+  # }
 
   set {
     name = "configs.secret.extra.accounts\\.student\\.password"

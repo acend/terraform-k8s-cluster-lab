@@ -45,6 +45,16 @@ resource "helm_release" "argocd" {
   }
 
   set {
+    name  = "server.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/backend-protocol"
+    value = "HTTPS"
+  }
+
+  set {
+    name  = "server.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/force-ssl-redirect"
+    value = "true"
+  }
+
+  set {
     name  = "server.ingress.hosts[0]"
     value = "argocd.labapp.acend.ch"
   }
@@ -67,6 +77,11 @@ resource "helm_release" "argocd" {
   set {
     name = "server.ingressGrpc.enabled"
     value = "true"
+  }
+
+    set {
+    name  = "server.ingressGrpc.annotations.nginx\\.ingress\\.kubernetes\\.io/backend-protocol"
+    value = "GRPC"
   }
 
   set {

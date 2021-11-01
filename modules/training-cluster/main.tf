@@ -16,6 +16,11 @@ provider "k8s" {
   load_config_file = "false"
 }
 
+provider "kubernetes" {
+  host             = local.kube_host
+  token            = local.kube_token
+}
+
 
 provider "helm" {
   kubernetes {

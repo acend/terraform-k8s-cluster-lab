@@ -115,24 +115,34 @@ resource "helm_release" "argocd" {
     value = "true"
   }
 
-  set {
-    name = "configs.secret.extra.accounts.student"
-    value = ""
-  }
-
   // Student Account
   set {
-    name = "server.config.accounts.student"
+    name = "server.config.accounts\\.student"
     value = "apiKey, login"
   }
 
   set {
-    name = "configs.secret.extra.accounts.student.password"
+    name = "server.config.rbacConfig.policy\\.csv"
+    value = <<-EOT
+    p, role:org-admin, applications, *, */*, allow
+    p, role:org-admin, clusters, get, *, allow
+    p, role:org-admin, repositories, get, *, allow
+    p, role:org-admin, repositories, create, *, allow
+    p, role:org-admin, repositories, update, *, allow
+    p, role:org-admin, repositories, delete, *, allow
+
+    g, student role:org-admin
+
+    EOT
+  }
+
+  set {
+    name = "configs.secret.extra.accounts.student\\.password"
     value = bcrypt(random_password.student-password.result)
   }
 
   set {
-    name = "configs.secret.extra.accounts.student.passwordMtime"
+    name = "configs.secret.extra.accounts.student\\.passwordMtime"
     value = timestamp()
   }
 

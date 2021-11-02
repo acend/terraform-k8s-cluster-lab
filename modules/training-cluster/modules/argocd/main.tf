@@ -110,11 +110,6 @@ resource "helm_release" "argocd" {
     value = "true"
   }
 
-  # set {
-  #   name = "server.config.rbacConfig.policy.csv"
-  #   value = file("${path.module}/manifests/policy.csv")
-  # }
-
   values = [
     data.template_file.values_account_student.rendered,
     "${file("${path.module}/manifests/values_rbacConfig_policy.yaml")}"

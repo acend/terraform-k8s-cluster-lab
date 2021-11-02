@@ -8,3 +8,7 @@ output "webshell-links" {
 output "argocd-admin-secret" {
   value = module.argocd[0].admin-secret
 }
+
+output "argocd-student-password" {
+  value = module.argocd[0].student-password
+}

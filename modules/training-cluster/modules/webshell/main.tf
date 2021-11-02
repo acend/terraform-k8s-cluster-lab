@@ -8,12 +8,6 @@ resource "rancher2_namespace" "student-namespace" {
   }
 }
 
-resource "random_password" "basic-auth-password" {
-  length           = 16
-  special          = true
-  override_special = "_%@"
-}
-
 resource "helm_release" "webshell" {
 
 
@@ -28,7 +22,7 @@ resource "helm_release" "webshell" {
 
   set {
     name = "password"
-    value = random_password.basic-auth-password.result
+    value = var.student-password
   }
 
   set {

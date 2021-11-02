@@ -11,3 +11,7 @@ variable "count-students" {
   type        = number
   default     = 0
 }
+
+variable "student-passwords" {
+  type = list
+}

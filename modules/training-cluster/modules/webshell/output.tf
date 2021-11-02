@@ -1,11 +1,3 @@
-output "student-password" {
-  value = random_password.basic-auth-password.result
-}
-
-output "student-username" {
-  value = var.student-name
-}
-
 output "student-direct-webshelllink" {
-  value = nonsensitive("https://${var.student-name}:${random_password.basic-auth-password.result}@${var.student-name}.${var.domain}")
+  value = nonsensitive("https://${var.student-name}:${var.student-password}@${var.student-name}.${var.domain}")
 }

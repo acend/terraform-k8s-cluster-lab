@@ -7,7 +7,7 @@ server:
 configs:
   secret:
     extra:
-       %{ for student in range(count-students) ~}
-       accounts.student${i+1}.password: ${password[${i}].result}
+       %{ for i in range(count-students) ~}
+       accounts.student${i+1}.password: ${password[i].result}
        accounts.student${i+1}.passwordMtime: ${timestamp()}
        %{ endfor ~}

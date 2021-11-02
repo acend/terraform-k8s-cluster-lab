@@ -10,6 +10,10 @@ variable "student-name" {
     type = string
 }
 
+variable "student-password" {
+    type = string
+}
+
 variable "domain" {
     default = "labapp.acend.ch"
 }

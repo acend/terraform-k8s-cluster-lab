@@ -137,19 +137,9 @@ resource "helm_release" "argocd" {
   }
 
   values = [
-    templatefile("${path.module}/manifests/values_account_student.yaml", {count-students = var.count-students, password = random_password.student-password}),
+    templatefile("${path.module}/manifests/values_account_student.yaml", {count-students = var.count-students, password = var.student-passwords}),
     templatefile("${path.module}/manifests/values_rbacConfig_policy.yaml", {count-students = var.count-students }),
     templatefile("${path.module}/manifests/values_projects.yaml", {count-students = var.count-students }),
   ]
 
-}
-
-
-# Account Student Config
-
-resource "random_password" "student-password" {
-  length           = 16
-  special          = true
-
-  count = var.count-students
 }

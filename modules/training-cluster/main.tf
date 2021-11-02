@@ -309,6 +309,8 @@ module "cilium" {
   count = local.cilium_enabled
 }
 
+
+
 module "webshell" {
   source = "./modules/webshell"
 
@@ -316,7 +318,6 @@ module "webshell" {
 
   rancher_training_project = rancher2_project.training
   student-name             = "student${count.index + 1}"
-
 
   count = var.count-students
 }
@@ -326,6 +327,8 @@ module "argocd" {
 
   rancher_training_project = rancher2_project.training
   depends_on = [rancher2_cluster_sync.training]
+
+  count-students = var.count-students
 
   count = local.argocd_enabled
 }

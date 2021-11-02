@@ -3,5 +3,5 @@ output "admin-secret" {
 }
 
 output "student-password" {
-  value = nonsensitive(random_password.student-password.result)
+  value = nonsensitive(random_password.student-password.*.result)
 }

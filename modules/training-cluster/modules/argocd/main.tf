@@ -10,6 +10,32 @@ resource "rancher2_namespace" "argocd-namespace" {
 }
 
 
+resource "rancher2_namespace" "student-namespace-prod" {
+
+  name       = "student${count.index + 1}-prod"
+  project_id = var.rancher_training_project.id
+
+  labels = {
+      certificate-labapp = "true"
+  }
+
+  count = var.count-students
+}
+
+resource "rancher2_namespace" "student-namespace-dev" {
+
+  name       = "student${count.index + 1}-dev"
+  project_id = var.rancher_training_project.id
+
+  labels = {
+      certificate-labapp = "true"
+  }
+
+  count = var.count-students
+}
+
+
+
 data "kubernetes_secret" "admin-secret" {
   metadata {
     name = "argocd-initial-admin-secret"
@@ -111,23 +137,19 @@ resource "helm_release" "argocd" {
   }
 
   values = [
-    data.template_file.values_account_student.rendered,
-    "${file("${path.module}/manifests/values_rbacConfig_policy.yaml")}"
+    templatefile("${path.module}/manifests/values_account_student.yaml", {count-students = var.count-students, password = random_password.student-password}),
+    templatefile("${path.module}/manifests/values_rbacConfig_policy.yaml", {count-students = var.count-students }),
+    templatefile("${path.module}/manifests/values_projects.yaml", {count-students = var.count-students }),
   ]
 
 }
+
 
 # Account Student Config
 
 resource "random_password" "student-password" {
   length           = 16
   special          = true
-}
 
-data "template_file" "values_account_student" {
-  template = "${file("${path.module}/manifests/values_account_student.yaml")}"
-  vars = {
-    password = bcrypt(random_password.student-password.result)
-    passwordMtime = timestamp()
-  }
+  count = var.count-students
 }

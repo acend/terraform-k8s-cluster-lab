@@ -1,7 +1,7 @@
 output "admin-secret" {
-  value = data.kubernetes_secret.admin-secret.data
+  value = data.kubernetes_secret.admin-secret.data.password
 }
 
 output "student-password" {
-  value = nonsensitive(data.kubernetes_secret.admin-secret.data)
+  value = nonsensitive(random_password.student-password.result)
 }

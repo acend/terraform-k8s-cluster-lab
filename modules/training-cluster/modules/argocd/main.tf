@@ -115,25 +115,22 @@ resource "helm_release" "argocd" {
     value = "true"
   }
 
-  // Student Account
-  set {
-    name = "server.config.accounts.student"
-    value = "apiKey, login"
-  }
-
   # set {
-  #   name = "server.config.rbacConfig.policy\\.csv"
+  #   name = "server.config.rbacConfig.policy.csv"
   #   value = file("${path.module}/manifests/policy.csv")
   # }
 
-  set {
-    name = "configs.secret.extra.accounts.student.password"
-    value = bcrypt(random_password.student-password.result)
-  }
+  values = [
+    data.template_file.values_account_student.rendered
+  ]
 
-  set {
-    name = "configs.secret.extra.accounts.student.passwordMtime"
-    value = timestamp()
-  }
+}
 
+
+data "template_file" "values_account_student" {
+  template = "${file("${path.module}/manifests/values_account_student.yaml")}"
+  vars = {
+    password = bcrypt(random_password.student-password.result)
+    passwordMtime = timestamp()
+  }
 }

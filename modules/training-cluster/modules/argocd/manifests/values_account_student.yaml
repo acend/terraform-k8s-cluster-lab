@@ -1,0 +1,9 @@
+server:
+  config:
+    accounts.student: "apiKey, login"
+
+configs:
+  secret:
+    extra:
+       accounts.student.password: ${password}
+       accounts.student..passwordMtime: ${passwordMtime}

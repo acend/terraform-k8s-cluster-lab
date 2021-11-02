@@ -1,13 +1,13 @@
 server:
   config:
     %{ for i in range(count-students) ~}
-    accounts.student${i+1}: "apiKey, login"
+    "accounts.student${i+1}": "apiKey, login"
     %{ endfor ~}
 
 configs:
   secret:
     extra:
-       %{ for i in range(count-students) ~}
-       accounts.student${i+1}.password: "${passwords[i].result}"
-       accounts.student${i+1}.passwordMtime: "${timestamp()}"
-       %{ endfor ~}
+      %{ for i in range(count-students) ~}
+      "accounts.student${i+1}.password": "${passwords[i].result}"
+      "accounts.student${i+1}.passwordMtime": "${timestamp()}"
+      %{ endfor ~}

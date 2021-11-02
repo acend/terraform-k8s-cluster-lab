@@ -137,20 +137,19 @@ resource "cloudscale_floating_ip" "vip-v4" {
   }
 }
 
-# # Add a Floating IPv6 network to web-worker01
-# resource "cloudscale_floating_ip" "vip-v6" {
-#   server        = cloudscale_server.node01.id
-#   ip_version    = 6
-#   prefix_length = 56
+# Add a Floating IPv6 network to web-worker01
+resource "cloudscale_floating_ip" "vip-v6" {
+  server        = cloudscale_server.nodes-master[0].id
+  ip_version    = 6
 
-#   lifecycle {
-#     ignore_changes = [
-#       # Ignore changes to server
-#       # keepalived can reasign
-#       server
-#     ]
-#   }
-# }
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to server
+      # keepalived can reasign
+      server
+    ]
+  }
+}
 
 
 resource "rancher2_cluster" "training" {
@@ -287,6 +286,29 @@ resource "rancher2_app" "cloudscale-vip" {
   }
 }
 
+resource "rancher2_app" "cloudscale-vip-v6" {
+
+  catalog_name     = data.rancher2_catalog.puzzle.name
+  name             = "cloudscale-vip-v6"
+  project_id       = data.rancher2_project.system.id
+  template_name    = "cloudscale-vip"
+  template_version = "0.1.0"
+  target_namespace = "kube-system"
+  answers = {
+    "cloudscale.access_token"     = var.cloudscale_token
+    "keepalived.interface"        = "ens3"
+    "keepalived.track_interface"  = "ens3"
+    "keepalived.vip"              = replace(cloudscale_floating_ip.vip-v6.network, "/128", "")
+    "keepalived.master_host"      = cloudscale_server.nodes-master[0].name
+    "keepalived.unicast_peers[0]" = cloudscale_server.nodes-master[0].public_ipv6_address
+    "keepalived.unicast_peers[1]" = cloudscale_server.nodes-master[1].public_ipv6_address
+    "keepalived.unicast_peers[2]" = cloudscale_server.nodes-master[2].public_ipv6_address
+    "nodeSelector.vip"            = "true"
+  }
+}
+
+
+# Deploy Cert-Manager for Certificates
 module "training-cluster" {
   source = "./modules/cert-manager"
 
@@ -298,6 +320,7 @@ module "training-cluster" {
   acme-config = var.acme-config
 }
 
+# Deploy Cilium CNI if enabled
 module "cilium" {
   source = "./modules/cilium"
 
@@ -310,6 +333,7 @@ module "cilium" {
 }
 
 
+# Create Passwords for the students (shared by multiple apps like webshell and argocd)
 resource "random_password" "student-passwords" {
   length           = 16
   special          = true
@@ -319,7 +343,7 @@ resource "random_password" "student-passwords" {
 }
 
 
-
+# Deploy Webshell with a student Namespace to work in 
 module "webshell" {
   source = "./modules/webshell"
 
@@ -332,6 +356,7 @@ module "webshell" {
   count = var.count-students
 }
 
+# Deploy ArgoCD and configure it for the students
 module "argocd" {
   source = "./modules/argocd"
 

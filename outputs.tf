@@ -4,6 +4,9 @@ output "vip_address" {
   value = module.training-cluster.vip_address
 }
 
+output "vip_address_v6" {
+  value = module.training-cluster.vip_address_v6
+}
 
 // Webshell & Student Output
 

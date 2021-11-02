@@ -9,7 +9,6 @@ resource "rancher2_namespace" "argocd-namespace" {
   }
 }
 
-
 resource "rancher2_namespace" "student-namespace-prod" {
 
   name       = "student${count.index + 1}-prod"
@@ -21,6 +20,29 @@ resource "rancher2_namespace" "student-namespace-prod" {
 
   count = var.count-students
 }
+
+// Allow to use the SA from Webshell Namespace to also access this argocd student prod Namespace
+resource "kubernetes_role_binding" "student-prod" {
+  metadata {
+    name      = "admin-rb"
+    namespace = "student${count.index + 1}-prod"
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "admin"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "webshell"
+    namespace = "student${count.index + 1}"
+  }
+
+  count = var.count-students
+}
+
 
 resource "rancher2_namespace" "student-namespace-dev" {
 
@@ -34,7 +56,27 @@ resource "rancher2_namespace" "student-namespace-dev" {
   count = var.count-students
 }
 
+// Allow to use the SA from Webshell Namespace to also access this argocd student prod Namespace
+resource "kubernetes_role_binding" "student-dev" {
+  metadata {
+    name      = "admin-rb"
+    namespace = "student${count.index + 1}-dev"
+  }
 
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "admin"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "webshell"
+    namespace = "student${count.index + 1}"
+  }
+
+  count = var.count-students
+}
 
 data "kubernetes_secret" "admin-secret" {
   metadata {
@@ -46,6 +88,7 @@ data "kubernetes_secret" "admin-secret" {
     helm_release.argocd
   ]
 }
+
 
 resource "helm_release" "argocd" {
 

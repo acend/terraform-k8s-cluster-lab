@@ -292,7 +292,7 @@ resource "rancher2_app" "cloudscale-vip-v6" {
   name             = "cloudscale-vip-v6"
   project_id       = data.rancher2_project.system.id
   template_name    = "cloudscale-vip"
-  template_version = "0.1.0"
+  template_version = "0.1.1"
   target_namespace = "kube-system"
   answers = {
     "cloudscale.access_token"     = var.cloudscale_token

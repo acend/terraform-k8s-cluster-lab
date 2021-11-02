@@ -309,6 +309,17 @@ module "cilium" {
   count = local.cilium_enabled
 }
 
+
+resource "random_password" "student-passwords" {
+  length           = 16
+  special          = true
+  override_special = "_%@"
+
+  count = var.count-students
+}
+
+
+
 module "webshell" {
   source = "./modules/webshell"
 
@@ -316,7 +327,7 @@ module "webshell" {
 
   rancher_training_project = rancher2_project.training
   student-name             = "student${count.index + 1}"
-
+  student-password         = random_password.student-passwords[count.index].result
 
   count = var.count-students
 }
@@ -326,6 +337,10 @@ module "argocd" {
 
   rancher_training_project = rancher2_project.training
   depends_on = [rancher2_cluster_sync.training]
+
+  count-students   = var.count-students
+  student-passwords = random_password.student-passwords
+
 
   count = local.argocd_enabled
 }

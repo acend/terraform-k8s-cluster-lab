@@ -5,7 +5,7 @@ output "vip_address" {
 }
 
 
-// Webshell Output
+// Webshell & Student Output
 
 output "webshell-infos" {
   value = module.training-cluster.webshell-links
@@ -17,8 +17,4 @@ output "webshell-infos" {
 output "argocd-admin-secret" {
   value = module.training-cluster.argocd-admin-secret
   sensitive = true
-}
-
-output "argocd-student-password" {
-  value = module.training-cluster.argocd-student-password
 }

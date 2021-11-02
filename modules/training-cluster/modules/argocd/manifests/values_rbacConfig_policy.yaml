@@ -8,4 +8,6 @@ server:
       p, role:org-admin, repositories, update, *, allow
       p, role:org-admin, repositories, delete, *, allow
 
-      g, student, role:org-admin
+      %{ for i in range(count-students) ~}
+      g, student${i+1}, role:org-admin
+      %{ endfor ~}

@@ -10,11 +10,6 @@ resource "rancher2_namespace" "argocd-namespace" {
 }
 
 
-resource "random_password" "student-password" {
-  length           = 16
-  special          = true
-}
-
 data "kubernetes_secret" "admin-secret" {
   metadata {
     name = "argocd-initial-admin-secret"
@@ -121,11 +116,18 @@ resource "helm_release" "argocd" {
   # }
 
   values = [
-    data.template_file.values_account_student.rendered
+    data.template_file.values_account_student.rendered,
+    "${file("${path.module}/manifests/values_rbacConfig_policy.yaml")}"
   ]
 
 }
 
+# Account Student Config
+
+resource "random_password" "student-password" {
+  length           = 16
+  special          = true
+}
 
 data "template_file" "values_account_student" {
   template = "${file("${path.module}/manifests/values_account_student.yaml")}"

@@ -1,6 +1,9 @@
 variable "rancher_training_project" {
 }
 
+variable "rancher_system_project" {
+}
+
 variable "chart-repository" {
     type = string
     default = "https://argoproj.github.io/argo-helm"

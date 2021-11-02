@@ -2,7 +2,7 @@
 resource "rancher2_namespace" "argocd-namespace" {
 
   name       = "argocd"
-  project_id = var.rancher_training_project.id
+  project_id = var.rancher_system_project.id
 
   labels = {
       certificate-labapp = "true"

@@ -360,7 +360,9 @@ module "webshell" {
 module "argocd" {
   source = "./modules/argocd"
 
+  rancher_system_project   = data.rancher2_project.system
   rancher_training_project = rancher2_project.training
+  
   depends_on = [rancher2_cluster_sync.training]
 
   count-students    = var.count-students

@@ -137,7 +137,7 @@ resource "helm_release" "argocd" {
   }
 
   values = [
-    templatefile("${path.module}/manifests/values_account_student.yaml", {count-students = var.count-students, password = var.student-passwords}),
+    templatefile("${path.module}/manifests/values_account_student.yaml", {count-students = var.count-students, passwords = var.student-passwords}),
     templatefile("${path.module}/manifests/values_rbacConfig_policy.yaml", {count-students = var.count-students }),
     templatefile("${path.module}/manifests/values_projects.yaml", {count-students = var.count-students }),
   ]

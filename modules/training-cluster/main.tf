@@ -338,7 +338,7 @@ module "argocd" {
   rancher_training_project = rancher2_project.training
   depends_on = [rancher2_cluster_sync.training]
 
-  count-students   = var.count-students
+  count-students    = var.count-students
   student-passwords = random_password.student-passwords
 
 

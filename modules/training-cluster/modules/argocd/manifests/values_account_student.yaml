@@ -6,4 +6,4 @@ configs:
   secret:
     extra:
        accounts.student.password: ${password}
-       accounts.student..passwordMtime: ${passwordMtime}
+       accounts.student.passwordMtime: ${passwordMtime}

@@ -1,13 +1,14 @@
 server:
   rbacConfig: 
     policy.csv: |
-      p, role:org-admin, applications, *, */*, allow
-      p, role:org-admin, clusters, get, *, allow
-      p, role:org-admin, repositories, get, *, allow
-      p, role:org-admin, repositories, create, *, allow
-      p, role:org-admin, repositories, update, *, allow
-      p, role:org-admin, repositories, delete, *, allow
+      p, role:student, applications, *, */*, allow
+      p, role:student, clusters, get, *, allow
+      p, role:student, repositories, get, *, allow
+      p, role:student, repositories, create, *, allow
+      p, role:student, repositories, update, *, allow
+      p, role:student, repositories, delete, *, allow
+      p, role:student, projects, get, argocd-training, allow
 
       %{~ for i in range(count-students) ~}
-      g, student${i+1}, role:org-admin
+      g, student${i+1}, role:student
       %{~ endfor ~}

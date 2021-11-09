@@ -350,6 +350,7 @@ module "webshell" {
   depends_on = [rancher2_cluster_sync.training]
 
   rancher_training_project = rancher2_project.training
+  rancher_quotalab_project = rancher2_project.quotalab
   student-name             = "student${count.index + 1}"
   student-password         = random_password.student-passwords[count.index].result
 

@@ -10,7 +10,7 @@ resource "rancher2_namespace" "student-namespace" {
 
 resource "rancher2_namespace" "student-namespace-quotalab" {
 
-  name       = var.student-name
+  name       = "${var.student-name}-quota"
   project_id = var.rancher_quotalab_project.id
 
 }

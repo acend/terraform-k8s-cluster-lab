@@ -8,6 +8,34 @@ resource "rancher2_namespace" "student-namespace" {
   }
 }
 
+resource "rancher2_namespace" "student-namespace-quotalab" {
+
+  name       = var.student-name
+  project_id = var.rancher_quotalab_project.id
+
+}
+
+// Allow to use the SA from Webshell Namespace to also access this argocd student prod Namespace
+resource "kubernetes_role_binding" "student-quotalab" {
+  metadata {
+    name      = "admin-rb"
+    namespace = rancher2_namespace.student-namespace-quotalab.name
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "admin"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "webshell"
+    namespace = var.student-name
+  }
+
+}
+
 resource "helm_release" "webshell" {
 
 

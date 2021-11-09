@@ -1,6 +1,10 @@
 variable "rancher_training_project" {
 }
 
+variable "rancher_quotalab_project" {
+}
+
+
 
 variable "chart-repository" {
     type = string

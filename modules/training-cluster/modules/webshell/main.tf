@@ -13,6 +13,13 @@ resource "rancher2_namespace" "student-namespace-quotalab" {
   name       = "${var.student-name}-quota"
   project_id = var.rancher_quotalab_project.id
 
+  container_resource_limit {
+    limits_cpu = "100m"
+    limits_memory = "32Mi"
+    requests_cpu = "10m"
+    requests_memory = "16Mi"
+  }
+
 }
 
 // Allow to use the SA from Webshell Namespace to also access this argocd student prod Namespace

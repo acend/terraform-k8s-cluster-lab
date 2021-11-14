@@ -113,5 +113,16 @@ resource "helm_release" "webshell" {
     value = "${var.student-name}.${var.domain}"
   }
 
+  set {
+    name = "theia.persistence.enabled"
+    value = "true"
+  }
+
+  set {
+    name = "theia.persistence.storageclass"
+    value = "cloudscale-volume-ssd"
+  }
+
+
 
 }

@@ -7,6 +7,12 @@ server:
       p, role:student, repositories, create, *, allow
       p, role:student, repositories, update, *, allow
       p, role:student, repositories, delete, *, allow
+
+      p, role:student, projects, get, *, allow
+      p, role:student, projects, create, *, allow
+      p, role:student, projects, update, *, allow
+      p, role:student, projects, delete, *, allow
+
       p, role:student, projects, get, argocd-training, allow
 
       %{~ for i in range(count-students) ~}

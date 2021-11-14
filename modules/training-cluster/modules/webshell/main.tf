@@ -116,6 +116,7 @@ resource "helm_release" "webshell" {
   set {
     name = "theia.persistence.enabled"
     value = "true"
+    type  = "string"
   }
 
   set {

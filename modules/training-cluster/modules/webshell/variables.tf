@@ -8,8 +8,14 @@ variable "rancher_quotalab_project" {
 
 variable "chart-repository" {
     type = string
-    default = "https://github.com/acend/webshell-env/raw/main/deploy/charts/webshell-0.1.2.tgz"
+    default = "https://acend.github.io/webshell-env/"
 }
+
+variable "chart-version" {
+    type = string
+    default = "0.1.5"
+}
+
 variable "student-name" {
     type = string
 }

@@ -3,6 +3,7 @@ server:
     policy.csv: |
       p, role:student, applications, *, */*, allow
       p, role:student, clusters, get, *, allow
+      p, role:student, clusters, update, *, allow
       p, role:student, repositories, get, *, allow
       p, role:student, repositories, create, *, allow
       p, role:student, repositories, update, *, allow

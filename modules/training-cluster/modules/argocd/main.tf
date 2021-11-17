@@ -9,6 +9,8 @@ resource "rancher2_namespace" "argocd-namespace" {
   }
 }
 
+# Student Prod Namespaces
+
 resource "rancher2_namespace" "student-namespace-prod" {
 
   name       = "student${count.index + 1}-prod"
@@ -16,6 +18,21 @@ resource "rancher2_namespace" "student-namespace-prod" {
 
   labels = {
       certificate-labapp = "true"
+  }
+
+  count = var.count-students
+}
+
+resource "kubernetes_role" "argocd-role-prod" {
+  metadata {
+    name = "argocd"
+    namespace = "student${count.index + 1}-prod"
+  }
+
+  rule {
+    api_groups     = ["argoproj.io"]
+    resources      = ["applications"]
+    verbs          = ["get", "list", "watch", "create", "update", "patch", "delete"]
   }
 
   count = var.count-students
@@ -43,7 +60,28 @@ resource "kubernetes_role_binding" "student-prod" {
   count = var.count-students
 }
 
+resource "kubernetes_role_binding" "argocd-prod" {
+  metadata {
+    name      = "argocd-rb"
+    namespace = "student${count.index + 1}-prod"
+  }
 
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Role"
+    name      = "argocd"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "webshell"
+    namespace = "student${count.index + 1}"
+  }
+
+  count = var.count-students
+}
+
+# Student Dev Namespaces
 resource "rancher2_namespace" "student-namespace-dev" {
 
   name       = "student${count.index + 1}-dev"
@@ -51,6 +89,21 @@ resource "rancher2_namespace" "student-namespace-dev" {
 
   labels = {
       certificate-labapp = "true"
+  }
+
+  count = var.count-students
+}
+
+resource "kubernetes_role" "argocd-role-dev" {
+  metadata {
+    name = "argocd"
+    namespace = "student${count.index + 1}-dev"
+  }
+
+  rule {
+    api_groups     = ["argoproj.io"]
+    resources      = ["applications"]
+    verbs          = ["get", "list", "watch", "create", "update", "patch", "delete"]
   }
 
   count = var.count-students
@@ -67,6 +120,65 @@ resource "kubernetes_role_binding" "student-dev" {
     api_group = "rbac.authorization.k8s.io"
     kind      = "ClusterRole"
     name      = "admin"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "webshell"
+    namespace = "student${count.index + 1}"
+  }
+
+  count = var.count-students
+}
+
+resource "kubernetes_role_binding" "argocd-dev" {
+  metadata {
+    name      = "argocd-rb"
+    namespace = "student${count.index + 1}-dev"
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Role"
+    name      = "argocd"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "webshell"
+    namespace = "student${count.index + 1}"
+  }
+
+  count = var.count-students
+}
+
+
+# Student  Namespaces
+resource "kubernetes_role" "argocd-role" {
+  metadata {
+    name = "argocd"
+    namespace = "student${count.index + 1}"
+  }
+
+  rule {
+    api_groups     = ["argoproj.io"]
+    resources      = ["applications"]
+    verbs          = ["get", "list", "watch", "create", "update", "patch", "delete"]
+  }
+
+  count = var.count-students
+}
+
+resource "kubernetes_role_binding" "argocd" {
+  metadata {
+    name      = "argocd-rb"
+    namespace = "student${count.index + 1}"
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Role"
+    name      = "argocd"
   }
 
   subject {

@@ -123,6 +123,11 @@ resource "helm_release" "webshell" {
     value = "cloudscale-volume-ssd"
   }
 
+  set {
+    name = "podSecurityContext.fsGroup"
+    value = "1001"
+  }
+
 
 
 }

@@ -128,6 +128,11 @@ resource "helm_release" "webshell" {
     value = "1001"
   }
 
+  set {
+    name = "updateStrategy.type"
+    value = "Recreate"
+  }
+
 
 
 }

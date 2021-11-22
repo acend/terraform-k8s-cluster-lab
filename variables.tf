@@ -60,12 +60,12 @@ variable "ssh_keys" {
 }
 
 variable "acme-config" {
-  type    = string
+  type = string
 }
 
 variable "count-students" {
-  type        = number
-  default     = 0
+  type    = number
+  default = 0
 }
 
 variable "argocd-enabled" {

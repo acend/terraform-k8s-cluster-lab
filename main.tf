@@ -1,6 +1,6 @@
 
 terraform {
-	backend "remote" {}
+  backend "remote" {}
 }
 
 module "training-cluster" {
@@ -16,7 +16,7 @@ module "training-cluster" {
   node_count_master   = var.node_count_master
   node_count_worker   = var.node_count_worker
   ssh_keys            = var.ssh_keys
-  
+
   # Network Plugin
   network_plugin = var.network_plugin
 

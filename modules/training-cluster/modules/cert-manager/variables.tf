@@ -12,6 +12,6 @@ variable "letsencrypt_email" {
 }
 
 variable "acme-config" {
-  type    = string
+  type = string
 }
 

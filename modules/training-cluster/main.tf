@@ -17,8 +17,8 @@ provider "k8s" {
 }
 
 provider "kubernetes" {
-  host             = local.kube_host
-  token            = local.kube_token
+  host  = local.kube_host
+  token = local.kube_token
 }
 
 
@@ -139,8 +139,8 @@ resource "cloudscale_floating_ip" "vip-v4" {
 
 # Add a Floating IPv6 network to web-worker01
 resource "cloudscale_floating_ip" "vip-v6" {
-  server        = cloudscale_server.nodes-master[0].id
-  ip_version    = 6
+  server     = cloudscale_server.nodes-master[0].id
+  ip_version = 6
 
   lifecycle {
     ignore_changes = [
@@ -195,18 +195,18 @@ resource "rancher2_project" "quotalab" {
 
   resource_quota {
     project_limit {
-      requests_cpu = "30000m"
+      requests_cpu    = "30000m"
       requests_memory = "30000Mi"
     }
     namespace_default_limit {
       requests_memory = "100Mi"
-      requests_cpu = "100m"
+      requests_cpu    = "100m"
     }
   }
   container_resource_limit {
-    limits_cpu = "100m"
-    limits_memory = "32Mi"
-    requests_cpu = "10m"
+    limits_cpu      = "100m"
+    limits_memory   = "32Mi"
+    requests_cpu    = "10m"
     requests_memory = "16Mi"
   }
 
@@ -309,7 +309,7 @@ resource "rancher2_app" "cloudscale-vip-v6" {
 
 
 # Deploy Cert-Manager for Certificates
-module "training-cluster" {
+module "cert-manager" {
   source = "./modules/cert-manager"
 
   depends_on = [rancher2_cluster_sync.training]
@@ -347,11 +347,11 @@ resource "random_password" "student-passwords" {
 module "webshell" {
   source = "./modules/webshell"
 
-  depends_on = [rancher2_cluster_sync.training]
+  depends_on = [rancher2_cluster_sync.training, rancher2_app.cloudscale-csi]
 
   rancher_training_project = rancher2_project.training
   rancher_quotalab_project = rancher2_project.quotalab
-  student-name             = "student${count.index + 1}"
+  student-name             = "${var.studentname-prefix}${count.index + 1}"
   student-password         = random_password.student-passwords[count.index].result
 
   count = var.count-students
@@ -363,11 +363,12 @@ module "argocd" {
 
   rancher_system_project   = data.rancher2_project.system
   rancher_training_project = rancher2_project.training
-  
+
   depends_on = [rancher2_cluster_sync.training]
 
-  count-students    = var.count-students
-  student-passwords = random_password.student-passwords
+  count-students     = var.count-students
+  student-passwords  = random_password.student-passwords
+  studentname-prefix = var.studentname-prefix
 
 
   count = local.argocd_enabled

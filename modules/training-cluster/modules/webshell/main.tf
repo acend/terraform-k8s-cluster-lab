@@ -4,7 +4,7 @@ resource "rancher2_namespace" "student-namespace" {
   project_id = var.rancher_training_project.id
 
   labels = {
-      certificate-labapp = "true" # this will copy the wildcard cert created with cert-manager using the kubed installation
+    certificate-labapp = "true" # this will copy the wildcard cert created with cert-manager using the kubed installation
   }
 }
 
@@ -14,9 +14,9 @@ resource "rancher2_namespace" "student-namespace-quotalab" {
   project_id = var.rancher_quotalab_project.id
 
   container_resource_limit {
-    limits_cpu = "100m"
-    limits_memory = "32Mi"
-    requests_cpu = "10m"
+    limits_cpu      = "100m"
+    limits_memory   = "32Mi"
+    requests_cpu    = "10m"
     requests_memory = "16Mi"
   }
 
@@ -58,17 +58,17 @@ resource "helm_release" "webshell" {
   }
 
   set {
-    name = "password"
+    name  = "password"
     value = var.student-password
   }
 
   set {
-    name = "ingress.enabled"
+    name  = "ingress.enabled"
     value = "true"
   }
 
   set {
-    name = "ingress.className"
+    name  = "ingress.className"
     value = "nginx"
   }
 
@@ -79,57 +79,57 @@ resource "helm_release" "webshell" {
   }
 
   set {
-    name = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-type"
+    name  = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-type"
     value = "basic"
   }
 
   set {
-    name = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-secret"
+    name  = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-secret"
     value = "basic-auth"
   }
 
   set {
-    name = "ingress.hosts[0].host"
+    name  = "ingress.hosts[0].host"
     value = "${var.student-name}.${var.domain}"
   }
 
   set {
-    name = "ingress.hosts[0].paths[0].path"
+    name  = "ingress.hosts[0].paths[0].path"
     value = "/"
   }
 
   set {
-    name = "ingress.hosts[0].paths[0].pathType"
+    name  = "ingress.hosts[0].paths[0].pathType"
     value = "ImplementationSpecific"
   }
 
   set {
-    name = "ingress.tls[0].secretName"
+    name  = "ingress.tls[0].secretName"
     value = "labapp-wildcard"
   }
 
   set {
-    name = "ingress.tls[0].hosts[0]"
+    name  = "ingress.tls[0].hosts[0]"
     value = "${var.student-name}.${var.domain}"
   }
 
   set {
-    name = "theia.persistence.enabled"
+    name  = "theia.persistence.enabled"
     value = "true"
   }
 
   set {
-    name = "theia.persistence.storageclass"
+    name  = "theia.persistence.storageclass"
     value = "cloudscale-volume-ssd"
   }
 
   set {
-    name = "podSecurityContext.fsGroup"
+    name  = "podSecurityContext.fsGroup"
     value = "1001"
   }
 
   set {
-    name = "updateStrategy.type"
+    name  = "updateStrategy.type"
     value = "Recreate"
   }
 

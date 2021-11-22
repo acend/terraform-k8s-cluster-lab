@@ -10,6 +10,7 @@ output "vip_address_v6" {
 output "webshell-links" {
   value = module.webshell.*.student-direct-webshelllink
 }
+
 output "argocd-admin-secret" {
-  value = module.argocd[0].admin-secret
+  value = var.argocd-enabled ? module.argocd[0].admin-secret : ""
 }

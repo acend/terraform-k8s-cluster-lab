@@ -18,3 +18,8 @@ variable "count-students" {
 variable "student-passwords" {
   type = list
 }
+
+variable "studentname-prefix" {
+  type = list
+  default = "student"
+}

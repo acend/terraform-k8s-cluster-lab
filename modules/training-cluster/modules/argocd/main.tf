@@ -9,11 +9,22 @@ resource "rancher2_namespace" "argocd-namespace" {
   }
 }
 
-# Student Prod Namespaces
+resource "kubernetes_cluster_role" "argocd" {
+  metadata {
+    name = "argocd"
+  }
 
+  rule {
+    api_groups     = ["argoproj.io"]
+    resources      = ["applications"]
+    verbs          = ["get", "list", "watch", "create", "update", "patch", "delete"]
+  }
+}
+
+# Student Prod Namespaces
 resource "rancher2_namespace" "student-namespace-prod" {
 
-  name       = "student${count.index + 1}-prod"
+  name       = "${var.studentname_prefix}${count.index + 1}-prod"
   project_id = var.rancher_training_project.id
 
   labels = {
@@ -23,26 +34,12 @@ resource "rancher2_namespace" "student-namespace-prod" {
   count = var.count-students
 }
 
-resource "kubernetes_role" "argocd-role-prod" {
-  metadata {
-    name = "argocd"
-    namespace = "student${count.index + 1}-prod"
-  }
-
-  rule {
-    api_groups     = ["argoproj.io"]
-    resources      = ["applications"]
-    verbs          = ["get", "list", "watch", "create", "update", "patch", "delete"]
-  }
-
-  count = var.count-students
-}
 
 // Allow to use the SA from Webshell Namespace to also access this argocd student prod Namespace
 resource "kubernetes_role_binding" "student-prod" {
   metadata {
     name      = "admin-rb"
-    namespace = "student${count.index + 1}-prod"
+    namespace = "${var.studentname_prefix}${count.index + 1}-prod"
   }
 
   role_ref {
@@ -54,7 +51,7 @@ resource "kubernetes_role_binding" "student-prod" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "student${count.index + 1}"
+    namespace = "${var.studentname_prefix}${count.index + 1}"
   }
 
   count = var.count-students
@@ -63,19 +60,19 @@ resource "kubernetes_role_binding" "student-prod" {
 resource "kubernetes_role_binding" "argocd-prod" {
   metadata {
     name      = "argocd-rb"
-    namespace = "student${count.index + 1}-prod"
+    namespace = "${var.studentname_prefix}${count.index + 1}-prod"
   }
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
-    kind      = "Role"
+    kind      = "ClusterRole"
     name      = "argocd"
   }
 
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "student${count.index + 1}"
+    namespace = "${var.studentname_prefix}${count.index + 1}"
   }
 
   count = var.count-students
@@ -84,7 +81,7 @@ resource "kubernetes_role_binding" "argocd-prod" {
 # Student Dev Namespaces
 resource "rancher2_namespace" "student-namespace-dev" {
 
-  name       = "student${count.index + 1}-dev"
+  name       = "${var.studentname_prefix}${count.index + 1}-dev"
   project_id = var.rancher_training_project.id
 
   labels = {
@@ -94,26 +91,12 @@ resource "rancher2_namespace" "student-namespace-dev" {
   count = var.count-students
 }
 
-resource "kubernetes_role" "argocd-role-dev" {
-  metadata {
-    name = "argocd"
-    namespace = "student${count.index + 1}-dev"
-  }
-
-  rule {
-    api_groups     = ["argoproj.io"]
-    resources      = ["applications"]
-    verbs          = ["get", "list", "watch", "create", "update", "patch", "delete"]
-  }
-
-  count = var.count-students
-}
 
 // Allow to use the SA from Webshell Namespace to also access this argocd student prod Namespace
 resource "kubernetes_role_binding" "student-dev" {
   metadata {
     name      = "admin-rb"
-    namespace = "student${count.index + 1}-dev"
+    namespace = "${var.studentname_prefix}${count.index + 1}-dev"
   }
 
   role_ref {
@@ -125,7 +108,7 @@ resource "kubernetes_role_binding" "student-dev" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "student${count.index + 1}"
+    namespace = "${var.studentname_prefix}${count.index + 1}"
   }
 
   count = var.count-students
@@ -134,19 +117,19 @@ resource "kubernetes_role_binding" "student-dev" {
 resource "kubernetes_role_binding" "argocd-dev" {
   metadata {
     name      = "argocd-rb"
-    namespace = "student${count.index + 1}-dev"
+    namespace = "${var.studentname_prefix}${count.index + 1}-dev"
   }
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
-    kind      = "Role"
+    kind      = "ClusterRole"
     name      = "argocd"
   }
 
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "student${count.index + 1}"
+    namespace = "${var.studentname_prefix}${count.index + 1}"
   }
 
   count = var.count-students
@@ -154,37 +137,22 @@ resource "kubernetes_role_binding" "argocd-dev" {
 
 
 # Student  Namespaces
-resource "kubernetes_role" "argocd-role" {
-  metadata {
-    name = "argocd"
-    namespace = "student${count.index + 1}"
-  }
-
-  rule {
-    api_groups     = ["argoproj.io"]
-    resources      = ["applications"]
-    verbs          = ["get", "list", "watch", "create", "update", "patch", "delete"]
-  }
-
-  count = var.count-students
-}
-
 resource "kubernetes_role_binding" "argocd" {
   metadata {
     name      = "argocd-rb"
-    namespace = "student${count.index + 1}"
+    namespace = "${var.studentname_prefix}${count.index + 1}"
   }
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
-    kind      = "Role"
+    kind      = "ClusterRole"
     name      = "argocd"
   }
 
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "student${count.index + 1}"
+    namespace = "${var.studentname_prefix}${count.index + 1}"
   }
 
   count = var.count-students
@@ -293,9 +261,9 @@ resource "helm_release" "argocd" {
   }
 
   values = [
-    templatefile("${path.module}/manifests/values_account_student.yaml", {count-students = var.count-students, passwords = var.student-passwords}),
-    templatefile("${path.module}/manifests/values_rbacConfig_policy.yaml", {count-students = var.count-students }),
-    templatefile("${path.module}/manifests/values_projects.yaml", {count-students = var.count-students }),
+    templatefile("${path.module}/manifests/values_account_student.yaml", {studentname_prefix = var.studentname_prefix, count-students = var.count-students, passwords = var.student-passwords}),
+    templatefile("${path.module}/manifests/values_rbacConfig_policy.yaml", {studentname_prefix = var.studentname_prefix, count-students = var.count-students }),
+    templatefile("${path.module}/manifests/values_projects.yaml", {studentname_prefix = var.studentname_prefix, count-students = var.count-students }),
   ]
 
 }

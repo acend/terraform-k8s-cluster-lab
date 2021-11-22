@@ -92,6 +92,11 @@ variable "count-students" {
   default     = 0
 }
 
+variable "studentname-prefix" {
+  type = list
+  default = "student"
+}
+
 variable "argocd-enabled" {
   type    = bool
   default = false

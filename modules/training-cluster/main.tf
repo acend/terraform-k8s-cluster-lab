@@ -309,7 +309,7 @@ resource "rancher2_app" "cloudscale-vip-v6" {
 
 
 # Deploy Cert-Manager for Certificates
-module "training-cluster" {
+module "cert-manager" {
   source = "./modules/cert-manager"
 
   depends_on = [rancher2_cluster_sync.training]
@@ -347,11 +347,11 @@ resource "random_password" "student-passwords" {
 module "webshell" {
   source = "./modules/webshell"
 
-  depends_on = [rancher2_cluster_sync.training]
+  depends_on = [rancher2_cluster_sync.training, rancher2_app.cloudscale-csi]
 
   rancher_training_project = rancher2_project.training
   rancher_quotalab_project = rancher2_project.quotalab
-  student-name             = "student${count.index + 1}"
+  student-name             = "${var.studentname_prefix}${count.index + 1}"
   student-password         = random_password.student-passwords[count.index].result
 
   count = var.count-students
@@ -368,6 +368,7 @@ module "argocd" {
 
   count-students    = var.count-students
   student-passwords = random_password.student-passwords
+  studentname_prefix = var.studentname_prefix
 
 
   count = local.argocd_enabled

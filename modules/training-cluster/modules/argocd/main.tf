@@ -24,7 +24,7 @@ resource "kubernetes_cluster_role" "argocd" {
 # Student Prod Namespaces
 resource "rancher2_namespace" "student-namespace-prod" {
 
-  name       = "${var.studentname_prefix}${count.index + 1}-prod"
+  name       = "${var.studentname-prefix}${count.index + 1}-prod"
   project_id = var.rancher_training_project.id
 
   labels = {
@@ -39,7 +39,7 @@ resource "rancher2_namespace" "student-namespace-prod" {
 resource "kubernetes_role_binding" "student-prod" {
   metadata {
     name      = "admin-rb"
-    namespace = "${var.studentname_prefix}${count.index + 1}-prod"
+    namespace = "${var.studentname-prefix}${count.index + 1}-prod"
   }
 
   role_ref {
@@ -51,7 +51,7 @@ resource "kubernetes_role_binding" "student-prod" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "${var.studentname_prefix}${count.index + 1}"
+    namespace = "${var.studentname-prefix}${count.index + 1}"
   }
 
   count = var.count-students
@@ -60,7 +60,7 @@ resource "kubernetes_role_binding" "student-prod" {
 resource "kubernetes_role_binding" "argocd-prod" {
   metadata {
     name      = "argocd-rb"
-    namespace = "${var.studentname_prefix}${count.index + 1}-prod"
+    namespace = "${var.studentname-prefix}${count.index + 1}-prod"
   }
 
   role_ref {
@@ -72,7 +72,7 @@ resource "kubernetes_role_binding" "argocd-prod" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "${var.studentname_prefix}${count.index + 1}"
+    namespace = "${var.studentname-prefix}${count.index + 1}"
   }
 
   count = var.count-students
@@ -81,7 +81,7 @@ resource "kubernetes_role_binding" "argocd-prod" {
 # Student Dev Namespaces
 resource "rancher2_namespace" "student-namespace-dev" {
 
-  name       = "${var.studentname_prefix}${count.index + 1}-dev"
+  name       = "${var.studentname-prefix}${count.index + 1}-dev"
   project_id = var.rancher_training_project.id
 
   labels = {
@@ -96,7 +96,7 @@ resource "rancher2_namespace" "student-namespace-dev" {
 resource "kubernetes_role_binding" "student-dev" {
   metadata {
     name      = "admin-rb"
-    namespace = "${var.studentname_prefix}${count.index + 1}-dev"
+    namespace = "${var.studentname-prefix}${count.index + 1}-dev"
   }
 
   role_ref {
@@ -108,7 +108,7 @@ resource "kubernetes_role_binding" "student-dev" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "${var.studentname_prefix}${count.index + 1}"
+    namespace = "${var.studentname-prefix}${count.index + 1}"
   }
 
   count = var.count-students
@@ -117,7 +117,7 @@ resource "kubernetes_role_binding" "student-dev" {
 resource "kubernetes_role_binding" "argocd-dev" {
   metadata {
     name      = "argocd-rb"
-    namespace = "${var.studentname_prefix}${count.index + 1}-dev"
+    namespace = "${var.studentname-prefix}${count.index + 1}-dev"
   }
 
   role_ref {
@@ -129,7 +129,7 @@ resource "kubernetes_role_binding" "argocd-dev" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "${var.studentname_prefix}${count.index + 1}"
+    namespace = "${var.studentname-prefix}${count.index + 1}"
   }
 
   count = var.count-students
@@ -140,7 +140,7 @@ resource "kubernetes_role_binding" "argocd-dev" {
 resource "kubernetes_role_binding" "argocd" {
   metadata {
     name      = "argocd-rb"
-    namespace = "${var.studentname_prefix}${count.index + 1}"
+    namespace = "${var.studentname-prefix}${count.index + 1}"
   }
 
   role_ref {
@@ -152,7 +152,7 @@ resource "kubernetes_role_binding" "argocd" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "${var.studentname_prefix}${count.index + 1}"
+    namespace = "${var.studentname-prefix}${count.index + 1}"
   }
 
   count = var.count-students
@@ -261,9 +261,9 @@ resource "helm_release" "argocd" {
   }
 
   values = [
-    templatefile("${path.module}/manifests/values_account_student.yaml", { studentname_prefix = var.studentname_prefix, count-students = var.count-students, passwords = var.student-passwords }),
-    templatefile("${path.module}/manifests/values_rbacConfig_policy.yaml", { studentname_prefix = var.studentname_prefix, count-students = var.count-students }),
-    templatefile("${path.module}/manifests/values_projects.yaml", { studentname_prefix = var.studentname_prefix, count-students = var.count-students }),
+    templatefile("${path.module}/manifests/values_account_student.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students, passwords = var.student-passwords }),
+    templatefile("${path.module}/manifests/values_rbacConfig_policy.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students }),
+    templatefile("${path.module}/manifests/values_projects.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students }),
   ]
 
 }

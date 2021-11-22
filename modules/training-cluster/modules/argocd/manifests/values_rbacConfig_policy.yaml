@@ -17,5 +17,5 @@ server:
       p, role:student, projects, get, argocd-training, allow
 
       %{~ for i in range(count-students) ~}
-      g, ${studentname_prefix}${i+1}, role:student
+      g, ${studentname-prefix}${i+1}, role:student
       %{~ endfor ~}

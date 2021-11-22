@@ -351,7 +351,7 @@ module "webshell" {
 
   rancher_training_project = rancher2_project.training
   rancher_quotalab_project = rancher2_project.quotalab
-  student-name             = "${var.studentname_prefix}${count.index + 1}"
+  student-name             = "${var.studentname-prefix}${count.index + 1}"
   student-password         = random_password.student-passwords[count.index].result
 
   count = var.count-students
@@ -368,7 +368,7 @@ module "argocd" {
 
   count-students     = var.count-students
   student-passwords  = random_password.student-passwords
-  studentname_prefix = var.studentname_prefix
+  studentname-prefix = var.studentname-prefix
 
 
   count = local.argocd_enabled

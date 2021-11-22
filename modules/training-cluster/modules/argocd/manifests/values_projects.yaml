@@ -11,11 +11,11 @@ server:
      - '*'
      destinations:
      %{~ for i in range(count-students) ~}
-     - namespace: ${studentname_prefix}${i+1}
+     - namespace: ${studentname-prefix}${i+1}
        server: https://kubernetes.default.svc
-     - namespace: ${studentname_prefix}${i+1}-prod
+     - namespace: ${studentname-prefix}${i+1}-prod
        server: https://kubernetes.default.svc
-     - namespace: ${studentname_prefix}${i+1}-dev
+     - namespace: ${studentname-prefix}${i+1}-dev
        server: https://kubernetes.default.svc
      %{~ endfor ~}
      clusterResourceWhitelist: []

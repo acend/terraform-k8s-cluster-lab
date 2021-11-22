@@ -93,8 +93,8 @@ variable "count-students" {
 }
 
 variable "studentname-prefix" {
-  type    = list(any)
-  default = "student"
+  type    = string
+  default = "user"
 }
 
 variable "argocd-enabled" {

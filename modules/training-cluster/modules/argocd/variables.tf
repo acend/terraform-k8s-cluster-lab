@@ -20,6 +20,6 @@ variable "student-passwords" {
 }
 
 variable "studentname-prefix" {
-  type    = list(any)
+  type    = string
   default = "student"
 }

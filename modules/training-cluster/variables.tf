@@ -52,7 +52,7 @@ variable "letsencrypt_email" {
 }
 
 variable "acme-config" {
-  type    = string
+  type = string
 }
 
 
@@ -88,12 +88,12 @@ variable "rke_network_plugin" {
 }
 
 variable "count-students" {
-  type        = number
-  default     = 0
+  type    = number
+  default = 0
 }
 
 variable "studentname-prefix" {
-  type = list
+  type    = list(any)
   default = "student"
 }
 

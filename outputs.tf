@@ -18,6 +18,6 @@ output "webshell-infos" {
 // Argo CD Output
 
 output "argocd-admin-secret" {
-  value = module.training-cluster.argocd-admin-secret
+  value     = module.training-cluster.argocd-admin-secret
   sensitive = true
 }

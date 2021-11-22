@@ -7,23 +7,23 @@ variable "rancher_quotalab_project" {
 
 
 variable "chart-repository" {
-    type = string
-    default = "https://acend.github.io/webshell-env/"
+  type    = string
+  default = "https://acend.github.io/webshell-env/"
 }
 
 variable "chart-version" {
-    type = string
-    default = "0.1.9"
+  type    = string
+  default = "0.1.9"
 }
 
 variable "student-name" {
-    type = string
+  type = string
 }
 
 variable "student-password" {
-    type = string
+  type = string
 }
 
 variable "domain" {
-    default = "labapp.acend.ch"
+  default = "labapp.acend.ch"
 }

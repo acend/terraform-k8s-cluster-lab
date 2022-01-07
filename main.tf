@@ -28,4 +28,7 @@ module "training-cluster" {
 
   # Argocd
   argocd-enabled = var.argocd-enabled
+
+  # Gitea
+  gitea-enabled = var.gitea-enabled
 }

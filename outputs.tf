@@ -21,3 +21,4 @@ output "argocd-admin-secret" {
   value     = module.training-cluster.argocd-admin-secret
   sensitive = true
 }
+

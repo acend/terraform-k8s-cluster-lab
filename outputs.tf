@@ -22,3 +22,9 @@ output "argocd-admin-secret" {
   sensitive = true
 }
 
+// Gitea Output
+
+output "gitea-admin-password" {
+  value     = module.training-cluster.gitea-admin-password
+  sensitive = true
+}

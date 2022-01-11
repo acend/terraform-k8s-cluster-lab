@@ -59,6 +59,16 @@ resource "helm_release" "gitea" {
   }
 
   set {
+    name  = "ingress.hosts[0].paths[0].path"
+    value = "/"
+  }
+
+    set {
+    name  = "ingress.hosts[0].paths[0].pathType"
+    value = "Prefix"
+  }
+
+  set {
     name  = "ingress.tls[0].hosts[0]"
     value = "gitea.labapp.acend.ch"
   }

@@ -34,12 +34,12 @@ resource "helm_release" "gitea" {
   
   set {
     name  = "gitea.admin.passowrd"
-    value = random_password.admin-password
+    value = random_password.admin-password.result
   }
 
   set {
     name  = "gitea.postgresql.global.postgresql.postgresqlPassword"
-    value = random_password.pg-password
+    value = random_password.pg-password.result
   }
 
   set {

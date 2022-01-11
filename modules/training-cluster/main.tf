@@ -37,6 +37,7 @@ locals {
   kube_token     = local.kube_config.users[0].user.token
   cilium_enabled = var.network_plugin == "cilium" ? 1 : 0
   argocd_enabled = var.argocd-enabled ? 1 : 0
+  gitea_enabled  = var.gitea-enabled ? 1 : 0
 }
 
 
@@ -333,7 +334,7 @@ module "cilium" {
 }
 
 
-# Create Passwords for the students (shared by multiple apps like webshell and argocd)
+# Create Passwords for the students (shared by multiple apps like webshell, argocd and gitea)
 resource "random_password" "student-passwords" {
   length           = 16
   special          = true
@@ -372,4 +373,21 @@ module "argocd" {
 
 
   count = local.argocd_enabled
+}
+
+# Deploy Gitea and configure it for the students
+module "gitea" {
+  source = "./modules/gitea"
+
+  rancher_system_project   = data.rancher2_project.system
+  rancher_training_project = rancher2_project.training
+
+  depends_on = [rancher2_cluster_sync.training]
+
+  count-students     = var.count-students
+  student-passwords  = random_password.student-passwords
+  studentname-prefix = var.studentname-prefix
+
+
+  count = local.gitea_enabled
 }

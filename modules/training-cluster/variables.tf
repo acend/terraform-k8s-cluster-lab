@@ -101,3 +101,8 @@ variable "argocd-enabled" {
   type    = bool
   default = false
 }
+
+variable "gitea-enabled" {
+  type    = bool
+  default = false
+}

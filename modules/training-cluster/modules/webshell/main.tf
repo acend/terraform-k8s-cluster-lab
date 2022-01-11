@@ -133,6 +133,9 @@ resource "helm_release" "webshell" {
     value = "Recreate"
   }
 
-
+  set {
+    name  = "dind.persistence.enabled"
+    value = "true"
+  }
 
 }

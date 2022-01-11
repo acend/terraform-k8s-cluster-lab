@@ -33,7 +33,7 @@ resource "helm_release" "gitea" {
   namespace  = rancher2_namespace.gitea-namespace.name
   
   set {
-    name  = "gitea.admin.passowrd"
+    name  = "gitea.admin.password"
     value = random_password.admin-password.result
   }
 

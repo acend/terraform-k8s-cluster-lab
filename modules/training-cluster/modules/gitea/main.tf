@@ -48,12 +48,13 @@ resource "helm_release" "gitea" {
   }
 
   set {
-    name  = "server.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/force-ssl-redirect"
+    name  = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/force-ssl-redirect"
     value = "true"
+    type  = "string"
   }
 
   set {
-    name  = "ingress.hosts[0]"
+    name  = "ingress.hosts[0].host"
     value = "gitea.labapp.acend.ch"
   }
 

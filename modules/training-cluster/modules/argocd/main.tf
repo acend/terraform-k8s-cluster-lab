@@ -37,10 +37,11 @@ resource "rancher2_namespace" "student-namespace-prod" {
 
 // Allow to use the SA from Webshell Namespace to also access this argocd student prod Namespace
 resource "kubernetes_role_binding" "student-prod" {
+
+
   metadata {
     name      = "admin-rb"
-    namespace = "${var.studentname-prefix}${count.index + 1}-prod"
-  }
+    namespace = rancher2_namespace.student-namespace-prod[count.index].name
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
@@ -60,7 +61,7 @@ resource "kubernetes_role_binding" "student-prod" {
 resource "kubernetes_role_binding" "argocd-prod" {
   metadata {
     name      = "argocd-rb"
-    namespace = "${var.studentname-prefix}${count.index + 1}-prod"
+    namespace = rancher2_namespace.student-namespace-prod[count.index].name
   }
 
   role_ref {
@@ -96,7 +97,7 @@ resource "rancher2_namespace" "student-namespace-dev" {
 resource "kubernetes_role_binding" "student-dev" {
   metadata {
     name      = "admin-rb"
-    namespace = "${var.studentname-prefix}${count.index + 1}-dev"
+    namespace = rancher2_namespace.student-namespace-dev[count.index].name
   }
 
   role_ref {
@@ -117,7 +118,7 @@ resource "kubernetes_role_binding" "student-dev" {
 resource "kubernetes_role_binding" "argocd-dev" {
   metadata {
     name      = "argocd-rb"
-    namespace = "${var.studentname-prefix}${count.index + 1}-dev"
+    namespace = rancher2_namespace.student-namespace-dev[count.index].name
   }
 
   role_ref {

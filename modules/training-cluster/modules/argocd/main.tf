@@ -42,6 +42,7 @@ resource "kubernetes_role_binding" "student-prod" {
   metadata {
     name      = "admin-rb"
     namespace = rancher2_namespace.student-namespace-prod[count.index].name
+  }
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
@@ -162,7 +163,7 @@ resource "kubernetes_role_binding" "argocd" {
 // Allow access to argocd resrouces in argocd namespace
 resource "kubernetes_role_binding" "argocd-app" {
   metadata {
-    name      = "argocd-app-rb"
+    name      = "argocd-app-${var.studentname-prefix}${count.index + 1}-rb"
     namespace = rancher2_namespace.argocd-namespace.name
   }
 

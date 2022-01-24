@@ -169,6 +169,15 @@ resource "rancher2_cluster" "training" {
           feature-gates = "RemoveSelfLink=false"
         }
       }
+      kubelet {
+        extra_args = {
+          "kube-reserved"   = "cpu=200m,memory=1Gi"
+          "system-reserved" = "cpu=200m,memory=1Gi"
+          "eviction-hard"   = "memory.available<500Mi"
+          "max-pods"        = "70"
+        }
+      }
+
     }
   }
 }

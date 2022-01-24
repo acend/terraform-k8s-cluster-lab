@@ -338,7 +338,7 @@ module "cilium" {
 resource "random_password" "student-passwords" {
   length           = 16
   special          = true
-  override_special = "_%@"
+  override_special = ".-_"
 
   count = var.count-students
 }

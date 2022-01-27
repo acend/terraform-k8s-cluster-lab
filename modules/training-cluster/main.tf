@@ -253,59 +253,169 @@ resource "rancher2_project_role_template_binding" "quotalab-project-member" {
   user_id          = data.rancher2_user.acend-training-user.id
 }
 
-resource "rancher2_app" "cloudscale-csi" {
+resource "helm_release" "cloudscale-csi" {
 
-  catalog_name     = data.rancher2_catalog.puzzle.name
-  name             = "cloudscale-csi"
-  project_id       = data.rancher2_project.system.id
-  template_name    = "cloudscale-csi"
-  template_version = "0.2.3"
-  target_namespace = "kube-system"
-  answers = {
-    "cloudscale.access_token" = var.cloudscale_token
+  name       = "cloudscale-csi"
+  repository = "https://charts.k8s.puzzle.ch"
+  chart      = "cloudscale-csi"
+  version    = "0.2.4"
+  namespace  = "kube-system"
+
+  set {
+    name  = "cloudscale.access_token"
+    value = var.cloudscale_token
   }
+
+}
+resource "helm_release" "cloudscale-vip" {
+
+  name       = "cloudscale-vip-v4"
+  repository = "https://charts.k8s.puzzle.ch"
+  chart      = "cloudscale-vip"
+  version    = "0.1.2"
+  namespace  = "kube-system"
+
+
+  set {
+    name  = "cloudscale.access_token"
+    value = var.cloudscale_token
+  }
+
+  set {
+    name  = "keepalived.interface"
+    value = "ens3"
+  }
+
+  set {
+    name  = "keepalived.track_interface"
+    value = "ens3"
+  }
+
+  set {
+    name  = "keepalived.vip"
+    value = replace(cloudscale_floating_ip.vip-v4.network, "/32", "")
+  }
+
+  set {
+    name  = "keepalived.master_host"
+    value = cloudscale_server.nodes-master[0].name
+  }
+
+  set {
+    name  = "keepalived.unicast_peers[0]"
+    value = cloudscale_server.nodes-master[0].public_ipv4_address
+  }
+
+  set {
+    name  = "keepalived.unicast_peers[1]"
+    value = cloudscale_server.nodes-master[1].public_ipv4_address
+  }
+
+  set {
+    name  = "keepalived.unicast_peers[2]"
+    value = cloudscale_server.nodes-master[2].public_ipv4_address
+  }
+  set {
+    name  = "nodeSelector.node-role\\.kubernetes\\.io/controlplane"
+    value = "true"
+  }
+
+  set {
+    name  = "tolerations[0].key"
+    value = "node-role.kubernetes.io/control-plane"
+  }
+
+  set {
+    name  = "tolerations[0].effect"
+    value = "NoSchedule"
+  }
+
+  set {
+    name  = "tolerations[0].operator"
+    value = "Equal"
+  }
+
+  set {
+    name  = "tolerations[0].operator"
+    value = "true"
+  }
+
 }
 
-resource "rancher2_app" "cloudscale-vip" {
+resource "helm_release" "cloudscale-vip-v6" {
 
-  catalog_name     = data.rancher2_catalog.puzzle.name
-  name             = "cloudscale-vip-v4"
-  project_id       = data.rancher2_project.system.id
-  template_name    = "cloudscale-vip"
-  template_version = "0.1.2"
-  target_namespace = "kube-system"
-  answers = {
-    "cloudscale.access_token"     = var.cloudscale_token
-    "keepalived.interface"        = "ens3"
-    "keepalived.track_interface"  = "ens3"
-    "keepalived.vip"              = replace(cloudscale_floating_ip.vip-v4.network, "/32", "")
-    "keepalived.master_host"      = cloudscale_server.nodes-master[0].name
-    "keepalived.unicast_peers[0]" = cloudscale_server.nodes-master[0].public_ipv4_address
-    "keepalived.unicast_peers[1]" = cloudscale_server.nodes-master[1].public_ipv4_address
-    "keepalived.unicast_peers[2]" = cloudscale_server.nodes-master[2].public_ipv4_address
-    "nodeSelector.vip"            = "true"
+  name       = "cloudscale-vip-v6"
+  repository = "https://charts.k8s.puzzle.ch"
+  chart      = "cloudscale-vip"
+  version    = "0.1.2"
+  namespace  = "kube-system"
+
+
+  set {
+    name  = "cloudscale.access_token"
+    value = var.cloudscale_token
   }
-}
 
-resource "rancher2_app" "cloudscale-vip-v6" {
-
-  catalog_name     = data.rancher2_catalog.puzzle.name
-  name             = "cloudscale-vip-v6"
-  project_id       = data.rancher2_project.system.id
-  template_name    = "cloudscale-vip"
-  template_version = "0.1.2"
-  target_namespace = "kube-system"
-  answers = {
-    "cloudscale.access_token"     = var.cloudscale_token
-    "keepalived.interface"        = "ens3"
-    "keepalived.track_interface"  = "ens3"
-    "keepalived.vip"              = replace(cloudscale_floating_ip.vip-v6.network, "/128", "")
-    "keepalived.master_host"      = cloudscale_server.nodes-master[0].name
-    "keepalived.unicast_peers[0]" = cloudscale_server.nodes-master[0].public_ipv6_address
-    "keepalived.unicast_peers[1]" = cloudscale_server.nodes-master[1].public_ipv6_address
-    "keepalived.unicast_peers[2]" = cloudscale_server.nodes-master[2].public_ipv6_address
-    "nodeSelector.vip"            = "true"
+  set {
+    name  = "keepalived.interface"
+    value = "ens3"
   }
+
+  set {
+    name  = "keepalived.track_interface"
+    value = "ens3"
+  }
+
+  set {
+    name  = "keepalived.vip"
+    value = replace(cloudscale_floating_ip.vip-v6.network, "/128", "")
+  }
+
+  set {
+    name  = "keepalived.master_host"
+    value = cloudscale_server.nodes-master[0].name
+  }
+
+  set {
+    name  = "keepalived.unicast_peers[0]"
+    value = cloudscale_server.nodes-master[0].public_ipv6_address
+  }
+
+  set {
+    name  = "keepalived.unicast_peers[1]"
+    value = cloudscale_server.nodes-master[1].public_ipv6_address
+  }
+
+  set {
+    name  = "keepalived.unicast_peers[2]"
+    value = cloudscale_server.nodes-master[2].public_ipv6_address
+  }
+
+  set {
+    name  = "nodeSelector.node-role\\.kubernetes\\.io/controlplane"
+    value = "true"
+  }
+
+  set {
+    name  = "tolerations[0].key"
+    value = "node-role.kubernetes.io/control-plane"
+  }
+
+  set {
+    name  = "tolerations[0].effect"
+    value = "NoSchedule"
+  }
+
+  set {
+    name  = "tolerations[0].operator"
+    value = "Equal"
+  }
+
+  set {
+    name  = "tolerations[0].operator"
+    value = "true"
+  }
+
 }
 
 
@@ -348,7 +458,7 @@ resource "random_password" "student-passwords" {
 module "webshell" {
   source = "./modules/webshell"
 
-  depends_on = [rancher2_cluster_sync.training, rancher2_app.cloudscale-csi]
+  depends_on = [rancher2_cluster_sync.training, helm_release.cloudscale-csi]
 
   rancher_training_project = rancher2_project.training
   rancher_quotalab_project = rancher2_project.quotalab

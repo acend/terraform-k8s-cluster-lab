@@ -322,6 +322,21 @@ resource "helm_release" "cloudscale-vip" {
   }
 
   set {
+    name  = "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].key"
+    value = "node-role.kubernetes.io/controlplane"
+  }
+
+  set {
+    name  = "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].operator"
+    value = "In"
+  }
+  set {
+    name  = "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].values[0]"
+    value = "true"
+    type  = "string"
+  }
+
+  set {
     name  = "tolerations[0].key"
     value = "node-role.kubernetes.io/control-plane"
   }
@@ -395,6 +410,21 @@ resource "helm_release" "cloudscale-vip-v6" {
 
   set {
     name  = "nodeSelector.node-role\\.kubernetes\\.io/controlplane"
+    value = "true"
+    type  = "string"
+  }
+
+  set {
+    name  = "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].key"
+    value = "node-role.kubernetes.io/controlplane"
+  }
+
+  set {
+    name  = "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].operator"
+    value = "In"
+  }
+  set {
+    name  = "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].values[0]"
     value = "true"
     type  = "string"
   }

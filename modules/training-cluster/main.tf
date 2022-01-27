@@ -337,7 +337,7 @@ resource "helm_release" "cloudscale-vip" {
   }
 
   set {
-    name  = "tolerations[0].operator"
+    name  = "tolerations[0].value"
     value = "true"
     type  = "string"
   }
@@ -415,7 +415,7 @@ resource "helm_release" "cloudscale-vip-v6" {
   }
 
   set {
-    name  = "tolerations[0].operator"
+    name  = "tolerations[0].value"
     value = "true"
     type  = "string"
   }

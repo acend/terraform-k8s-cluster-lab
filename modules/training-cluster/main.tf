@@ -318,6 +318,7 @@ resource "helm_release" "cloudscale-vip" {
   set {
     name  = "nodeSelector.node-role\\.kubernetes\\.io/controlplane"
     value = "true"
+    type  = "string"
   }
 
   set {
@@ -338,6 +339,7 @@ resource "helm_release" "cloudscale-vip" {
   set {
     name  = "tolerations[0].operator"
     value = "true"
+    type  = "string"
   }
 
 }
@@ -394,6 +396,7 @@ resource "helm_release" "cloudscale-vip-v6" {
   set {
     name  = "nodeSelector.node-role\\.kubernetes\\.io/controlplane"
     value = "true"
+    type  = "string"
   }
 
   set {
@@ -414,6 +417,7 @@ resource "helm_release" "cloudscale-vip-v6" {
   set {
     name  = "tolerations[0].operator"
     value = "true"
+    type  = "string"
   }
 
 }

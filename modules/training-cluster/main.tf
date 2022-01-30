@@ -266,6 +266,50 @@ resource "helm_release" "cloudscale-csi" {
     value = var.cloudscale_token
   }
 
+  set {
+    name  = "node.tolerations[0].key"
+    value = "node-role.kubernetes.io/control-plane"
+  }
+
+  set {
+    name  = "node.tolerations[0].effect"
+    value = "NoSchedule"
+  }
+
+  set {
+    name  = "node.tolerations[0].operator"
+    value = "Equal"
+  }
+
+  set {
+    name  = "node.tolerations[0].value"
+    value = "true"
+    type  = "string"
+  }
+
+  set {
+    name  = "controller.tolerations[0].key"
+    value = "node-role.kubernetes.io/control-plane"
+  }
+
+  set {
+    name  = "controller.tolerations[0].effect"
+    value = "NoSchedule"
+  }
+
+  set {
+    name  = "controller.tolerations[0].operator"
+    value = "Equal"
+  }
+
+  set {
+    name  = "controller.tolerations[0].value"
+    value = "true"
+    type  = "string"
+  }
+
+
+
 }
 resource "helm_release" "cloudscale-vip" {
 

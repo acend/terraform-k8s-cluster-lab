@@ -101,7 +101,8 @@ resource "cloudscale_server" "nodes-master" {
     ignore_changes = [
       # Ignore changes to volumes
       # cloudscale-csi can add volumes
-      volumes[1]
+      volumes[1],
+      user_data
     ]
   }
 
@@ -120,6 +121,15 @@ resource "cloudscale_server" "nodes-worker" {
   user_data = data.template_file.cloudinit_worker.rendered
 
   count = var.node_count_worker
+
+    lifecycle {
+    ignore_changes = [
+      # Ignore changes to volumes
+      # cloudscale-csi can add volumes
+      volumes[1],
+      user_data
+    ]
+  }
 
 }
 
@@ -169,6 +179,15 @@ resource "rancher2_cluster" "training" {
           feature-gates = "RemoveSelfLink=false"
         }
       }
+      kubelet {
+        extra_args = {
+          "kube-reserved"   = "cpu=200m,memory=1Gi"
+          "system-reserved" = "cpu=200m,memory=1Gi"
+          "eviction-hard"   = "memory.available<500Mi"
+          "max-pods"        = "70"
+        }
+      }
+
     }
   }
 }

@@ -11,7 +11,7 @@ data "template_file" "cloudinit_uservm" {
   template = file("${path.module}/manifests/cloudinit.yaml")
 
   vars = {
-    username = "${var.studentname-prefix}${count.index}"
+    username = "${var.studentname-prefix}${count.index+1}"
     sshkey = tls_private_key.user-ssh-key[count.index].public_key_openssh
   }
 

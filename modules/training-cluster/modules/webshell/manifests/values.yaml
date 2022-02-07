@@ -3,10 +3,7 @@ init:
   command:
   - sh
   - -c
-  - echo Welcome to the acend theia ide > /home/project/welcome &&
-  - echo \nYour VM IP  is ${ip-address} >> /home/project/welcome && 
-  - echo \nYou can login to the vm using 'ssh ${ip-address}' >> /home/project/welcome &&
-  - echo ${ssh-private-key} > /home/theia/.ssh/id_ecdsa && chmod 600 /home/theia/.ssh/id_ecdsa
+  - echo Welcome to the acend theia ide > /home/project/welcome && echo \nYour VM IP  is ${ip-address} >> /home/project/welcome &&  echo \nYou can login to the vm using 'ssh ${ip-address}' >> /home/project/welcome && echo "${ssh-private-key}" > /home/theia/.ssh/id_ecdsa && chmod 600 /home/theia/.ssh/id_ecdsa
 %{ else }
 init:
   command:

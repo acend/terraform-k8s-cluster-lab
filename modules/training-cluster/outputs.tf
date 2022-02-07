@@ -17,3 +17,7 @@ output "argocd-admin-secret" {
 output "gitea-admin-password" {
   value = var.gitea-enabled? module.gitea[0].admin-password : ""
 }
+
+output "student-vm-ip-address" {
+  value = var.user-vms-enabled ? module.student-vms[0].ip-address : ""
+}

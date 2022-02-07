@@ -566,7 +566,9 @@ module "webshell" {
   student-password         = random_password.student-passwords[count.index].result
 
   user-vm-enabled = var.user-vms-enabled
-  user-ssh-key = var.user-vms-enabled ? [module.student-vms[0].user-ssh-keys[count.index]] : []
+  student-vms = var.user-vms-enabled ? [module.student-vms[0]] : null
+
+
 
   count = var.count-students
 }

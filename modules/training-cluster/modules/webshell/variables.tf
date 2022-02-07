@@ -32,5 +32,5 @@ variable user-vm-enabled {
   type = bool
 }
 
-variable user-ssh-key {
+variable student-vms {
 }

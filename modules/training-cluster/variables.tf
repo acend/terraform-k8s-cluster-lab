@@ -106,3 +106,8 @@ variable "gitea-enabled" {
   type    = bool
   default = false
 }
+
+variable "user-vms-enabled" {
+  type    = bool
+  default = false
+}

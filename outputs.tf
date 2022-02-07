@@ -28,3 +28,9 @@ output "gitea-admin-password" {
   value     = module.training-cluster.gitea-admin-password
   sensitive = true
 }
+
+// Student VM Output
+
+output "student-vm-ip-address" {
+  value = module.training-cluster.student-vm-ip-address
+}

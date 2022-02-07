@@ -27,3 +27,10 @@ variable "student-password" {
 variable "domain" {
   default = "labapp.acend.ch"
 }
+
+variable user-vm-enabled {
+  type = bool
+}
+
+variable student-vms {
+}

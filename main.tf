@@ -31,4 +31,7 @@ module "training-cluster" {
 
   # Gitea
   gitea-enabled = var.gitea-enabled
+
+  # User VMs
+  user-vms-enabled = var.user-vms-enabled
 }

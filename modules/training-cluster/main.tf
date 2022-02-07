@@ -38,6 +38,7 @@ locals {
   cilium_enabled = var.network_plugin == "cilium" ? 1 : 0
   argocd_enabled = var.argocd-enabled ? 1 : 0
   gitea_enabled  = var.gitea-enabled ? 1 : 0
+  vms-enabled    = var.user-vms-enabled ? 1 : 0
 }
 
 
@@ -136,8 +137,9 @@ resource "cloudscale_server" "nodes-worker" {
 
 # Add a Floating IPv4 address to web-worker01
 resource "cloudscale_floating_ip" "vip-v4" {
-  server     = cloudscale_server.nodes-master[0].id
-  ip_version = 4
+  server        = cloudscale_server.nodes-master[0].id
+  ip_version    = 4
+  prefix_length = 32
 
   lifecycle {
     ignore_changes = [
@@ -150,8 +152,9 @@ resource "cloudscale_floating_ip" "vip-v4" {
 
 # Add a Floating IPv6 network to web-worker01
 resource "cloudscale_floating_ip" "vip-v6" {
-  server     = cloudscale_server.nodes-master[0].id
-  ip_version = 6
+  server        = cloudscale_server.nodes-master[0].id
+  ip_version    = 6
+  prefix_length = 128
 
   lifecycle {
     ignore_changes = [
@@ -555,15 +558,33 @@ resource "random_password" "student-passwords" {
 module "webshell" {
   source = "./modules/webshell"
 
-  depends_on = [rancher2_cluster_sync.training, helm_release.cloudscale-csi]
+  depends_on = [rancher2_cluster_sync.training, helm_release.cloudscale-csi, module.student-vms]
 
   rancher_training_project = rancher2_project.training
   rancher_quotalab_project = rancher2_project.quotalab
   student-name             = "${var.studentname-prefix}${count.index + 1}"
   student-password         = random_password.student-passwords[count.index].result
 
+  user-vm-enabled = var.user-vms-enabled
+  user-ssh-key = var.user-vms-enabled ? [module.student-vms[0].user-ssh-keys[count.index]] : []
+
   count = var.count-students
 }
+
+module "student-vms" {
+  source = "./modules/student-vms"
+
+
+  count-students     = var.count-students
+  student-passwords  = random_password.student-passwords
+  studentname-prefix = var.studentname-prefix
+
+  ssh_keys = var.ssh_keys
+
+
+  count = local.vms-enabled
+}
+
 
 # Deploy ArgoCD and configure it for the students
 module "argocd" {

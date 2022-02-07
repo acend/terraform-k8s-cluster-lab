@@ -43,6 +43,20 @@ resource "kubernetes_role_binding" "student-quotalab" {
 
 }
 
+data "template_file" "values" {
+  template = file("${path.module}/manifests/values.yaml")
+
+  vars = {
+    user-vm-enabled = var.user-vm-enabled
+    student-index   = var.student-index
+
+    ip-address      = var.student-vms[0].ip-address[var.student-index]
+    ssh-public-key  = var.student-vms[0].user-ssh-keys[var.student-index].private_key_pem
+    ssh-private-key = var.student-vms[0].user-ssh-keys[var.student-index].public_key_openssh
+  }
+
+}
+
 resource "helm_release" "webshell" {
 
 
@@ -51,6 +65,10 @@ resource "helm_release" "webshell" {
   chart      = "webshell"
   version    = var.chart-version
   namespace  = rancher2_namespace.student-namespace.name
+
+  values = [
+    "${data.template_file.values.rendered}"
+  ]
 
   set {
     name  = "student"
@@ -137,5 +155,7 @@ resource "helm_release" "webshell" {
     name  = "dind.persistence.enabled"
     value = "true"
   }
+
+
 
 }

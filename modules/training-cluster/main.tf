@@ -562,6 +562,7 @@ module "webshell" {
 
   rancher_training_project = rancher2_project.training
   rancher_quotalab_project = rancher2_project.quotalab
+  student-index            = count.index
   student-name             = "${var.studentname-prefix}${count.index + 1}"
   student-password         = random_password.student-passwords[count.index].result
 

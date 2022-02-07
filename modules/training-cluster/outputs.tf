@@ -19,5 +19,5 @@ output "gitea-admin-password" {
 }
 
 output "student-vm-ip-address" {
-  value = var.user-vms-enabled ? module.student-vms[0].ip-address : ""
+  value = var.user-vms-enabled ? module.student-vms[0].ip-address : []
 }

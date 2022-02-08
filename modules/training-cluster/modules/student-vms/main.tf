@@ -28,16 +28,6 @@ resource "cloudscale_server" "user-vm" {
 
   user_data = data.template_file.cloudinit_uservm[count.index].rendered
 
-
-  lifecycle {
-    ignore_changes = [
-      # Ignore changes to volumes
-      # cloudscale-csi can add volumes
-
-      user_data
-    ]
-  }
-
   count = var.count-students
 
 }

@@ -4,6 +4,7 @@ runcmd:
   - curl -fsSL https://get.docker.com -o get-docker.sh; sh get-docker.sh
   - curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl; install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
   - curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube; mv minikube /usr/local/bin
+  - curl -s https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
   - iptables -I DOCKER-USER -j ACCEPT
 
 mounts:
@@ -16,8 +17,9 @@ package_upgrade: true
 
 users:
   - name: ${username}
-    groups: docker
+    groups: docker, admin
     ssh_authorized_keys:
     - ${sshkey}
     shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
 

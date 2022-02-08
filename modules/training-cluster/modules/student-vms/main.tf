@@ -19,7 +19,7 @@ data "template_file" "cloudinit_uservm" {
 }
 
 resource "cloudscale_server" "user-vm" {
-  name           = "vm-${var.studentname-prefix}-${count.index}"
+  name           = "vm-${var.studentname-prefix}-${count.index+1}"
   flavor_slug    = var.vm-flavor
   image_slug     = "ubuntu-20.04"
   volume_size_gb = 50

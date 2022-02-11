@@ -6,6 +6,7 @@ runcmd:
   - curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube; mv minikube /usr/local/bin
   - curl -s https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
   - iptables -I DOCKER-USER -j ACCEPT
+  - echo 'source <(kubectl completion bash)' >> /home/${username}/.bashrc
 
 mounts:
 - [ bpffs, /sys/fs/bpf, bpf, "default", 0, 0 ]
@@ -13,6 +14,7 @@ mounts:
 package_update: true
 package_upgrade: true
 
+packages: ['jq']
 
 
 users:
@@ -22,4 +24,5 @@ users:
     - ${sshkey}
     shell: /bin/bash
     sudo: ALL=(ALL) NOPASSWD:ALL
+
 

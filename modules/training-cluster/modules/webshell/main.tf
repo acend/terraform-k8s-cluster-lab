@@ -157,6 +157,10 @@ resource "helm_release" "webshell" {
     value = "true"
   }
 
+  set {
+    name  = "rbac.create"
+    value = tostring(var.rbac-enabled)
+  }
 
 
 }

@@ -13,7 +13,7 @@ variable "chart-repository" {
 
 variable "chart-version" {
   type    = string
-  default = "0.2.4"
+  default = "0.2.5"
 }
 
 variable "student-index" {
@@ -36,4 +36,9 @@ variable user-vm-enabled {
 }
 
 variable student-vms {
+}
+
+variable rbac-enabled {
+  type = bool
+  default = true
 }

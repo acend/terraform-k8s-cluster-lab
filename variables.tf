@@ -83,3 +83,7 @@ variable "user-vms-enabled" {
   default = false
 }
 
+variable "webshell-rbac-enabled" {
+  type    = bool
+  default = true
+}

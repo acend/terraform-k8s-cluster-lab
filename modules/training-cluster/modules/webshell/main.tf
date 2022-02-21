@@ -51,9 +51,9 @@ data "template_file" "values" {
     student-index   = var.student-index
 
     student-name    = var.student-name
-    ip-address      = var.student-vms[0].ip-address[var.student-index]
-    ssh-public-key  = chomp(var.student-vms[0].user-ssh-keys[var.student-index].public_key_openssh)
-    ssh-private-key = base64encode(var.student-vms[0].user-ssh-keys[var.student-index].private_key_pem)
+    ip-address      = var.user-vm-enabled ? var.student-vms[0].ip-address[var.student-index] : ""
+    ssh-public-key  = var.user-vm-enabled ? homp(var.student-vms[0].user-ssh-keys[var.student-index].public_key_openssh) : ""
+    ssh-private-key = var.user-vm-enabled ? base64encode(var.student-vms[0].user-ssh-keys[var.student-index].private_key_pem) : ""
   }
 
 }

@@ -22,7 +22,7 @@ resource "rancher2_namespace" "student-namespace-quotalab" {
 
 }
 
-// Allow to use the SA from Webshell Namespace to also access this argocd student prod Namespace
+// Allow to use the SA from Webshell Namespace to also access this quotalab student prod Namespace
 resource "kubernetes_role_binding" "student-quotalab" {
   metadata {
     name      = "admin-rb"
@@ -40,6 +40,8 @@ resource "kubernetes_role_binding" "student-quotalab" {
     name      = "webshell"
     namespace = var.student-name
   }
+
+  count = var.rbac-enabled ? 1 : 0
 
 }
 

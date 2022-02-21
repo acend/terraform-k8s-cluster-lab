@@ -34,4 +34,7 @@ module "training-cluster" {
 
   # User VMs
   user-vms-enabled = var.user-vms-enabled
+
+  # RBAC in Webshell
+  webshell-rbac-enabled = var.webshell-rbac-enabled
 }

@@ -9,7 +9,7 @@ runcmd:
   - echo 'source <(kubectl completion bash)' >> /home/${username}/.bashrc
   - git clone https://github.com/jonmosco/kube-ps1.git /home/${username}/kube-ps1
   - echo 'source /home/${username}/kube-ps1/kube-ps1.sh' >> /home/${username}/.bashrc 
-  - echo 'PS1="\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] $(kube_ps1)\$ "' >> /home/${username}/.bashrc
+  - echo 'PS1='"'"'\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] $(kube_ps1)\$ '"'"'' >> /home/${username}/.bashrc
   - git clone https://github.com/ahmetb/kubectx /opt/kubectx
   - ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx && ln -s /opt/kubectx/kubens /usr/local/bin/kubens
   - COMPDIR=$(pkg-config --variable=completionsdir bash-completion) && ln -sf /opt/kubectx/completion/kubens.bash $COMPDIR/kubens && ln -sf /opt/kubectx/completion/kubectx.bash $COMPDIR/kubectx

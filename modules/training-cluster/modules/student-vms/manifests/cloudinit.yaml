@@ -10,6 +10,11 @@ runcmd:
   - git clone https://github.com/jonmosco/kube-ps1.git /home/${username}/kube-ps1
   - echo 'source /home/${username}/kube-ps1/kube-ps1.sh' >> /home/${username}/.bashrc
   - echo 'PS1='[\u@\h \W $(kube_ps1)]\$ '' >> /home/${username}/.bashrc
+  - git clone https://github.com/ahmetb/kubectx /opt/kubectx
+  - ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx && ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+  - COMPDIR=$(pkg-config --variable=completionsdir bash-completion) && ln -sf /opt/kubectx/completion/kubens.bash $COMPDIR/kubens && ln -sf /opt/kubectx/completion/kubectx.bash $COMPDIR/kubectx
+
+
 
 mounts:
 - [ bpffs, /sys/fs/bpf, bpf, "default", 0, 0 ]

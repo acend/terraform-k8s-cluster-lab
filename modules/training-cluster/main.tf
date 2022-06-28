@@ -290,7 +290,7 @@ resource "helm_release" "cloudscale-csi" {
 
   set {
     name  = "node.tolerations[0].key"
-    value = "node-role.kubernetes.io/control-plane"
+    value = "node-role.kubernetes.io/controlplane"
   }
 
   set {
@@ -311,7 +311,7 @@ resource "helm_release" "cloudscale-csi" {
 
   set {
     name  = "controller.tolerations[0].key"
-    value = "node-role.kubernetes.io/control-plane"
+    value = "node-role.kubernetes.io/controlplane"
   }
 
   set {

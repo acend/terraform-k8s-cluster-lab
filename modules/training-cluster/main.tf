@@ -280,7 +280,7 @@ resource "helm_release" "cloudscale-csi" {
   name       = "cloudscale-csi"
   repository = "https://charts.k8s.puzzle.ch"
   chart      = "cloudscale-csi"
-  version    = "0.3.0"
+  version    = "0.3.1"
   namespace  = "kube-system"
 
   set {

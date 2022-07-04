@@ -31,14 +31,14 @@ variable "domain" {
   default = "labapp.acend.ch"
 }
 
-variable user-vm-enabled {
+variable "user-vm-enabled" {
   type = bool
 }
 
-variable student-vms {
+variable "student-vms" {
 }
 
-variable rbac-enabled {
-  type = bool
+variable "rbac-enabled" {
+  type    = bool
   default = true
 }

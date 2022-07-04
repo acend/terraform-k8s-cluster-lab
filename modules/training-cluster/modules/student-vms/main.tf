@@ -11,15 +11,15 @@ data "template_file" "cloudinit_uservm" {
   template = file("${path.module}/manifests/cloudinit.yaml")
 
   vars = {
-    username = "${var.studentname-prefix}${count.index+1}"
-    sshkey = tls_private_key.user-ssh-key[count.index].public_key_openssh
+    username = "${var.studentname-prefix}${count.index + 1}"
+    sshkey   = tls_private_key.user-ssh-key[count.index].public_key_openssh
   }
 
   count = var.count-students
 }
 
 resource "cloudscale_server" "user-vm" {
-  name           = "vm-${var.studentname-prefix}-${count.index+1}"
+  name           = "vm-${var.studentname-prefix}-${count.index + 1}"
   flavor_slug    = var.vm-flavor
   image_slug     = "ubuntu-20.04"
   volume_size_gb = 50

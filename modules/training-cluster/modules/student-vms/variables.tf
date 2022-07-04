@@ -13,7 +13,7 @@ variable "studentname-prefix" {
 }
 
 variable "vm-flavor" {
-  type = string
+  type    = string
   default = "flex-8"
 }
 

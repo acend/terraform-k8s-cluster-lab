@@ -31,7 +31,7 @@ resource "helm_release" "gitea" {
   repository = var.chart-repository
   chart      = "gitea"
   namespace  = rancher2_namespace.gitea-namespace.name
-  
+
   set {
     name  = "gitea.admin.password"
     value = random_password.admin-password.result
@@ -63,7 +63,7 @@ resource "helm_release" "gitea" {
     value = "/"
   }
 
-    set {
+  set {
     name  = "ingress.hosts[0].paths[0].pathType"
     value = "Prefix"
   }

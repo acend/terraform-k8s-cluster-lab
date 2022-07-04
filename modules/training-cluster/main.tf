@@ -123,7 +123,7 @@ resource "cloudscale_server" "nodes-worker" {
 
   count = var.node_count_worker
 
-    lifecycle {
+  lifecycle {
     ignore_changes = [
       # Ignore changes to volumes
       # cloudscale-csi can add volumes
@@ -593,7 +593,7 @@ module "student-vms" {
 # Deploy ArgoCD and configure it for the students
 module "argocd" {
   source = "./modules/argocd"
-  
+
 
   rancher_system_project   = data.rancher2_project.system
   rancher_training_project = rancher2_project.training

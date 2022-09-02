@@ -3,7 +3,7 @@ variable "rancher_system_project" {
 
 variable "chart_version" {
   type    = string
-  default = "1.10.3"
+  default = "1.12.1"
 }
 
 variable "public_ip" {

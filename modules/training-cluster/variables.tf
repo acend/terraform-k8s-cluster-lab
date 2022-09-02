@@ -18,13 +18,13 @@ variable "rancher2_api_url" {
 variable "node_flavor_master" {
   description = "The cloudscale.ch VM flavor to use for the master nodes."
   type        = string
-  default     = "flex-8"
+  default     = "flex-8-4"
 }
 
 variable "node_flavor_worker" {
   description = "The cloudscale.ch VM flavor to use for the worker nodes."
   type        = string
-  default     = "flex-8"
+  default     = "flex-8-4"
 }
 
 variable "node_count_master" {
@@ -70,7 +70,7 @@ variable "network_plugin" {
 
 variable "kubernetes_version" {
   type    = string
-  default = "v1.20.15-rancher1-4"
+  default = "v1.24.2-rancher1-1"
 }
 
 variable "ssh_keys" {

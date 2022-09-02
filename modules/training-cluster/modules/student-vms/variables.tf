@@ -14,7 +14,7 @@ variable "studentname-prefix" {
 
 variable "vm-flavor" {
   type    = string
-  default = "flex-8"
+  default = "flex-8-4"
 }
 
 variable "ssh_keys" {

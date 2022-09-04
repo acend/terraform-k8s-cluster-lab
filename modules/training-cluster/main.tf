@@ -177,11 +177,7 @@ resource "rancher2_cluster" "training" {
       plugin = lookup(var.rke_network_plugin, var.network_plugin, "canal")
     }
     services {
-      kube_api {
-        extra_args = {
-          feature-gates = "RemoveSelfLink=false"
-        }
-      }
+
       kubelet {
         extra_args = {
           "kube-reserved"   = "cpu=200m,memory=1Gi"

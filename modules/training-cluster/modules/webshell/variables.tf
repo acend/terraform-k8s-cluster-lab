@@ -13,7 +13,7 @@ variable "chart-repository" {
 
 variable "chart-version" {
   type    = string
-  default = "0.2.10"
+  default = "0.2.14"
 }
 
 variable "student-index" {

@@ -2,6 +2,7 @@ terraform {
   required_providers {
     helm = {
       source = "hashicorp/helm"
+      version = "2.6.0"
     }
     k8s = {
       source = "banzaicloud/k8s"

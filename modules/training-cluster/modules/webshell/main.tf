@@ -4,7 +4,8 @@ resource "rancher2_namespace" "student-namespace" {
   project_id = var.rancher_training_project.id
 
   labels = {
-    certificate-labapp = "true" # this will copy the wildcard cert created with cert-manager using the kubed installation
+    certificate-labapp            = "true" # this will copy the wildcard cert created with cert-manager using the kubed installation
+    "kubernetes.io/metadata.name" = var.student-name
   }
 }
 

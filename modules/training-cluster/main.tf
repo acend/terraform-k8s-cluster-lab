@@ -92,7 +92,7 @@ resource "cloudscale_server" "nodes-master" {
   name           = "${var.cluster_name}-node-master-${count.index}"
   flavor_slug    = var.node_flavor_master
   image_slug     = "ubuntu-20.04"
-  volume_size_gb = 100
+  volume_size_gb = 50
   ssh_keys       = var.ssh_keys
   use_ipv6       = true
 
@@ -115,7 +115,7 @@ resource "cloudscale_server" "nodes-worker" {
   name           = "${var.cluster_name}-node-worker-${count.index}"
   flavor_slug    = var.node_flavor_worker
   image_slug     = "ubuntu-20.04"
-  volume_size_gb = 100
+  volume_size_gb = 50
   ssh_keys       = var.ssh_keys
   use_ipv6       = true
 

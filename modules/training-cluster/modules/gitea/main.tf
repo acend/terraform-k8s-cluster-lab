@@ -55,7 +55,7 @@ resource "helm_release" "gitea" {
 
   set {
     name  = "ingress.hosts[0].host"
-    value = "gitea.labapp.acend.ch"
+    value = "gitea.${var.domain}"
   }
 
   set {
@@ -70,7 +70,7 @@ resource "helm_release" "gitea" {
 
   set {
     name  = "ingress.tls[0].hosts[0]"
-    value = "gitea.labapp.acend.ch"
+    value = "gitea.${var.domain}"
   }
 
   set {

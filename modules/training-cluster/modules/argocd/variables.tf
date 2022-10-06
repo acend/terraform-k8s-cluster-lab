@@ -9,6 +9,9 @@ variable "chart-repository" {
   default = "https://argoproj.github.io/argo-helm"
 }
 
+variable "domain" {
+  default = "labapp.acend.ch"
+}
 
 variable "count-students" {
   type    = number

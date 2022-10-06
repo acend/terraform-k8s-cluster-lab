@@ -92,7 +92,7 @@ resource "cloudscale_server" "nodes-master" {
   name           = "${var.cluster_name}-node-master-${count.index}"
   flavor_slug    = var.node_flavor_master
   image_slug     = "ubuntu-20.04"
-  volume_size_gb = 50
+  volume_size_gb = 100
   ssh_keys       = var.ssh_keys
   use_ipv6       = true
 
@@ -598,6 +598,7 @@ module "argocd" {
 
   depends_on = [rancher2_cluster_sync.training, module.webshell] // student namespaces are created in the webshell module
 
+  domain             = var.domain
   count-students     = var.count-students
   student-passwords  = random_password.student-passwords
   studentname-prefix = var.studentname-prefix
@@ -615,6 +616,7 @@ module "gitea" {
 
   depends_on = [rancher2_cluster_sync.training]
 
+  domain             = var.domain
   count-students     = var.count-students
   student-passwords  = random_password.student-passwords
   studentname-prefix = var.studentname-prefix

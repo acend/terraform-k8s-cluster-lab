@@ -92,7 +92,7 @@ resource "cloudscale_server" "nodes-master" {
   name           = "${var.cluster_name}-node-master-${count.index}"
   flavor_slug    = var.node_flavor_master
   image_slug     = "ubuntu-20.04"
-  volume_size_gb = 50
+  volume_size_gb = 100
   ssh_keys       = var.ssh_keys
   use_ipv6       = true
 
@@ -115,7 +115,7 @@ resource "cloudscale_server" "nodes-worker" {
   name           = "${var.cluster_name}-node-worker-${count.index}"
   flavor_slug    = var.node_flavor_worker
   image_slug     = "ubuntu-20.04"
-  volume_size_gb = 50
+  volume_size_gb = 100
   ssh_keys       = var.ssh_keys
   use_ipv6       = true
 
@@ -400,7 +400,7 @@ resource "helm_release" "cloudscale-vip" {
 
   set {
     name  = "tolerations[0].key"
-    value = "node-role.kubernetes.io/control-plane"
+    value = "node-role.kubernetes.io/controlplane"
   }
 
   set {
@@ -493,7 +493,7 @@ resource "helm_release" "cloudscale-vip-v6" {
 
   set {
     name  = "tolerations[0].key"
-    value = "node-role.kubernetes.io/control-plane"
+    value = "node-role.kubernetes.io/controlplane"
   }
 
   set {
@@ -561,6 +561,8 @@ module "webshell" {
   student-index            = count.index
   student-name             = "${var.studentname-prefix}${count.index + 1}"
   student-password         = random_password.student-passwords[count.index].result
+
+  domain = var.domain
 
   user-vm-enabled = var.user-vms-enabled
   student-vms     = var.user-vms-enabled ? [module.student-vms[0]] : null

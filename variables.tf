@@ -16,16 +16,25 @@ variable "rancher2_api_url" {
   type = string
 }
 
+variable "cluster_name" {
+  type    = string
+  default = "acend-training-cluster"
+}
+
+variable "domain" {
+  default = "labapp.acend.ch"
+}
+
 variable "node_flavor_master" {
   description = "The cloudscale.ch VM flavor to use for the master nodes."
   type        = string
-  default     = "flex-8"
+  default     = "flex-8-4"
 }
 
 variable "node_flavor_worker" {
   description = "The cloudscale.ch VM flavor to use for the worker nodes."
   type        = string
-  default     = "flex-8"
+  default     = "flex-8-4"
 }
 
 
@@ -48,7 +57,7 @@ variable "cluster_owner_group" {
 }
 
 variable "network_plugin" {
-  description = "The Network Plugin Rancher should install on the Cluster"
+  description = "The Network Plugin Rancher should install on the Cluster. Can be canal or cilium"
   type        = string
   default     = "canal"
 }
@@ -64,26 +73,31 @@ variable "acme-config" {
 }
 
 variable "count-students" {
+  description = "Number of students"
   type    = number
   default = 0
 }
 
 variable "argocd-enabled" {
+  description = "Switch to deploy argocd instance and configure it for the students"
   type    = bool
   default = false
 }
 
 variable "gitea-enabled" {
+  description = "Switch to deploy Gitea"
   type    = bool
   default = false
 }
 
 variable "user-vms-enabled" {
+  description = "Deploy a VM for each User"
   type    = bool
   default = false
 }
 
 variable "webshell-rbac-enabled" {
+  description = "Deploy RBAC to access Kubernetes Cluster for each student"
   type    = bool
   default = true
 }

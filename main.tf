@@ -6,6 +6,9 @@ terraform {
 module "training-cluster" {
   source = "./modules/training-cluster"
 
+  cluster_name = var.cluster_name
+  domain       = var.domain
+
   rancher2_access_key = var.rancher2_access_key
   rancher2_secret_key = var.rancher2_secret_key
   rancher2_api_url    = var.rancher2_api_url

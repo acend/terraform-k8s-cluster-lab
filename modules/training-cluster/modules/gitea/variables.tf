@@ -9,6 +9,9 @@ variable "chart-repository" {
   default = "https://dl.gitea.io/charts/"
 }
 
+variable "domain" {
+  default = "labapp.acend.ch"
+}
 
 variable "count-students" {
   type    = number

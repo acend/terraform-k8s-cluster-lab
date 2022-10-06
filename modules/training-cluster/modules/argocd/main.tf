@@ -211,7 +211,7 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.config.url"
-    value = "https://argocd.labapp.acend.ch"
+    value = "https://argocd.${var.domain}"
   }
 
   set {
@@ -236,12 +236,12 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.ingress.hosts[0]"
-    value = "argocd.labapp.acend.ch"
+    value = "argocd.${var.domain}"
   }
 
   set {
     name  = "server.ingress.tls[0].hosts[0]"
-    value = "argocd.labapp.acend.ch"
+    value = "argocd.${var.domain}"
   }
 
   set {
@@ -266,12 +266,12 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.ingressGrpc.hosts[0]"
-    value = "argocd-grpc.labapp.acend.ch"
+    value = "argocd-grpc.${var.domain}"
   }
 
   set {
     name  = "server.ingressGrpc.tls[0].hosts[0]"
-    value = "argocd-grpc.labapp.acend.ch"
+    value = "argocd-grpc.${var.domain}"
   }
 
   set {

@@ -400,7 +400,7 @@ resource "helm_release" "cloudscale-vip" {
 
   set {
     name  = "tolerations[0].key"
-    value = "node-role.kubernetes.io/control-plane"
+    value = "node-role.kubernetes.io/controlplane"
   }
 
   set {
@@ -493,7 +493,7 @@ resource "helm_release" "cloudscale-vip-v6" {
 
   set {
     name  = "tolerations[0].key"
-    value = "node-role.kubernetes.io/control-plane"
+    value = "node-role.kubernetes.io/controlplane"
   }
 
   set {
@@ -561,6 +561,8 @@ module "webshell" {
   student-index            = count.index
   student-name             = "${var.studentname-prefix}${count.index + 1}"
   student-password         = random_password.student-passwords[count.index].result
+
+  domain = var.domain
 
   user-vm-enabled = var.user-vms-enabled
   student-vms     = var.user-vms-enabled ? [module.student-vms[0]] : null

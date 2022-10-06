@@ -87,6 +87,10 @@ variable "rke_network_plugin" {
   }
 }
 
+variable "domain" {
+  default = "labapp.acend.ch"
+}
+
 variable "count-students" {
   type    = number
   default = 0

@@ -70,7 +70,7 @@ variable "network_plugin" {
 
 variable "kubernetes_version" {
   type    = string
-  default = "v1.24.2-rancher1-1"
+  default = "v1.24.4-rancher1-1"
 }
 
 variable "ssh_keys" {

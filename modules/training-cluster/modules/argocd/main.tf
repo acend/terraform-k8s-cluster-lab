@@ -6,6 +6,7 @@ resource "rancher2_namespace" "argocd-namespace" {
 
   labels = {
     certificate-labapp = "true"
+    "kubernetes.io/metadata.name" = "argocd"
   }
 }
 
@@ -29,6 +30,7 @@ resource "rancher2_namespace" "student-namespace-prod" {
 
   labels = {
     certificate-labapp = "true"
+    "kubernetes.io/metadata.name" = "${var.studentname-prefix}${count.index + 1}-prod"
   }
 
   count = var.count-students
@@ -88,6 +90,7 @@ resource "rancher2_namespace" "student-namespace-dev" {
 
   labels = {
     certificate-labapp = "true"
+    "kubernetes.io/metadata.name" = "${var.studentname-prefix}${count.index + 1}-dev"
   }
 
   count = var.count-students

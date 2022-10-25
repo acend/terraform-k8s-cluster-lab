@@ -38,6 +38,7 @@ locals {
   argocd_enabled = var.argocd-enabled ? 1 : 0
   gitea_enabled  = var.gitea-enabled ? 1 : 0
   vms-enabled    = var.user-vms-enabled ? 1 : 0
+  hasWorker      = var.node_count_worker > 0 ? 1 : 0
 }
 
 

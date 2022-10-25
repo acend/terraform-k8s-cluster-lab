@@ -86,6 +86,56 @@ environment = {
  count = var.node_count_worker
 }
 
+resource "null_resource" "taint-master-when-worker-available" {
+
+  triggers = {
+    kubeconfig = base64encode(nonsensitive(rancher2_cluster_sync.training.kube_config))
+    clusterName = var.cluster_name
+  }
+
+  provisioner "local-exec" {
+    command = <<EOH
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+chmod +x ./kubectl
+
+./kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+
+./kubectl taint node $CLUSTERNAME-node-master-0 node-role.kubernetes.io/control-plane:NoSchedule
+./kubectl taint node $CLUSTERNAME-node-master-1 node-role.kubernetes.io/control-plane:NoSchedule
+./kubectl taint node $CLUSTERNAME-node-master-2 node-role.kubernetes.io/control-plane:NoSchedule
+
+EOH
+    interpreter = ["/bin/bash", "-c"]
+environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+      CLUSTERNAME = self.triggers.clusterName
+  }
+ }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<EOH
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+chmod +x ./kubectl
+
+./kubectl taint node $CLUSTERNAME-node-master-0 node-role.kubernetes.io/control-plane~
+./kubectl taint node $CLUSTERNAME-node-master-1 node-role.kubernetes.io/control-plane~
+./kubectl taint node $CLUSTERNAME-node-master-2 node-role.kubernetes.io/control-plane~
+EOH
+    interpreter = ["/bin/bash", "-c"]
+environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+      CLUSTERNAME = self.triggers.clusterName
+  }
+ }
+
+ count = local.hasWorker
+}
+
 
 # Add a Floating IPv4 address to web-worker01
 resource "cloudscale_floating_ip" "vip-v4" {

@@ -296,14 +296,14 @@ resource "helm_release" "cloudscale-vip" {
     value = cloudscale_server.nodes-master[2].public_ipv4_address
   }
   set {
-    name  = "nodeSelector.node-role\\.kubernetes\\.io/controlplane"
+    name  = "nodeSelector.node-role\\.kubernetes\\.io/control-plane"
     value = "true"
     type  = "string"
   }
 
   set {
     name  = "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].key"
-    value = "node-role.kubernetes.io/controlplane"
+    value = "node-role.kubernetes.io/control-plane"
   }
 
   set {
@@ -318,7 +318,7 @@ resource "helm_release" "cloudscale-vip" {
 
   set {
     name  = "tolerations[0].key"
-    value = "node-role.kubernetes.io/controlplane"
+    value = "node-role.kubernetes.io/control-plane"
   }
 
   set {
@@ -328,13 +328,7 @@ resource "helm_release" "cloudscale-vip" {
 
   set {
     name  = "tolerations[0].operator"
-    value = "Equal"
-  }
-
-  set {
-    name  = "tolerations[0].value"
-    value = "true"
-    type  = "string"
+    value = "Exists"
   }
 
 }
@@ -389,14 +383,14 @@ resource "helm_release" "cloudscale-vip-v6" {
   }
 
   set {
-    name  = "nodeSelector.node-role\\.kubernetes\\.io/controlplane"
+    name  = "nodeSelector.node-role\\.kubernetes\\.io/control-plane"
     value = "true"
     type  = "string"
   }
 
   set {
     name  = "affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].key"
-    value = "node-role.kubernetes.io/controlplane"
+    value = "node-role.kubernetes.io/control-plane"
   }
 
   set {
@@ -411,7 +405,7 @@ resource "helm_release" "cloudscale-vip-v6" {
 
   set {
     name  = "tolerations[0].key"
-    value = "node-role.kubernetes.io/controlplane"
+    value = "node-role.kubernetes.io/control-plane"
   }
 
   set {
@@ -421,13 +415,7 @@ resource "helm_release" "cloudscale-vip-v6" {
 
   set {
     name  = "tolerations[0].operator"
-    value = "Equal"
-  }
-
-  set {
-    name  = "tolerations[0].value"
-    value = "true"
-    type  = "string"
+    value = "Exists"
   }
 
 }

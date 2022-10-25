@@ -104,6 +104,24 @@ resource "cloudscale_floating_ip" "vip-v6" {
   }
 }
 
+resource "rancher2_cluster_v2" "training" {
+  name               = "${var.cluster_name}-rke2"
+  kubernetes_version = "v1.24.4+rke2r1"
+
+  rke_config {
+
+    machine_global_config = <<EOF
+cni: "cilium"
+
+EOF
+
+    chart_values = <<EOF
+  rke2-cilium:
+    {}
+EOF
+  }
+
+}
 
 resource "rancher2_cluster" "training" {
   name        = var.cluster_name
@@ -129,6 +147,8 @@ resource "rancher2_cluster" "training" {
     }
   }
 }
+
+
 resource "rancher2_cluster_sync" "training" {
 
   depends_on = [cloudscale_server.nodes-master]

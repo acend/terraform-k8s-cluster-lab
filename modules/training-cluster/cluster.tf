@@ -133,7 +133,7 @@ environment = {
   }
  }
 
- count = hasWorker
+ count = local.hasWorker
 }
 
 

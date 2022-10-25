@@ -104,7 +104,7 @@ chmod 0755 jq
 
 ./kubectl -n gitea wait --for=condition=Ready Pods -l app=gitea --timeout=90s --kubeconfig <(echo $KUBECONFIG | base64 --decode)
 
-token_result=$(curl -XPOST -H "Content-Type: application/json"  -k -d '{"name":"admin-token-$TIMESTAMP"}' -s -u $GITEA_ADMIN_USER:$GITEA_ADMIN_PASSWORD https://$GITEA_HOST/api/v1/users/$GITEA_ADMIN_USER/tokens)
+token_result=$(curl -XPOST -H "Content-Type: application/json"  -k -d '{"name":"admin-token-'$TIMESTAMP'"}' -s -u $GITEA_ADMIN_USER:$GITEA_ADMIN_PASSWORD https://$GITEA_HOST/api/v1/users/$GITEA_ADMIN_USER/tokens)
 echo $token_result | ./jq '.sha1' | sed 's/\"//g' > ${path.module}/gitea_token
 
 
@@ -138,7 +138,6 @@ data "local_file" "giteaToken" {
 resource "null_resource" "giteaUser" {
 
   triggers = {
-    kubeconfig = base64encode(var.kubeconfig)
     giteaHost = "gitea.${var.domain}"
     giteaToken = data.local_file.giteaToken.content
     password = var.student-passwords[count.index].result
@@ -188,7 +187,6 @@ curl -X 'DELETE' \
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-        KUBECONFIG = self.triggers.kubeconfig
         GITEA_HOST = self.triggers.giteaHost
         GITEA_TOKEN = self.triggers.giteaToken
         USERNAME = self.triggers.username
@@ -201,7 +199,6 @@ EOH
  resource "null_resource" "repo" {
 
   triggers = {
-    kubeconfig = base64encode(var.kubeconfig)
     giteaHost = "gitea.${var.domain}"
     giteaToken = data.local_file.giteaToken.content
     username = "${var.studentname-prefix}${count.index + 1}"
@@ -224,7 +221,6 @@ EOH
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-        KUBECONFIG = self.triggers.kubeconfig
         GITEA_HOST = self.triggers.giteaHost
         GITEA_TOKEN = self.triggers.giteaToken
         USERNAME = self.triggers.username

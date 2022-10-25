@@ -139,7 +139,7 @@ resource "null_resource" "giteaUser" {
   triggers = {
     kubeconfig = base64encode(var.kubeconfig)
     giteaHost = "gitea.${var.domain}"
-    password = var.student-passwords[count.index]
+    password = var.student-passwords[count.index].result
     username = "${var.studentname-prefix}${count.index + 1}"
   }
 

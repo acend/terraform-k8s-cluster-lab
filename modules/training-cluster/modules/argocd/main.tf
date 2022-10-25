@@ -294,3 +294,31 @@ resource "helm_release" "argocd" {
   ]
 
 }
+
+esource "null_resource" "cleanup-argo-cr-before-destroy" {
+
+  triggers = {
+    kubeconfig = base64encode(var.kubeconfig)
+
+  }
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<EOH
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+chmod +x ./kubectl
+
+./kubectl delete Application -A --all --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
+EOH
+    interpreter = ["/bin/bash", "-c"]
+environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+  }
+ }
+
+ depends_on = [
+   helm_release.argocd
+ ]
+
+}

@@ -413,7 +413,7 @@ chmod +x ./kubectl
 EOH
     interpreter = ["/bin/bash", "-c"]
 environment = {
-      KUBECONFIG = base64encode(rancher2_cluster_sync.training.kube_config)
+      KUBECONFIG = base64encode(nonsensitive(rancher2_cluster_sync.training.kube_config))
   }
  }
 }

@@ -46,42 +46,18 @@ resource "helm_release" "kubed" {
 
 }
 
-data "template_file" "clusterissuer-letsencrypt-prod" {
-  template = file("${path.module}/manifests/letsencrypt-prod.yaml")
-
-  vars = {
-    letsencrypt_email = var.letsencrypt_email
-  }
-}
-
-data "template_file" "secret-acme" {
-  template = file("${path.module}/manifests/secret-acme.yaml")
-
-  vars = {
-    acme-config = var.acme-config
-  }
-}
-
-data "template_file" "clusterissuer-acend-acme" {
-  template = file("${path.module}/manifests/clusterissuer-acend-acme.yaml")
-}
-
-data "template_file" "certificate-acend-labapp-wildcard" {
-  template = file("${path.module}/manifests/certificate-wildcard-labapp.yaml")
-}
-
 resource "k8s_manifest" "clusterissuer-letsencrypt-prod" {
 
   depends_on = [helm_release.certmanager]
 
-  content = data.template_file.clusterissuer-letsencrypt-prod.rendered
+  content = "${templatefile("${path.module}/manifests/letsencrypt-prod.yaml", {letsencrypt_email = var.letsencrypt_email})}"
 }
 
 resource "k8s_manifest" "secret-acend-acme" {
 
   depends_on = [helm_release.certmanager]
 
-  content = data.template_file.secret-acme.rendered
+  content = "${templatefile("${path.module}/manifests/secret-acme.yaml", {acme-config = var.acme-config})}"
 }
 
 
@@ -89,12 +65,12 @@ resource "k8s_manifest" "clusterissuer-acend-acme" {
 
   depends_on = [helm_release.certmanager, k8s_manifest.secret-acend-acme]
 
-  content = data.template_file.clusterissuer-acend-acme.rendered
+  content = "${templatefile("${path.module}/manifests/clusterissuer-acend-acme.yaml", {})}"
 }
 
 resource "k8s_manifest" "certificate-acend-labapp-wildcard" {
 
   depends_on = [helm_release.certmanager, k8s_manifest.clusterissuer-acend-acme]
 
-  content = data.template_file.certificate-acend-labapp-wildcard.rendered
+  content = "${templatefile("${path.module}/manifests/certificate-wildcard-labapp.yaml", {})}"
 }

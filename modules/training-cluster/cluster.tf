@@ -1,19 +1,3 @@
-data "template_file" "cloudinit_master" {
-  template = file("${path.module}/manifests/cloudinit.yaml")
-
-  vars = {
-    cluster_join_command = "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
-  }
-}
-
-data "template_file" "cloudinit_worker" {
-  template = file("${path.module}/manifests/cloudinit.yaml")
-
-  vars = {
-    cluster_join_command = "${rancher2_cluster.training.cluster_registration_token[0].node_command} --worker"
-  }
-}
-
 resource "cloudscale_server" "nodes-master" {
   name           = "${var.cluster_name}-node-master-${count.index}"
   flavor_slug    = var.node_flavor_master
@@ -22,7 +6,12 @@ resource "cloudscale_server" "nodes-master" {
   ssh_keys       = var.ssh_keys
   use_ipv6       = true
 
-  user_data = data.template_file.cloudinit_master.rendered
+  user_data = "${templatefile(
+    "${path.module}/manifests/cloudinit.yaml",
+    {
+      cluster_join_command = "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
+    }
+    )}"
 
   lifecycle {
     ignore_changes = [
@@ -45,9 +34,33 @@ resource "cloudscale_server" "nodes-worker" {
   ssh_keys       = var.ssh_keys
   use_ipv6       = true
 
-  user_data = data.template_file.cloudinit_worker.rendered
+  user_data = "${templatefile(
+    "${path.module}/manifests/cloudinit.yaml",
+    {
+      cluster_join_command = "${rancher2_cluster.training.cluster_registration_token[0].node_command} --worker"
+    }
+    )}"
 
   count = var.node_count_worker
+
+
+#   provisioner "local-exec" {
+#     when    = destroy
+#     command = <<EOH
+# curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+# echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+# chmod +x kubectl
+
+
+# kubectl delete node ${self.name} --kubeconfig <(echo $KUBECONFIG | base64 --decode)"
+
+# EOH
+#     interpreter = ["/bin/bash", "-c"]
+#     environment = {
+#       KUBECONFIG = base64encode(rancher2_cluster_sync.training.kube_config)
+#     }
+#   }
 
   lifecycle {
     ignore_changes = [
@@ -370,4 +383,24 @@ resource "helm_release" "cloudscale-vip-v6" {
     type  = "string"
   }
 
+}
+
+
+resource "null_resource" "kubectl" {
+  provisioner "local-exec" {
+    command = <<EOH
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+chmod +x kubectl
+
+
+kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)"
+
+EOH
+    interpreter = ["/bin/bash", "-c"]
+environment = {
+      KUBECONFIG = base64encode(rancher2_cluster_sync.training.kube_config)
+  }
+ }
 }

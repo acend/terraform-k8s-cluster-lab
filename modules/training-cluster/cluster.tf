@@ -328,13 +328,7 @@ resource "helm_release" "cloudscale-vip" {
 
   set {
     name  = "tolerations[0].operator"
-    value = "Equal"
-  }
-
-  set {
-    name  = "tolerations[0].value"
-    value = "true"
-    type  = "string"
+    value = "Exists"
   }
 
 }
@@ -421,13 +415,7 @@ resource "helm_release" "cloudscale-vip-v6" {
 
   set {
     name  = "tolerations[0].operator"
-    value = "Equal"
-  }
-
-  set {
-    name  = "tolerations[0].value"
-    value = "true"
-    type  = "string"
+    value = "Exists"
   }
 
 }

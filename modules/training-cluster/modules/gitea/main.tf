@@ -88,6 +88,7 @@ resource "null_resource" "getGiteaToken" {
     giteaHost = "gitea.${var.domain}"
     giteaAdminPassword = random_password.admin-password.result
     giteaAdminUser = "gitea_admin"
+    always_run = "${timestamp()}"
   }
 
   provisioner "local-exec" {
@@ -127,10 +128,12 @@ environment = {
 }
 
 data "local_file" "giteaToken" {
-    filename = "${path.module}/gitea_token"
-  depends_on = ["null_resource.getGiteaToken"]
-}
+  filename = "${path.module}/gitea_token"
 
+  depends_on = [
+    null_resource.getGiteaToken
+  ]
+}
 # data "http" "check_gitea" {
 #   url = "https://gitea.${var.domain}/health"
 

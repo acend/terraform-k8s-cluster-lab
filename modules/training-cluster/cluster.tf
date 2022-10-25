@@ -56,7 +56,7 @@ resource "cloudscale_server" "nodes-worker" {
 resource "null_resource" "cleanup-node-before-destroy" {
 
   triggers = {
-    kubeconfig = base64encode(nonsensitive(rancher2_cluster_sync.training.kube_config))
+    kubeconfig = base64encode(rancher2_cluster_sync.training.kube_config)
     node_name = cloudscale_server.nodes-worker[count.index].name
   }
   provisioner "local-exec" {
@@ -89,7 +89,7 @@ environment = {
 resource "null_resource" "taint-master-when-worker-available" {
 
   triggers = {
-    kubeconfig = base64encode(nonsensitive(rancher2_cluster_sync.training.kube_config))
+    kubeconfig = base64encode(rancher2_cluster_sync.training.kube_config)
     clusterName = var.cluster_name
   }
 
@@ -102,9 +102,9 @@ chmod +x ./kubectl
 
 ./kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)
 
-./kubectl taint node $CLUSTERNAME-node-master-0 node-role.kubernetes.io/control-plane:NoSchedule
-./kubectl taint node $CLUSTERNAME-node-master-1 node-role.kubernetes.io/control-plane:NoSchedule
-./kubectl taint node $CLUSTERNAME-node-master-2 node-role.kubernetes.io/control-plane:NoSchedule
+./kubectl taint node $CLUSTERNAME-node-master-0 node-role.kubernetes.io/control-plane:NoSchedule --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+./kubectl taint node $CLUSTERNAME-node-master-1 node-role.kubernetes.io/control-plane:NoSchedule --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+./kubectl taint node $CLUSTERNAME-node-master-2 node-role.kubernetes.io/control-plane:NoSchedule --kubeconfig <(echo $KUBECONFIG | base64 --decode)
 
 EOH
     interpreter = ["/bin/bash", "-c"]
@@ -122,9 +122,9 @@ curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/b
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 chmod +x ./kubectl
 
-./kubectl taint node $CLUSTERNAME-node-master-0 node-role.kubernetes.io/control-plane~
-./kubectl taint node $CLUSTERNAME-node-master-1 node-role.kubernetes.io/control-plane~
-./kubectl taint node $CLUSTERNAME-node-master-2 node-role.kubernetes.io/control-plane~
+./kubectl taint node $CLUSTERNAME-node-master-0 node-role.kubernetes.io/control-plane~ --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+./kubectl taint node $CLUSTERNAME-node-master-1 node-role.kubernetes.io/control-plane~ --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+./kubectl taint node $CLUSTERNAME-node-master-2 node-role.kubernetes.io/control-plane~ --kubeconfig <(echo $KUBECONFIG | base64 --decode)
 EOH
     interpreter = ["/bin/bash", "-c"]
 environment = {

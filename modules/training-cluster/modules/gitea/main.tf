@@ -144,7 +144,7 @@ resource "null_resource" "giteaUser" {
   triggers = {
     giteaHost = "gitea.${var.domain}"
     giteaToken = data.local_file.giteaToken.content
-    password = var.student-passwords[count.index].result
+    password = nonsensitive(var.student-passwords[count.index].result)
     username = "${var.studentname-prefix}${count.index + 1}"
   }
 

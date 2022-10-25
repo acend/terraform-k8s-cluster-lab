@@ -338,7 +338,7 @@ resource "helm_release" "cloudscale-vip-v6" {
   name       = "cloudscale-vip-v6"
   repository = "https://charts.k8s.puzzle.ch"
   chart      = "cloudscale-vip"
-  version    = "0.1.2"
+  version    = "0.1.5"
   namespace  = "kube-system"
 
 

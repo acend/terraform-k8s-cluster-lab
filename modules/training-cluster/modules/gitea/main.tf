@@ -166,7 +166,6 @@ curl -X 'POST' \
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-        KUBECONFIG = self.triggers.kubeconfig
         GITEA_HOST = self.triggers.giteaHost
         GITEA_TOKEN = self.triggers.giteaToken
         USERNAME = self.triggers.username

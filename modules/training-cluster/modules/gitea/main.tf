@@ -182,8 +182,7 @@ curl -X 'DELETE' \
   "https://$GITEA_HOST/api/v1/admin/users/$USERNAME" \
   -H 'accept: application/json' \
   -H "Authorization: token $GITEA_TOKEN" \
-  -H 'Content-Type: application/json' \
-}"
+  -H 'Content-Type: application/json'
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
@@ -234,7 +233,7 @@ curl -X 'DELETE' \
   "https://$GITEA_HOST/api/v1/repos/$USERNAME/argocd-training-examples/" \
   -H 'accept: application/json' \
   -H "Authorization: token $GITEA_TOKEN" \
-  -H 'Content-Type: application/json' \
+  -H 'Content-Type: application/json'
 
 EOH
     interpreter = ["/bin/bash", "-c"]

@@ -134,6 +134,10 @@ environment = {
  }
 
  count = local.hasWorker
+
+ depends_on = [
+   cloudscale_server.nodes-worker
+ ]
 }
 
 

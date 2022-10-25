@@ -115,17 +115,6 @@ cni: "cilium"
 
 EOF
 
-  machine_selector_config {
-    config = {
-      kubelet-arg = [
-        "kube-reserved='cpu=200m,memory=1Gi'",
-        "system-reserved='cpu=200m,memory=1Gi'",
-        "eviction-hard='memory.available<500Mi'",
-      ]
-    }
-
-  }
-
     chart_values = <<EOF
   rke2-cilium:
     {}

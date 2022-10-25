@@ -177,14 +177,14 @@ resource "kubernetes_secret" "cloudscale" {
 resource "helm_release" "csi-cloudscale" {
 
   name       = "cloudscale-csi"
-  repository = "ttps://cloudscale-ch.github.io/csi-cloudscale"
+  repository = "https://cloudscale-ch.github.io/csi-cloudscale"
   chart      = "cloudscale-csi"
   version    = "3.4.1"
   namespace  = "kube-system"
 
   set {
     name  = "cloudscale.token.existingSecret"
-    value = kubernetes_secret.cloudscale.metadata.name
+    value = kubernetes_secret.cloudscale.metadata[0].name
   }
 
   set {
@@ -209,6 +209,7 @@ resource "helm_release" "csi-cloudscale" {
   }
 
 }
+
 resource "helm_release" "cloudscale-vip" {
 
   name       = "cloudscale-vip-v4"

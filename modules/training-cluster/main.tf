@@ -158,7 +158,7 @@ resource "random_password" "student-passwords" {
 module "webshell" {
   source = "./modules/webshell"
 
-  depends_on = [rancher2_cluster_sync.training, helm_release.cloudscale-csi, module.student-vms]
+  depends_on = [rancher2_cluster_sync.training, helm_release.csi-cloudscale, module.student-vms]
 
   rancher_training_project = rancher2_project.training
   rancher_quotalab_project = rancher2_project.quotalab

@@ -95,7 +95,7 @@ environment = {
  }
 
  depends_on = [
-   cloudscale_server.nodes-worker[count.index]
+   cloudscale_server.nodes-worker
  ]
 
  count = var.node_count_worker

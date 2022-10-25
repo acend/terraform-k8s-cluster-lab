@@ -129,7 +129,7 @@ data "local_file" "giteaToken" {
   filename = "${path.module}/gitea_token"
 
   depends_on = [
-    null_resource.getGiteaToken
+    data.null_resource.getGiteaToken
   ]
 }
 
@@ -139,6 +139,7 @@ resource "null_resource" "giteaUser" {
   triggers = {
     kubeconfig = base64encode(var.kubeconfig)
     giteaHost = "gitea.${var.domain}"
+    giteaToken = data.null_resource.getGiteaToken
     password = var.student-passwords[count.index].result
     username = "${var.studentname-prefix}${count.index + 1}"
   }
@@ -201,7 +202,7 @@ EOH
   triggers = {
     kubeconfig = base64encode(var.kubeconfig)
     giteaHost = "gitea.${var.domain}"
-    giteaToken = random_password.admin-password.result
+    giteaToken = data.null_resource.getGiteaToken
     username = "${var.studentname-prefix}${count.index + 1}"
   }
 

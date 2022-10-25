@@ -180,7 +180,14 @@ EOF
 
     chart_values = <<EOF
   rke2-cilium:
-    {}
+    hostPort:
+      enabled: true
+    hubble:
+      enabled: true
+      relay: 
+        enabled: true
+      ui:
+        enabled: true
 EOF
   }
 

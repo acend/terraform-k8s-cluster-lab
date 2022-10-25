@@ -137,6 +137,10 @@ data "local_file" "giteaToken" {
 
 resource "null_resource" "giteaUser" {
 
+  depends_on = [
+    data.local_file.giteaToken
+  ]
+
   triggers = {
     giteaHost = "gitea.${var.domain}"
     giteaToken = data.local_file.giteaToken.content
@@ -237,7 +241,6 @@ curl -X 'DELETE' \
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-        KUBECONFIG = self.triggers.kubeconfig
         GITEA_HOST = self.triggers.giteaHost
         GITEA_TOKEN = self.triggers.giteaToken
         USERNAME = self.triggers.username
@@ -245,7 +248,8 @@ EOH
   }
 
   depends_on = [
-    null_resource.giteaUser
+    null_resource.giteaUser,
+    data.local_file.giteaToken
   ]
 
   count = var.count-students

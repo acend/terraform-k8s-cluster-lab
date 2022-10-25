@@ -126,6 +126,11 @@ environment = {
  ]
 }
 
+data "local_file" "giteaToken" {
+    filename = "${path.module}/gitea_token"
+  depends_on = ["null_resource.getGiteaToken"]
+}
+
 # data "http" "check_gitea" {
 #   url = "https://gitea.${var.domain}/health"
 

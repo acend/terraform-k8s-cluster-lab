@@ -84,7 +84,7 @@ resource "helm_release" "gitea" {
 resource "null_resource" "getGiteaToken" {
 
   triggers = {
-    kubeconfig = base64encode(var.kubeconfig)
+    kubeconfig = base64encode(nonsensitive(var.kubeconfig))
     giteaHost = "gitea.${var.domain}"
     giteaAdminPassword = random_password.admin-password.result
     giteaAdminUser = "gitea_admin"

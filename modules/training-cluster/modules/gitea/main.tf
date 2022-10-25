@@ -80,3 +80,61 @@ resource "helm_release" "gitea" {
   }
 
 }
+
+resource "null_resource" "getGiteaToken" {
+
+  triggers = {
+    kubeconfig = base64encode(var.kubeconfig)
+    giteaHost = "gitea.${var.domain}"
+    giteaAdminPassword = random_password.admin-password.result
+    giteaAdminUser = "gitea_admin"
+  }
+
+  provisioner "local-exec" {
+    command = <<EOH
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+chmod +x ./kubectl
+
+curl -o jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+chmod 0755 jq
+
+
+./kubectl wait --for=condition=Ready Pods -l app=gitea --timeout=90s --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+
+token_result=$(curl -XPOST -H "Content-Type: application/json"  -k -d '{"name":"create-user3"}' -s -u $GITEA_ADMIN_USER:$GITEA_ADMIN_PASSWORD https://$GITEA_HOST/api/v1/users/$GITEA_ADMIN_USER/tokens)
+echo $token_result | ./jq '.sha1' | sed 's/\"//g' > ${path.module}/gitea_token"
+  }
+
+
+
+EOH
+    interpreter = ["/bin/bash", "-c"]
+environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+      GITEA_HOST = self.triggers.giteaHost
+      GITEA_ADMIN_USER = self.triggers.giteaAdminUser
+      GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
+  }
+ }
+
+
+
+ depends_on = [
+   helm_release.gitea
+ ]
+}
+
+# data "http" "check_gitea" {
+#   url = "https://gitea.${var.domain}/health"
+
+#   # Optional request headers
+#   request_headers = {
+#     Accept = "application/json"
+#   }
+
+#   depends_on = [
+#     helm_release.gitea
+#   ]
+# }

@@ -41,7 +41,6 @@ locals {
   hasWorker      = var.node_count_worker > 0 ? 1 : 0
 }
 
-
 data "rancher2_user" "acend-training-user" {
   username = "acend-lab-user"
 }
@@ -209,6 +208,8 @@ module "argocd" {
 # Deploy Gitea and configure it for the students
 module "gitea" {
   source = "./modules/gitea"
+
+  kubeconfig = rancher2_cluster_sync.training.kube_config
 
   rancher_system_project   = data.rancher2_project.system
   rancher_training_project = rancher2_project.training

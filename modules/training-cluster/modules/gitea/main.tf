@@ -132,15 +132,121 @@ data "local_file" "giteaToken" {
     null_resource.getGiteaToken
   ]
 }
-# data "http" "check_gitea" {
-#   url = "https://gitea.${var.domain}/health"
 
-#   # Optional request headers
-#   request_headers = {
-#     Accept = "application/json"
-#   }
 
-#   depends_on = [
-#     helm_release.gitea
-#   ]
-# }
+resource "null_resource" "giteaUser" {
+
+  triggers = {
+    kubeconfig = base64encode(var.kubeconfig)
+    giteaHost = "gitea.${var.domain}"
+    giteaToken = random_password.admin-password.result
+    username = "${var.studentname-prefix}${count.index + 1}"
+  }
+
+  provisioner "local-exec" {
+    command = <<EOH
+
+curl -X 'POST' \
+  "https://$GITEA_HOST/api/v1/admin/users" \
+  -H 'accept: application/json' \
+  -H "Authorization: token $GITEA_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d "{
+  \"email\": \"$USERNAME@$GITEA_HOST\",
+  \"full_name\": \"$USERNAME\",
+  \"login_name\": \"$USERNAME\",
+  \"must_change_password\": false,
+  \"password\": \"$PASSWORD\",
+  \"send_notify\": false,
+  \"source_id\": 0,
+  \"username\": \"$USERNAME\",
+  \"visibility\": \"public\"
+}"
+EOH
+    interpreter = ["/bin/bash", "-c"]
+    environment = {
+        KUBECONFIG = self.triggers.kubeconfig
+        GITEA_HOST = self.triggers.giteaHost
+        GITEA_TOKEN = self.triggers.giteaToken
+        USERNAME = self.triggers.username
+        PASSWORD = self.triggers.password
+
+    }
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<EOH
+curl -X 'DELETE' \
+  "https://$GITEA_HOST/api/v1/admin/users/$USERNAME" \
+  -H 'accept: application/json' \
+  -H "Authorization: token $GITEA_TOKEN" \
+  -H 'Content-Type: application/json' \
+}"
+EOH
+    interpreter = ["/bin/bash", "-c"]
+    environment = {
+        KUBECONFIG = self.triggers.kubeconfig
+        GITEA_HOST = self.triggers.giteaHost
+        GITEA_TOKEN = self.triggers.giteaToken
+        USERNAME = self.triggers.username
+    }
+  }
+
+  count = var.count-students
+ }
+
+ resource "null_resource" "repo" {
+
+  triggers = {
+    kubeconfig = base64encode(var.kubeconfig)
+    giteaHost = "gitea.${var.domain}"
+    giteaToken = random_password.admin-password.result
+    username = "${var.studentname-prefix}${count.index + 1}"
+  }
+
+  provisioner "local-exec" {
+    command = <<EOH
+
+    curl -X 'POST' \
+  "https://$GITEA_HOST/api/v1/repos/migrate" \
+  -H 'accept: application/json' \
+  -H "Authorization: token $GITEA_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d "{
+  \"clone_addr\": \"https://github.com/acend/argocd-training-examples.git\",
+  \"private\": false,
+  \"repo_name\": \"argocd-training-examples\",
+  \"repo_owner\": \"$USERNAME\"
+}"
+EOH
+    interpreter = ["/bin/bash", "-c"]
+    environment = {
+        KUBECONFIG = self.triggers.kubeconfig
+        GITEA_HOST = self.triggers.giteaHost
+        GITEA_TOKEN = self.triggers.giteaToken
+        USERNAME = self.triggers.username
+    }
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<EOH
+curl -X 'DELETE' \
+  "https://$GITEA_HOST/api/v1/repos/$USERNAME/argocd-training-examples/" \
+  -H 'accept: application/json' \
+  -H "Authorization: token $GITEA_TOKEN" \
+  -H 'Content-Type: application/json' \
+
+EOH
+    interpreter = ["/bin/bash", "-c"]
+    environment = {
+        KUBECONFIG = self.triggers.kubeconfig
+        GITEA_HOST = self.triggers.giteaHost
+        GITEA_TOKEN = self.triggers.giteaToken
+        USERNAME = self.triggers.username
+    }
+  }
+
+  count = var.count-students
+ }

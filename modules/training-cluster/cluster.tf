@@ -404,8 +404,7 @@ curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/b
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 chmod +x ./kubectl
 
-./kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)"
-
+./kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)
 EOH
     interpreter = ["/bin/bash", "-c"]
 environment = {

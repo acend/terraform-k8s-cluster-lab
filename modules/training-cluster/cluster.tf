@@ -42,26 +42,6 @@ resource "cloudscale_server" "nodes-worker" {
     )}"
 
   count = var.node_count_worker
-
-
-#   provisioner "local-exec" {
-#     when    = destroy
-#     command = <<EOH
-# curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-# curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-# echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
-# chmod +x kubectl
-
-
-# kubectl delete node ${self.name} --kubeconfig <(echo $KUBECONFIG | base64 --decode)"
-
-# EOH
-#     interpreter = ["/bin/bash", "-c"]
-#     environment = {
-#       KUBECONFIG = base64encode(rancher2_cluster_sync.training.kube_config)
-#     }
-#   }
-
   lifecycle {
     ignore_changes = [
       # Ignore changes to volumes
@@ -74,6 +54,11 @@ resource "cloudscale_server" "nodes-worker" {
 }
 
 resource "null_resource" "cleanup-node-before-destroy" {
+
+  triggers = {
+    kubeconfig = base64encode(nonsensitive(rancher2_cluster_sync.training.kube_config))
+    node_name = cloudscale_server.nodes-worker[count.index].name
+  }
   provisioner "local-exec" {
     when    = destroy
     command = <<EOH
@@ -89,8 +74,8 @@ chmod +x ./kubectl
 EOH
     interpreter = ["/bin/bash", "-c"]
 environment = {
-      KUBECONFIG = base64encode(nonsensitive(rancher2_cluster_sync.training.kube_config))
-      NODE_NAME = cloudscale_server.nodes-worker[count.index].name
+      KUBECONFIG = self.triggers.kubeconfig
+      NODE_NAME = self.triggers.node_name
   }
  }
 
@@ -137,10 +122,6 @@ resource "rancher2_cluster_v2" "training" {
   kubernetes_version = var.kubernetes_version
 
   rke_config {
-
-    machine_selector_config {
-      
-    }
 
     machine_global_config = <<EOF
 cni: "cilium"

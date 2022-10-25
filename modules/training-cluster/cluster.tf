@@ -73,7 +73,7 @@ resource "cloudscale_server" "nodes-worker" {
 
 }
 
-resource "null_resource" "cleanup-node-before-destrox" {
+resource "null_resource" "cleanup-node-before-destroy" {
   provisioner "local-exec" {
     when    = destroy
     command = <<EOH
@@ -90,7 +90,7 @@ EOH
     interpreter = ["/bin/bash", "-c"]
 environment = {
       KUBECONFIG = base64encode(nonsensitive(rancher2_cluster_sync.training.kube_config))
-      NODE_NAME = loudscale_server.nodes-worker[count.index].name
+      NODE_NAME = cloudscale_server.nodes-worker[count.index].name
   }
  }
 

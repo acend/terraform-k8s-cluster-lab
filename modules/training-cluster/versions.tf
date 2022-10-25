@@ -23,6 +23,7 @@ terraform {
       // The version attribute can be used to pin to a specific version
       //version = "~> 3.0.0"
     }
+
   }
   required_version = ">= 1.2.4"
 }

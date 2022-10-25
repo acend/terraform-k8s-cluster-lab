@@ -67,8 +67,6 @@ curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/b
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 chmod +x ./kubectl
 
-./kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-
 ./kubectl drain node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
 ./kubectl delete node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
 EOH
@@ -99,8 +97,6 @@ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stabl
 curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 chmod +x ./kubectl
-
-./kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)
 
 ./kubectl taint node $CLUSTERNAME-node-master-0 node-role.kubernetes.io/control-plane:NoSchedule --kubeconfig <(echo $KUBECONFIG | base64 --decode)
 ./kubectl taint node $CLUSTERNAME-node-master-1 node-role.kubernetes.io/control-plane:NoSchedule --kubeconfig <(echo $KUBECONFIG | base64 --decode)

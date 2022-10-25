@@ -16,7 +16,6 @@ terraform {
     rancher2 = {
       source = "rancher/rancher2"
     }
-
   }
   required_version = ">= 1.2.4"
 }

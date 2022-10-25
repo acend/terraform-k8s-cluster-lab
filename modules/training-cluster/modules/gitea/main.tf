@@ -167,7 +167,6 @@ resource "null_resource" "giteaUser" {
 curl -X 'POST' \
   "https://$GITEA_HOST/api/v1/admin/users" \
   -H 'accept: application/json' \
-
   -H 'Content-Type: application/json' \
   -u $GITEA_ADMIN_USER:$GITEA_ADMIN_PASSWORD \
   -d "{
@@ -185,7 +184,7 @@ EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
         GITEA_HOST = self.triggers.giteaHost
-        GITEA_TOKEN = self.triggers.giteaToken
+        #GITEA_TOKEN = self.triggers.giteaToken
         GITEA_ADMIN_USER = self.triggers.giteaAdminUser
         GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
         USERNAME = self.triggers.username
@@ -272,7 +271,7 @@ EOH
   }
 
   depends_on = [
-    null_resource.giteaUser,
+    null_resource.giteaUser
     #data.local_file.giteaToken
   ]
 

@@ -73,6 +73,34 @@ resource "cloudscale_server" "nodes-worker" {
 
 }
 
+resource "null_resource" "cleanup-node-before-destrox" {
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<EOH
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+chmod +x ./kubectl
+
+./kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+
+./kubectl drain node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+./kubectl delete node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+EOH
+    interpreter = ["/bin/bash", "-c"]
+environment = {
+      KUBECONFIG = base64encode(nonsensitive(rancher2_cluster_sync.training.kube_config))
+      NODE_NAME = loudscale_server.nodes-worker[count.index].name
+  }
+ }
+
+ depends_on = [
+   cloudscale_server.nodes-worker[count.index]
+ ]
+
+ count = var.node_count_worker
+}
+
 
 # Add a Floating IPv4 address to web-worker01
 resource "cloudscale_floating_ip" "vip-v4" {
@@ -106,7 +134,7 @@ resource "cloudscale_floating_ip" "vip-v6" {
 
 resource "rancher2_cluster_v2" "training" {
   name               = "${var.cluster_name}-rke2"
-  kubernetes_version = "v1.24.4+rke2r1"
+  kubernetes_version = var.kubernetes_version
 
   rke_config {
 
@@ -126,33 +154,6 @@ EOF
   }
 
 }
-
-# resource "rancher2_cluster" "training" {
-#   name        = var.cluster_name
-#   description = "Kubernetes Cluster for acend GmbH Training"
-
-#   rke_config {
-
-#     kubernetes_version = var.kubernetes_version
-#     network {
-#       plugin = lookup(var.rke_network_plugin, var.network_plugin, "canal")
-#     }
-#     services {
-
-#       kubelet {
-#         extra_args = {
-#           "kube-reserved"   = "cpu=200m,memory=1Gi"
-#           "system-reserved" = "cpu=200m,memory=1Gi"
-#           "eviction-hard"   = "memory.available<500Mi"
-#           "max-pods"        = "70"
-#         }
-#       }
-
-#     }
-#   }
-# }
-
-
 resource "rancher2_cluster_sync" "training" {
 
   depends_on = [cloudscale_server.nodes-master]
@@ -398,22 +399,4 @@ resource "helm_release" "cloudscale-vip-v6" {
     type  = "string"
   }
 
-}
-
-
-resource "null_resource" "kubectl" {
-  provisioner "local-exec" {
-    command = <<EOH
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
-chmod +x ./kubectl
-
-./kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-EOH
-    interpreter = ["/bin/bash", "-c"]
-environment = {
-      KUBECONFIG = base64encode(nonsensitive(rancher2_cluster_sync.training.kube_config))
-  }
- }
 }

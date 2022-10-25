@@ -295,7 +295,7 @@ resource "helm_release" "argocd" {
 
 }
 
-esource "null_resource" "cleanup-argo-cr-before-destroy" {
+resource "null_resource" "cleanup-argo-cr-before-destroy" {
 
   triggers = {
     kubeconfig = base64encode(var.kubeconfig)

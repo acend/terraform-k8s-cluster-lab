@@ -249,7 +249,7 @@ EOH
   }
 
   depends_on = [
-    null_resource.giteaUser[count.index]
+    null_resource.giteaUser
   ]
 
   count = var.count-students

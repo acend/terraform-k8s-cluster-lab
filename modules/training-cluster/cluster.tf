@@ -110,6 +110,10 @@ resource "rancher2_cluster_v2" "training" {
 
   rke_config {
 
+    machine_selector_config {
+      
+    }
+
     machine_global_config = <<EOF
 cni: "cilium"
 
@@ -164,7 +168,8 @@ resource "rancher2_cluster_sync" "training" {
 
 resource "kubernetes_secret" "cloudscale" {
   metadata {
-    name = "cloudscale"
+    name      = "cloudscale"
+    namespace = "kube-system"
   }
 
   data = {
@@ -408,7 +413,7 @@ chmod +x ./kubectl
 EOH
     interpreter = ["/bin/bash", "-c"]
 environment = {
-      KUBECONFIG = base64encode(rancher2_cluster_sync.training.kube_config)
+      KUBECONFIG = base64encode(nonsensitive(rancher2_cluster_sync.training.kube_config))
   }
  }
 }

@@ -6,6 +6,7 @@ resource "rancher2_namespace" "gitea-namespace" {
 
   labels = {
     certificate-labapp = "true"
+    "kubernetes.io/metadata.name" = "gitea"
   }
 }
 

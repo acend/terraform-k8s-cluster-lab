@@ -140,7 +140,7 @@ resource "null_resource" "giteaUser" {
   triggers = {
     kubeconfig = base64encode(var.kubeconfig)
     giteaHost = "gitea.${var.domain}"
-    giteaToken = data.null_resource.giteaToken
+    giteaToken = data.local_file.giteaToken
     password = var.student-passwords[count.index].result
     username = "${var.studentname-prefix}${count.index + 1}"
   }
@@ -203,7 +203,7 @@ EOH
   triggers = {
     kubeconfig = base64encode(var.kubeconfig)
     giteaHost = "gitea.${var.domain}"
-    giteaToken = data.null_resource.giteaToken
+    giteaToken = data.local_file.giteaToken
     username = "${var.studentname-prefix}${count.index + 1}"
   }
 

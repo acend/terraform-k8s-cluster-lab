@@ -9,7 +9,7 @@ resource "cloudscale_server" "nodes-master" {
   user_data = "${templatefile(
     "${path.module}/manifests/cloudinit.yaml",
     {
-      cluster_join_command = "${rancher2_cluster.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
+      cluster_join_command = "${rancher2_cluster_v2.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
     }
     )}"
 
@@ -37,7 +37,7 @@ resource "cloudscale_server" "nodes-worker" {
   user_data = "${templatefile(
     "${path.module}/manifests/cloudinit.yaml",
     {
-      cluster_join_command = "${rancher2_cluster.training.cluster_registration_token[0].node_command} --worker"
+      cluster_join_command = "${rancher2_cluster_v2.training.cluster_registration_token[0].node_command} --worker"
     }
     )}"
 
@@ -115,6 +115,17 @@ cni: "cilium"
 
 EOF
 
+  machine_selector_config {
+    config = {
+      kubelet-arg = [
+        "kube-reserved='cpu=200m,memory=1Gi'",
+        "system-reserved='cpu=200m,memory=1Gi'",
+        "eviction-hard='memory.available<500Mi'",
+      ]
+    }
+
+  }
+
     chart_values = <<EOF
   rke2-cilium:
     {}
@@ -123,30 +134,30 @@ EOF
 
 }
 
-resource "rancher2_cluster" "training" {
-  name        = var.cluster_name
-  description = "Kubernetes Cluster for acend GmbH Training"
+# resource "rancher2_cluster" "training" {
+#   name        = var.cluster_name
+#   description = "Kubernetes Cluster for acend GmbH Training"
 
-  rke_config {
+#   rke_config {
 
-    kubernetes_version = var.kubernetes_version
-    network {
-      plugin = lookup(var.rke_network_plugin, var.network_plugin, "canal")
-    }
-    services {
+#     kubernetes_version = var.kubernetes_version
+#     network {
+#       plugin = lookup(var.rke_network_plugin, var.network_plugin, "canal")
+#     }
+#     services {
 
-      kubelet {
-        extra_args = {
-          "kube-reserved"   = "cpu=200m,memory=1Gi"
-          "system-reserved" = "cpu=200m,memory=1Gi"
-          "eviction-hard"   = "memory.available<500Mi"
-          "max-pods"        = "70"
-        }
-      }
+#       kubelet {
+#         extra_args = {
+#           "kube-reserved"   = "cpu=200m,memory=1Gi"
+#           "system-reserved" = "cpu=200m,memory=1Gi"
+#           "eviction-hard"   = "memory.available<500Mi"
+#           "max-pods"        = "70"
+#         }
+#       }
 
-    }
-  }
-}
+#     }
+#   }
+# }
 
 
 resource "rancher2_cluster_sync" "training" {
@@ -154,7 +165,7 @@ resource "rancher2_cluster_sync" "training" {
   depends_on = [cloudscale_server.nodes-master]
 
 
-  cluster_id    = rancher2_cluster.training.id
+  cluster_id    = rancher2_cluster_v2.training.cluster_v1_id
   state_confirm = 3
 
   timeouts {
@@ -162,17 +173,29 @@ resource "rancher2_cluster_sync" "training" {
   }
 }
 
-resource "helm_release" "cloudscale-csi" {
+resource "kubernetes_secret" "cloudscale" {
+  metadata {
+    name = "cloudscale"
+  }
+
+  data = {
+    access-token = var.cloudscale_token
+  }
+
+  type = "Opaque"
+}
+
+resource "helm_release" "csi-cloudscale" {
 
   name       = "cloudscale-csi"
-  repository = "https://charts.k8s.puzzle.ch"
+  repository = "ttps://cloudscale-ch.github.io/csi-cloudscale"
   chart      = "cloudscale-csi"
-  version    = "0.3.2"
+  version    = "3.4.1"
   namespace  = "kube-system"
 
   set {
-    name  = "cloudscale.access_token"
-    value = var.cloudscale_token
+    name  = "cloudscale.token.existingSecret"
+    value = kubernetes_secret.cloudscale.metadata.name
   }
 
   set {
@@ -195,29 +218,6 @@ resource "helm_release" "cloudscale-csi" {
     value = "true"
     type  = "string"
   }
-
-  set {
-    name  = "controller.tolerations[0].key"
-    value = "node-role.kubernetes.io/controlplane"
-  }
-
-  set {
-    name  = "controller.tolerations[0].effect"
-    value = "NoSchedule"
-  }
-
-  set {
-    name  = "controller.tolerations[0].operator"
-    value = "Equal"
-  }
-
-  set {
-    name  = "controller.tolerations[0].value"
-    value = "true"
-    type  = "string"
-  }
-
-
 
 }
 resource "helm_release" "cloudscale-vip" {

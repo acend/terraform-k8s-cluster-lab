@@ -68,11 +68,6 @@ data "rancher2_project" "system" {
   cluster_id = rancher2_cluster_sync.training.id
 }
 
-data "rancher2_catalog" "puzzle" {
-  name = "puzzle"
-}
-
-
 resource "rancher2_project" "training" {
   name       = "Training"
   cluster_id = rancher2_cluster_sync.training.id

@@ -179,7 +179,7 @@ resource "helm_release" "csi-cloudscale" {
   name       = "cloudscale-csi"
   repository = "https://cloudscale-ch.github.io/csi-cloudscale"
   chart      = "cloudscale-csi"
-  version    = "3.4.1"
+  version    = "1.1.1"
   namespace  = "kube-system"
 
   set {
@@ -402,10 +402,9 @@ resource "null_resource" "kubectl" {
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
-chmod +x kubectl
+chmod +x ./kubectl
 
-
-kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)"
+./kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)"
 
 EOH
     interpreter = ["/bin/bash", "-c"]

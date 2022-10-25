@@ -122,9 +122,9 @@ curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/b
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 chmod +x ./kubectl
 
-./kubectl taint node $CLUSTERNAME-node-master-0 node-role.kubernetes.io/control-plane:NoSchedule~ --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-./kubectl taint node $CLUSTERNAME-node-master-1 node-role.kubernetes.io/control-plane:NoSchedule~ --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-./kubectl taint node $CLUSTERNAME-node-master-2 node-role.kubernetes.io/control-plane:NoSchedule --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+./kubectl taint node $CLUSTERNAME-node-master-0 node-role.kubernetes.io/control-plane- --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+./kubectl taint node $CLUSTERNAME-node-master-1 node-role.kubernetes.io/control-plane- --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+./kubectl taint node $CLUSTERNAME-node-master-2 node-role.kubernetes.io/control-plane- --kubeconfig <(echo $KUBECONFIG | base64 --decode)
 EOH
     interpreter = ["/bin/bash", "-c"]
 environment = {

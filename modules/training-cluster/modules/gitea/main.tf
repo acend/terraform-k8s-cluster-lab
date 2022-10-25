@@ -130,7 +130,7 @@ data "local_file" "giteaToken" {
   filename = "${path.module}/gitea_token"
 
   depends_on = [
-    data.null_resource.getGiteaToken
+    null_resource.getGiteaToken
   ]
 }
 

@@ -106,8 +106,6 @@ chmod 0755 jq
 
 token_result=$(curl -XPOST -H "Content-Type: application/json"  -k -d '{"name":"admin-token"}' -s -u $GITEA_ADMIN_USER:$GITEA_ADMIN_PASSWORD https://$GITEA_HOST/api/v1/users/$GITEA_ADMIN_USER/tokens)
 echo $token_result | ./jq '.sha1' | sed 's/\"//g' > ${path.module}/gitea_token"
-  }
-
 
 
 EOH

@@ -176,9 +176,9 @@ resource "kubernetes_secret" "cloudscale" {
 
 resource "helm_release" "csi-cloudscale" {
 
-  name       = "cloudscale-csi"
+  name       = "csi-cloudscale"
   repository = "https://cloudscale-ch.github.io/csi-cloudscale"
-  chart      = "cloudscale-csi"
+  chart      = "csi-cloudscale"
   version    = "1.1.1"
   namespace  = "kube-system"
 
@@ -404,8 +404,7 @@ curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/b
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 chmod +x ./kubectl
 
-./kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)"
-
+./kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)
 EOH
     interpreter = ["/bin/bash", "-c"]
 environment = {

@@ -105,7 +105,10 @@ chmod 0755 jq
 ./kubectl -n gitea wait --for=condition=Ready Pods -l app=gitea --timeout=90s --kubeconfig <(echo $KUBECONFIG | base64 --decode)
 
 token_result=$(curl -XPOST -H "Content-Type: application/json"  -k -d '{"name":"admin-token-'$TIMESTAMP'"}' -s -u $GITEA_ADMIN_USER:$GITEA_ADMIN_PASSWORD https://$GITEA_HOST/api/v1/users/$GITEA_ADMIN_USER/tokens)
+echo $token_result > ${path.module}/gitea_token_raw
 echo $token_result | ./jq '.sha1' | sed 's/\"//g' > ${path.module}/gitea_token
+cat ${path.module}/gitea_token_raw
+cat ${path.module}/gitea_token
 
 
 EOH
@@ -134,6 +137,13 @@ data "local_file" "giteaToken" {
   ]
 }
 
+data "local_file" "giteaToken_raw" {
+  filename = "${path.module}/gitea_token_raw"
+
+  depends_on = [
+    null_resource.getGiteaToken
+  ]
+}
 
 resource "null_resource" "giteaUser" {
 

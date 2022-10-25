@@ -188,6 +188,9 @@ EOF
         enabled: true
       ui:
         enabled: true
+  rke2-ingress-nginx:
+    controller:
+      hostNetwork: true
 EOF
   }
 

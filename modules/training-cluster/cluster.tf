@@ -176,9 +176,9 @@ resource "kubernetes_secret" "cloudscale" {
 
 resource "helm_release" "csi-cloudscale" {
 
-  name       = "cloudscale-csi"
+  name       = "csi-cloudscale"
   repository = "https://cloudscale-ch.github.io/csi-cloudscale"
-  chart      = "cloudscale-csi"
+  chart      = "csi-cloudscale"
   version    = "1.1.1"
   namespace  = "kube-system"
 

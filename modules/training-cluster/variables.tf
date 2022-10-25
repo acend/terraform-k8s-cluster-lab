@@ -78,15 +78,6 @@ variable "ssh_keys" {
   default = []
 }
 
-variable "rke_network_plugin" {
-  description = "Mapping to know what Network Plugin (if any) Rancher should install using RKE"
-  type        = map(any)
-  default = {
-    canal  = "canal"
-    cilium = "none"
-  }
-}
-
 variable "domain" {
   default = "labapp.acend.ch"
 }

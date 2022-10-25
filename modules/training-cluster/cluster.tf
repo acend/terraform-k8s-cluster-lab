@@ -69,8 +69,8 @@ chmod +x ./kubectl
 
 ./kubectl version --kubeconfig <(echo $KUBECONFIG | base64 --decode)
 
-./kubectl drain node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-./kubectl delete node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+./kubectl drain node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
+./kubectl delete node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
 EOH
     interpreter = ["/bin/bash", "-c"]
 environment = {

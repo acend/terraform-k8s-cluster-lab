@@ -35,7 +35,6 @@ locals {
   kube_config    = yamldecode(rancher2_cluster_sync.training.kube_config)
   kube_host      = local.kube_config.clusters[0].cluster.server
   kube_token     = local.kube_config.users[0].user.token
-  cilium_enabled = var.network_plugin == "cilium" ? 1 : 0
   argocd_enabled = var.argocd-enabled ? 1 : 0
   gitea_enabled  = var.gitea-enabled ? 1 : 0
   vms-enabled    = var.user-vms-enabled ? 1 : 0

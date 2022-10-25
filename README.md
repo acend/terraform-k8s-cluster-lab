@@ -61,11 +61,3 @@ variable "cluster_owner_group" {
     default = ""
 }
 ```
-
-### Deploy Cluster with Canal SDN
-
-canal is the default network plugin and is set with the variable `network_plugin=canal`
-
-### Deploy Cluster with Cilium SDN
-
-Change the variable `network_plugin` to `cilium` if you want to deploy Cilium as your SDN.

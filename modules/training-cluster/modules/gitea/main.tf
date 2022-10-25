@@ -138,7 +138,6 @@ data "local_file" "giteaToken" {
 resource "null_resource" "giteaUser" {
 
   triggers = {
-    kubeconfig = base64encode(var.kubeconfig)
     giteaHost = "gitea.${var.domain}"
     giteaToken = data.local_file.giteaToken.content
     password = var.student-passwords[count.index].result
@@ -188,7 +187,6 @@ curl -X 'DELETE' \
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-        KUBECONFIG = self.triggers.kubeconfig
         GITEA_HOST = self.triggers.giteaHost
         GITEA_TOKEN = self.triggers.giteaToken
         USERNAME = self.triggers.username
@@ -201,7 +199,6 @@ EOH
  resource "null_resource" "repo" {
 
   triggers = {
-    kubeconfig = base64encode(var.kubeconfig)
     giteaHost = "gitea.${var.domain}"
     giteaToken = data.local_file.giteaToken.content
     username = "${var.studentname-prefix}${count.index + 1}"
@@ -224,7 +221,6 @@ EOH
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-        KUBECONFIG = self.triggers.kubeconfig
         GITEA_HOST = self.triggers.giteaHost
         GITEA_TOKEN = self.triggers.giteaToken
         USERNAME = self.triggers.username

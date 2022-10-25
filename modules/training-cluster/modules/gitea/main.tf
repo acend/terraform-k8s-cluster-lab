@@ -86,7 +86,7 @@ resource "null_resource" "getGiteaToken" {
   triggers = {
     kubeconfig = base64encode(nonsensitive(var.kubeconfig))
     giteaHost = "gitea.${var.domain}"
-    giteaAdminPassword = random_password.admin-password.result
+    giteaAdminPassword = nonsensitive(random_password.admin-password.result)
     giteaAdminUser = "gitea_admin"
     always_run = "${timestamp()}"
   }
@@ -144,7 +144,7 @@ resource "null_resource" "giteaUser" {
   triggers = {
     giteaHost = "gitea.${var.domain}"
     giteaToken = data.local_file.giteaToken.content
-    password = var.student-passwords[count.index].result
+    password = nonsensitive(var.student-passwords[count.index].result)
     username = "${var.studentname-prefix}${count.index + 1}"
   }
 

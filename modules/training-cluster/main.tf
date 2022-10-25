@@ -190,6 +190,8 @@ module "student-vms" {
 module "argocd" {
   source = "./modules/argocd"
 
+  kubeconfig = rancher2_cluster_sync.training.kube_config
+
 
   rancher_system_project   = data.rancher2_project.system
   rancher_training_project = rancher2_project.training

@@ -26,3 +26,7 @@ variable "studentname-prefix" {
   type    = string
   default = "student"
 }
+
+variable "kubeconfig" {
+  type = string
+}

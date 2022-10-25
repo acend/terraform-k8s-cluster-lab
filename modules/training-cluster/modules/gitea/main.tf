@@ -139,7 +139,7 @@ resource "null_resource" "giteaUser" {
   triggers = {
     kubeconfig = base64encode(var.kubeconfig)
     giteaHost = "gitea.${var.domain}"
-    giteaToken = random_password.admin-password.result
+    password = var.student-passwords[count.index].result
     username = "${var.studentname-prefix}${count.index + 1}"
   }
 
@@ -247,6 +247,10 @@ EOH
         USERNAME = self.triggers.username
     }
   }
+
+  depends_on = [
+    null_resource.giteaUser
+  ]
 
   count = var.count-students
  }

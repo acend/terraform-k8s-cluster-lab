@@ -31,6 +31,11 @@ variable "node_count_master" {
   description = "The number of master nodes to provision (will have roles control-plane, etcd, worker)"
   type        = number
   default     = 3
+
+   validation {
+    condition     = var.node_count_master == 3
+    error_message = "You must have 3 master nodes."
+  }
 }
 
 variable "node_count_worker" {

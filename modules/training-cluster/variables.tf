@@ -32,7 +32,7 @@ variable "node_count_master" {
   type        = number
   default     = 3
 
-   validation {
+  validation {
     condition     = var.node_count_master == 3
     error_message = "You must have 3 master nodes."
   }

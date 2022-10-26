@@ -14,16 +14,15 @@ terraform {
     }
     rancher2 = {
       source = "rancher/rancher2"
+      version = "1.24.2"
     }
     template = {
       source = "hashicorp/template"
     }
     cloudscale = {
       source = "cloudscale-ch/cloudscale"
-      // The version attribute can be used to pin to a specific version
-      //version = "~> 3.0.0"
     }
 
   }
-  required_version = ">= 1.2.4"
+  required_version = ">= 1.3.3"
 }

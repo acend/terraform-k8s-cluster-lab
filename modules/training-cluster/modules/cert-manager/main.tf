@@ -50,14 +50,14 @@ resource "k8s_manifest" "clusterissuer-letsencrypt-prod" {
 
   depends_on = [helm_release.certmanager]
 
-  content = "${templatefile("${path.module}/manifests/letsencrypt-prod.yaml", {letsencrypt_email = var.letsencrypt_email})}"
+  content = templatefile("${path.module}/manifests/letsencrypt-prod.yaml", { letsencrypt_email = var.letsencrypt_email })
 }
 
 resource "k8s_manifest" "secret-acend-acme" {
 
   depends_on = [helm_release.certmanager]
 
-  content = "${templatefile("${path.module}/manifests/secret-acme.yaml", {acme-config = var.acme-config})}"
+  content = templatefile("${path.module}/manifests/secret-acme.yaml", { acme-config = var.acme-config })
 }
 
 
@@ -65,12 +65,12 @@ resource "k8s_manifest" "clusterissuer-acend-acme" {
 
   depends_on = [helm_release.certmanager, k8s_manifest.secret-acend-acme]
 
-  content = "${templatefile("${path.module}/manifests/clusterissuer-acend-acme.yaml", {})}"
+  content = templatefile("${path.module}/manifests/clusterissuer-acend-acme.yaml", {})
 }
 
 resource "k8s_manifest" "certificate-acend-labapp-wildcard" {
 
   depends_on = [helm_release.certmanager, k8s_manifest.clusterissuer-acend-acme]
 
-  content = "${templatefile("${path.module}/manifests/certificate-wildcard-labapp.yaml", {})}"
+  content = templatefile("${path.module}/manifests/certificate-wildcard-labapp.yaml", {})
 }

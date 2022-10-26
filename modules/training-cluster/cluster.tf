@@ -6,12 +6,12 @@ resource "cloudscale_server" "nodes-master" {
   ssh_keys       = var.ssh_keys
   use_ipv6       = true
 
-  user_data = "${templatefile(
+  user_data = (templatefile(
     "${path.module}/manifests/cloudinit.yaml",
     {
       cluster_join_command = "${rancher2_cluster_v2.training.cluster_registration_token[0].node_command} --etcd --controlplane --worker"
     }
-    )}"
+  ))
 
   lifecycle {
     ignore_changes = [
@@ -34,12 +34,12 @@ resource "cloudscale_server" "nodes-worker" {
   ssh_keys       = var.ssh_keys
   use_ipv6       = true
 
-  user_data = "${templatefile(
+  user_data = (templatefile(
     "${path.module}/manifests/cloudinit.yaml",
     {
       cluster_join_command = "${rancher2_cluster_v2.training.cluster_registration_token[0].node_command} --worker"
     }
-    )}"
+  ))
 
   count = var.node_count_worker
   lifecycle {
@@ -57,11 +57,11 @@ resource "null_resource" "cleanup-node-before-destroy" {
 
   triggers = {
     kubeconfig = base64encode(rancher2_cluster_sync.training.kube_config)
-    node_name = cloudscale_server.nodes-worker[count.index].name
+    node_name  = cloudscale_server.nodes-worker[count.index].name
   }
   provisioner "local-exec" {
-    when    = destroy
-    command = <<EOH
+    when        = destroy
+    command     = <<EOH
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
@@ -71,28 +71,28 @@ chmod +x ./kubectl
 ./kubectl delete node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
 EOH
     interpreter = ["/bin/bash", "-c"]
-environment = {
+    environment = {
       KUBECONFIG = self.triggers.kubeconfig
-      NODE_NAME = self.triggers.node_name
+      NODE_NAME  = self.triggers.node_name
+    }
   }
- }
 
- depends_on = [
-   cloudscale_server.nodes-worker
- ]
+  depends_on = [
+    cloudscale_server.nodes-worker
+  ]
 
- count = var.node_count_worker
+  count = var.node_count_worker
 }
 
 resource "null_resource" "taint-master-when-worker-available" {
 
   triggers = {
-    kubeconfig = base64encode(rancher2_cluster_sync.training.kube_config)
+    kubeconfig  = base64encode(rancher2_cluster_sync.training.kube_config)
     clusterName = var.cluster_name
   }
 
   provisioner "local-exec" {
-    command = <<EOH
+    command     = <<EOH
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
@@ -104,15 +104,15 @@ chmod +x ./kubectl
 
 EOH
     interpreter = ["/bin/bash", "-c"]
-environment = {
-      KUBECONFIG = self.triggers.kubeconfig
+    environment = {
+      KUBECONFIG  = self.triggers.kubeconfig
       CLUSTERNAME = self.triggers.clusterName
+    }
   }
- }
 
   provisioner "local-exec" {
-    when    = destroy
-    command = <<EOH
+    when        = destroy
+    command     = <<EOH
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
@@ -123,17 +123,17 @@ chmod +x ./kubectl
 ./kubectl taint node $CLUSTERNAME-node-master-2 node-role.kubernetes.io/control-plane- --kubeconfig <(echo $KUBECONFIG | base64 --decode)
 EOH
     interpreter = ["/bin/bash", "-c"]
-environment = {
-      KUBECONFIG = self.triggers.kubeconfig
+    environment = {
+      KUBECONFIG  = self.triggers.kubeconfig
       CLUSTERNAME = self.triggers.clusterName
+    }
   }
- }
 
- count = local.hasWorker
+  count = local.hasWorker
 
- depends_on = [
-   cloudscale_server.nodes-worker
- ]
+  depends_on = [
+    cloudscale_server.nodes-worker
+  ]
 }
 
 
@@ -179,18 +179,18 @@ cni: "cilium"
 EOF
 
     chart_values = <<EOF
-  rke2-cilium:
-    hostPort:
+rke2-cilium:
+  hostPort:
+    enabled: true
+  hubble:
+    enabled: true
+    relay: 
       enabled: true
-    hubble:
+    ui:
       enabled: true
-      relay: 
-        enabled: true
-      ui:
-        enabled: true
-  rke2-ingress-nginx:
-    controller:
-      hostNetwork: true
+rke2-ingress-nginx:
+  controller:
+    hostNetwork: true
 EOF
   }
 

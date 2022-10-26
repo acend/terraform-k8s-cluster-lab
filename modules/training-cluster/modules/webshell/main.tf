@@ -58,7 +58,7 @@ resource "kubernetes_role_binding" "student-quotalab" {
 #     ssh-public-key  = var.user-vm-enabled ? chomp(var.student-vms[0].user-ssh-keys[var.student-index].public_key_openssh) : ""
 #     ssh-private-key = var.user-vm-enabled ? base64encode(var.student-vms[0].user-ssh-keys[var.student-index].private_key_pem) : ""
 #   }
-  
+
 # }
 
 resource "helm_release" "webshell" {

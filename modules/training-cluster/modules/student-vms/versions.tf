@@ -18,10 +18,8 @@ terraform {
     }
     cloudscale = {
       source = "cloudscale-ch/cloudscale"
-      // The version attribute can be used to pin to a specific version
-      //version = "~> 3.0.0"
     }
 
   }
-  required_version = ">= 1.2.4"
+  required_version = ">= 1.3.3"
 }

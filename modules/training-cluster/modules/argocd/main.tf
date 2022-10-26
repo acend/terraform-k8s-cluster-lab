@@ -5,7 +5,7 @@ resource "rancher2_namespace" "argocd-namespace" {
   project_id = var.rancher_system_project.id
 
   labels = {
-    certificate-labapp = "true"
+    certificate-labapp            = "true"
     "kubernetes.io/metadata.name" = "argocd"
   }
 }
@@ -29,7 +29,7 @@ resource "rancher2_namespace" "student-namespace-prod" {
   project_id = var.rancher_training_project.id
 
   labels = {
-    certificate-labapp = "true"
+    certificate-labapp            = "true"
     "kubernetes.io/metadata.name" = "${var.studentname-prefix}${count.index + 1}-prod"
   }
 
@@ -89,7 +89,7 @@ resource "rancher2_namespace" "student-namespace-dev" {
   project_id = var.rancher_training_project.id
 
   labels = {
-    certificate-labapp = "true"
+    certificate-labapp            = "true"
     "kubernetes.io/metadata.name" = "${var.studentname-prefix}${count.index + 1}-dev"
   }
 
@@ -302,8 +302,8 @@ resource "null_resource" "cleanup-argo-cr-before-destroy" {
 
   }
   provisioner "local-exec" {
-    when    = destroy
-    command = <<EOH
+    when        = destroy
+    command     = <<EOH
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
@@ -312,13 +312,13 @@ chmod +x ./kubectl
 ./kubectl delete Application -A --all --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
 EOH
     interpreter = ["/bin/bash", "-c"]
-environment = {
+    environment = {
       KUBECONFIG = self.triggers.kubeconfig
+    }
   }
- }
 
- depends_on = [
-   helm_release.argocd
- ]
+  depends_on = [
+    helm_release.argocd
+  ]
 
 }

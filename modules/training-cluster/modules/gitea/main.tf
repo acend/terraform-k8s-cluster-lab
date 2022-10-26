@@ -5,7 +5,7 @@ resource "rancher2_namespace" "gitea-namespace" {
   project_id = var.rancher_system_project.id
 
   labels = {
-    certificate-labapp = "true"
+    certificate-labapp            = "true"
     "kubernetes.io/metadata.name" = "gitea"
   }
 }
@@ -155,14 +155,14 @@ resource "null_resource" "giteaUser" {
     giteaHost = "gitea.${var.domain}"
     #giteaToken = data.local_file.giteaToken.content
     giteaAdminPassword = nonsensitive(random_password.admin-password.result)
-    giteaAdminUser = "gitea_admin"
-    password = nonsensitive(var.student-passwords[count.index].result)
-    username = "${var.studentname-prefix}${count.index + 1}"
+    giteaAdminUser     = "gitea_admin"
+    password           = nonsensitive(var.student-passwords[count.index].result)
+    username           = "${var.studentname-prefix}${count.index + 1}"
   }
 
   provisioner "local-exec" {
     #  -H "Authorization: token $GITEA_TOKEN" \
-    command = <<EOH
+    command     = <<EOH
 
 curl -X 'POST' \
   "https://$GITEA_HOST/api/v1/admin/users" \
@@ -183,19 +183,19 @@ curl -X 'POST' \
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-        GITEA_HOST = self.triggers.giteaHost
-        #GITEA_TOKEN = self.triggers.giteaToken
-        GITEA_ADMIN_USER = self.triggers.giteaAdminUser
-        GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
-        USERNAME = self.triggers.username
-        PASSWORD = self.triggers.password
+      GITEA_HOST = self.triggers.giteaHost
+      #GITEA_TOKEN = self.triggers.giteaToken
+      GITEA_ADMIN_USER     = self.triggers.giteaAdminUser
+      GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
+      USERNAME             = self.triggers.username
+      PASSWORD             = self.triggers.password
 
     }
   }
 
   provisioner "local-exec" {
-    when    = destroy
-    command = <<EOH
+    when        = destroy
+    command     = <<EOH
 curl -X 'DELETE' \
   "https://$GITEA_HOST/api/v1/admin/users/$USERNAME" \
   -H 'accept: application/json' \
@@ -204,29 +204,29 @@ curl -X 'DELETE' \
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-        GITEA_HOST = self.triggers.giteaHost
-        #GITEA_TOKEN = self.triggers.giteaToken
-        GITEA_ADMIN_USER = self.triggers.giteaAdminUser
-        GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
-        USERNAME = self.triggers.username
+      GITEA_HOST = self.triggers.giteaHost
+      #GITEA_TOKEN = self.triggers.giteaToken
+      GITEA_ADMIN_USER     = self.triggers.giteaAdminUser
+      GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
+      USERNAME             = self.triggers.username
     }
   }
 
   count = var.count-students
- }
+}
 
- resource "null_resource" "repo" {
+resource "null_resource" "repo" {
 
   triggers = {
-    giteaHost = "gitea.${var.domain}"
+    giteaHost          = "gitea.${var.domain}"
     giteaAdminPassword = nonsensitive(random_password.admin-password.result)
-    giteaAdminUser = "gitea_admin"
+    giteaAdminUser     = "gitea_admin"
     #giteaToken = data.local_file.giteaToken.content
     username = "${var.studentname-prefix}${count.index + 1}"
   }
 
   provisioner "local-exec" {
-    command = <<EOH
+    command     = <<EOH
 
     curl -X 'POST' \
   "https://$GITEA_HOST/api/v1/repos/migrate" \
@@ -242,17 +242,17 @@ EOH
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-        GITEA_HOST = self.triggers.giteaHost
-        #GITEA_TOKEN = self.triggers.giteaToken
-        GITEA_ADMIN_USER = self.triggers.giteaAdminUser
-        GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
-        USERNAME = self.triggers.username
+      GITEA_HOST = self.triggers.giteaHost
+      #GITEA_TOKEN = self.triggers.giteaToken
+      GITEA_ADMIN_USER     = self.triggers.giteaAdminUser
+      GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
+      USERNAME             = self.triggers.username
     }
   }
 
   provisioner "local-exec" {
-    when    = destroy
-    command = <<EOH
+    when        = destroy
+    command     = <<EOH
 curl -X 'DELETE' \
   "https://$GITEA_HOST/api/v1/repos/$USERNAME/argocd-training-examples/" \
   -H 'accept: application/json' \
@@ -262,11 +262,11 @@ curl -X 'DELETE' \
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-        GITEA_HOST = self.triggers.giteaHost
-        #GITEA_TOKEN = self.triggers.giteaToken
-        GITEA_ADMIN_USER = self.triggers.giteaAdminUser
-        GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
-        USERNAME = self.triggers.username
+      GITEA_HOST = self.triggers.giteaHost
+      #GITEA_TOKEN = self.triggers.giteaToken
+      GITEA_ADMIN_USER     = self.triggers.giteaAdminUser
+      GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
+      USERNAME             = self.triggers.username
     }
   }
 
@@ -276,4 +276,4 @@ EOH
   ]
 
   count = var.count-students
- }
+}

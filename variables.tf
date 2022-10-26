@@ -74,30 +74,30 @@ variable "acme-config" {
 
 variable "count-students" {
   description = "Number of students"
-  type    = number
-  default = 0
+  type        = number
+  default     = 0
 }
 
 variable "argocd-enabled" {
   description = "Switch to deploy argocd instance and configure it for the students"
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "gitea-enabled" {
   description = "Switch to deploy Gitea"
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "user-vms-enabled" {
   description = "Deploy a VM for each User"
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "webshell-rbac-enabled" {
   description = "Deploy RBAC to access Kubernetes Cluster for each student"
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
 }

@@ -17,7 +17,7 @@ resource "kubernetes_cluster_role" "argocd" {
 
   rule {
     api_groups = ["argoproj.io"]
-    resources  = ["applications"]
+    resources  = ["applications","applicationset"]
     verbs      = ["get", "list", "watch", "create", "update", "patch", "delete"]
   }
 }

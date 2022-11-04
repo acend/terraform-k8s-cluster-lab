@@ -20,8 +20,6 @@ module "training-cluster" {
   node_count_worker   = var.node_count_worker
   ssh_keys            = var.ssh_keys
 
-  # Network Plugin
-  network_plugin = var.network_plugin
 
   # Cert-Manager
   acme-config = var.acme-config

@@ -196,7 +196,7 @@ module "argocd" {
   rancher_system_project   = data.rancher2_project.system
   rancher_training_project = rancher2_project.training
 
-  depends_on = [rancher2_cluster_sync.training, module.webshell] // student namespaces are created in the webshell module
+  
 
   domain             = var.domain
   count-students     = var.count-students
@@ -205,6 +205,11 @@ module "argocd" {
 
 
   count = local.argocd_enabled
+
+  depends_on = [
+    rancher2_cluster_sync.training,
+    module.webshell // student namespaces are created in the webshell module
+  ] 
 }
 
 # Deploy Gitea and configure it for the students

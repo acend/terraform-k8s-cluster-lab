@@ -128,7 +128,7 @@ resource "kubernetes_role_binding" "argocd-dev" {
   role_ref {
     api_group = "rbac.authorization.k8s.io"
     kind      = "ClusterRole"
-    name      = "argocd"
+    name      = kubernetes_cluster_role.argocd.metadata[0].name
   }
 
   subject {
@@ -151,7 +151,7 @@ resource "kubernetes_role_binding" "argocd" {
   role_ref {
     api_group = "rbac.authorization.k8s.io"
     kind      = "ClusterRole"
-    name      = "argocd"
+    name      = kubernetes_cluster_role.argocd.metadata[0].name
   }
 
   subject {
@@ -173,7 +173,7 @@ resource "kubernetes_role_binding" "argocd-app" {
   role_ref {
     api_group = "rbac.authorization.k8s.io"
     kind      = "ClusterRole"
-    name      = "argocd"
+    name      = kubernetes_cluster_role.argocd.metadata[0].name
   }
 
   subject {
@@ -205,6 +205,7 @@ resource "helm_release" "argocd" {
   repository = var.chart-repository
   chart      = "argo-cd"
   namespace  = rancher2_namespace.argocd-namespace.name
+  version    = var.chart-version
 
 
   set {
@@ -291,6 +292,7 @@ resource "helm_release" "argocd" {
     templatefile("${path.module}/manifests/values_account_student.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students, passwords = var.student-passwords }),
     templatefile("${path.module}/manifests/values_rbacConfig_policy.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students }),
     templatefile("${path.module}/manifests/values_projects.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students }),
+    templatefile("${path.module}/manifests/values_resource-exclude.yaml", {}),
   ]
 
 }

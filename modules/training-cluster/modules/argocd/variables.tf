@@ -9,6 +9,11 @@ variable "chart-repository" {
   default = "https://argoproj.github.io/argo-helm"
 }
 
+variable "chart-version" {
+  type    = string
+  default = "5.13.2"
+}
+
 variable "domain" {
   default = "labapp.acend.ch"
 }

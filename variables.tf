@@ -56,11 +56,6 @@ variable "cluster_owner_group" {
   default     = ""
 }
 
-variable "network_plugin" {
-  description = "The Network Plugin Rancher should install on the Cluster. Can be canal or cilium"
-  type        = string
-  default     = "canal"
-}
 
 variable "ssh_keys" {
   description = "SSH Public keys with access to the cloudscale.ch VM's"

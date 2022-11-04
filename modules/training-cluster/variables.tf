@@ -67,11 +67,6 @@ variable "cluster_owner_group" {
   default = ""
 }
 
-variable "network_plugin" {
-  description = "The Network Plugin to use"
-  type        = string
-  default     = "canal"
-}
 
 variable "kubernetes_version" {
   type    = string

@@ -1,0 +1,7 @@
+server:
+  config:
+    resource.exclusions: |
+      - kinds:
+        - "ciliumidentities"
+        - "ciliumendpoints"
+        - "ciliumnodes"

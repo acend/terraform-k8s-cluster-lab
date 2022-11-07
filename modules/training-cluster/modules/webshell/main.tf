@@ -71,7 +71,7 @@ resource "helm_release" "webshell" {
   ]
 
   set {
-    name  = "student"
+    name  = "user"
     value = var.student-name
   }
 

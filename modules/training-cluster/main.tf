@@ -41,23 +41,6 @@ locals {
   hasWorker      = var.node_count_worker > 0 ? 1 : 0
 }
 
-data "rancher2_user" "acend-training-user" {
-  username = "acend-lab-user"
-}
-
-
-data "rancher2_role_template" "project-member" {
-  name = "Project Member"
-}
-
-data "rancher2_role_template" "view-nodes" {
-  name = "View Nodes"
-}
-
-data "rancher2_role_template" "view-all-projects" {
-  name = "View All Projects"
-}
-
 data "rancher2_role_template" "cluster-owner" {
   name = "Cluster Owner"
 }
@@ -94,21 +77,7 @@ resource "rancher2_project" "quotalab" {
   }
 
 }
-resource "rancher2_cluster_role_template_binding" "training-view-nodes" {
 
-  name             = "training-view-nodes"
-  cluster_id       = rancher2_cluster_sync.training.id
-  role_template_id = data.rancher2_role_template.view-nodes.id
-  user_id          = data.rancher2_user.acend-training-user.id
-}
-
-resource "rancher2_cluster_role_template_binding" "training-view-all-projects" {
-
-  name             = "training-view-all-projects"
-  cluster_id       = rancher2_cluster_sync.training.id
-  role_template_id = data.rancher2_role_template.view-all-projects.id
-  user_id          = data.rancher2_user.acend-training-user.id
-}
 
 resource "rancher2_cluster_role_template_binding" "cluster-owner" {
 
@@ -118,24 +87,6 @@ resource "rancher2_cluster_role_template_binding" "cluster-owner" {
 
   group_principal_id = var.cluster_owner_group
 }
-
-resource "rancher2_project_role_template_binding" "training-project-member" {
-
-  name             = "training-project-member"
-  project_id       = rancher2_project.training.id
-  role_template_id = data.rancher2_role_template.project-member.id
-  user_id          = data.rancher2_user.acend-training-user.id
-}
-
-resource "rancher2_project_role_template_binding" "quotalab-project-member" {
-
-  name             = "quotalab-project-member"
-  project_id       = rancher2_project.quotalab.id
-  role_template_id = data.rancher2_role_template.project-member.id
-  user_id          = data.rancher2_user.acend-training-user.id
-}
-
-
 
 
 # Create Passwords for the students (shared by multiple apps like webshell, argocd and gitea)

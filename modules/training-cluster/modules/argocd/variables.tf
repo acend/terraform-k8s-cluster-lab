@@ -11,7 +11,7 @@ variable "chart-repository" {
 
 variable "chart-version" {
   type    = string
-  default = "5.13.2"
+  default = "5.21.1"
 }
 
 variable "domain" {

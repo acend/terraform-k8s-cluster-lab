@@ -226,7 +226,7 @@ resource "helm_release" "csi-cloudscale" {
   name       = "csi-cloudscale"
   repository = "https://cloudscale-ch.github.io/csi-cloudscale"
   chart      = "csi-cloudscale"
-  version    = "1.1.1"
+  version    = "1.3.1"
   namespace  = "kube-system"
 
   set {
@@ -262,7 +262,7 @@ resource "helm_release" "cloudscale-vip" {
   name       = "cloudscale-vip-v4"
   repository = "https://charts.k8s.puzzle.ch"
   chart      = "cloudscale-vip"
-  version    = "0.1.2"
+  version    = "0.1.5"
   namespace  = "kube-system"
 
 

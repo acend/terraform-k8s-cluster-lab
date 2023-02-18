@@ -3,7 +3,7 @@ variable "rancher_system_project" {
 
 variable "chart_version" {
   type    = string
-  default = "v1.9.1"
+  default = "v1.11.0"
 }
 
 variable "letsencrypt_email" {

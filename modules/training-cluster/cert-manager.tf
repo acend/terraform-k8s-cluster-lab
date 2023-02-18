@@ -7,5 +7,5 @@ module "cert-manager" {
   letsencrypt_email      = var.letsencrypt_email
   rancher_system_project = data.rancher2_project.system
 
-  acme-config = var.acme-config
+  hosttech_dns_token = var.hosttech_dns_token
 }

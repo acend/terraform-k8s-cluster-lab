@@ -11,7 +11,7 @@ variable "letsencrypt_email" {
   default = "info@acend.ch"
 }
 
-variable "acme-config" {
-  type = string
+variable "hosttech_dns_token" {
+  type        = string
+  description = "hosttech dns api token"
 }
-

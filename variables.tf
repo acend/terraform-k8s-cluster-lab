@@ -16,6 +16,16 @@ variable "rancher2_api_url" {
   type = string
 }
 
+variable "hosttech_dns_token" {
+  type        = string
+  description = "hosttech dns api token"
+}
+
+variable "hosttech-dns-zone-id" {
+  type        = string
+  description = "Zone ID of the hosttech DNS Zone where LoadBalancer A/AAAA records are created"
+}
+
 variable "cluster_name" {
   type    = string
   default = "acend-training-cluster"
@@ -61,10 +71,6 @@ variable "ssh_keys" {
   description = "SSH Public keys with access to the cloudscale.ch VM's"
   type        = list(string)
   default     = []
-}
-
-variable "acme-config" {
-  type = string
 }
 
 variable "count-students" {

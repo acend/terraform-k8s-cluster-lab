@@ -30,6 +30,17 @@ provider "helm" {
   }
 }
 
+provider "restapi" {
+  alias                = "hosttech_dns"
+  uri                  = "https://api.ns1.hosttech.eu"
+  write_returns_object = true
+
+  headers = {
+    Authorization = "Bearer ${var.hosttech_dns_token}"
+    ContentType   = "application/json"
+  }
+}
+
 
 locals {
   kube_config    = yamldecode(rancher2_cluster_sync.training.kube_config)
@@ -147,7 +158,7 @@ module "argocd" {
   rancher_system_project   = data.rancher2_project.system
   rancher_training_project = rancher2_project.training
 
-  
+
 
   domain             = var.domain
   count-students     = var.count-students
@@ -160,7 +171,7 @@ module "argocd" {
   depends_on = [
     rancher2_cluster_sync.training,
     module.webshell // student namespaces are created in the webshell module
-  ] 
+  ]
 }
 
 # Deploy Gitea and configure it for the students

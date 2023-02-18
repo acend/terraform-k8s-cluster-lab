@@ -168,7 +168,7 @@ resource "cloudscale_floating_ip" "vip-v6" {
 }
 
 resource "rancher2_cluster_v2" "training" {
-  name               = "${var.cluster_name}"
+  name               = var.cluster_name
   kubernetes_version = var.kubernetes_version
 
   rke_config {

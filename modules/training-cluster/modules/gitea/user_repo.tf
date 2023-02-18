@@ -65,7 +65,7 @@
 resource "null_resource" "giteaUser" {
 
   triggers = {
-    giteaHost = "gitea.${var.domain}"
+    giteaHost          = "gitea.${var.domain}"
     giteaAdminPassword = nonsensitive(random_password.admin-password.result)
     giteaAdminUser     = "gitea_admin"
     password           = nonsensitive(var.student-passwords[count.index].result)
@@ -94,7 +94,7 @@ curl -X 'POST' \
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      GITEA_HOST = self.triggers.giteaHost
+      GITEA_HOST           = self.triggers.giteaHost
       GITEA_ADMIN_USER     = self.triggers.giteaAdminUser
       GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
       USERNAME             = self.triggers.username
@@ -114,7 +114,7 @@ curl -X 'DELETE' \
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      GITEA_HOST = self.triggers.giteaHost
+      GITEA_HOST           = self.triggers.giteaHost
       GITEA_ADMIN_USER     = self.triggers.giteaAdminUser
       GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
       USERNAME             = self.triggers.username
@@ -130,7 +130,7 @@ resource "null_resource" "repo" {
     giteaHost          = "gitea.${var.domain}"
     giteaAdminPassword = nonsensitive(random_password.admin-password.result)
     giteaAdminUser     = "gitea_admin"
-    username = "${var.studentname-prefix}${count.index + 1}"
+    username           = "${var.studentname-prefix}${count.index + 1}"
   }
 
   provisioner "local-exec" {
@@ -149,7 +149,7 @@ resource "null_resource" "repo" {
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      GITEA_HOST = self.triggers.giteaHost
+      GITEA_HOST           = self.triggers.giteaHost
       GITEA_ADMIN_USER     = self.triggers.giteaAdminUser
       GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
       USERNAME             = self.triggers.username
@@ -168,7 +168,7 @@ curl -X 'DELETE' \
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      GITEA_HOST = self.triggers.giteaHost
+      GITEA_HOST           = self.triggers.giteaHost
       GITEA_ADMIN_USER     = self.triggers.giteaAdminUser
       GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
       USERNAME             = self.triggers.username

@@ -1,3 +1,4 @@
+---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
@@ -9,9 +10,13 @@ spec:
     privateKeySecretRef:
       name: acend-acme-clusterissuer-account-key
     solvers:
-    - dns01:
-        acmeDNS:
-          accountSecretRef:
-            key: acmedns.json
-            name: acend-acme-config
-          host: https://acme-dns.k8s.puzzle.ch
+      - dns01:
+          webhook:
+            groupName: acme.acend.ch
+            solverName: hosttech
+            config:
+              secretName: hosttech-secret
+              apiUrl: https://api.ns1.hosttech.eu/api/user/v1
+        selector:
+          dnsNames:
+            - '*.labapp.acend.ch'

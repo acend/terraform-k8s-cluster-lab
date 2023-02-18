@@ -14,6 +14,15 @@ variable "rancher2_api_url" {
   type = string
 }
 
+variable "hosttech_dns_token" {
+  type        = string
+  description = "hosttech dns api token"
+}
+
+variable "hosttech-dns-zone-id" {
+  type        = string
+  description = "Zone ID of the hosttech DNS Zone where LoadBalancer A/AAAA records are created"
+}
 
 variable "node_flavor_master" {
   description = "The cloudscale.ch VM flavor to use for the master nodes."
@@ -55,12 +64,6 @@ variable "letsencrypt_email" {
   type    = string
   default = "sebastian@acend.ch"
 }
-
-variable "acme-config" {
-  type = string
-}
-
-
 
 variable "cluster_owner_group" {
   type    = string

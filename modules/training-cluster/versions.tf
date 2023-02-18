@@ -13,7 +13,7 @@ terraform {
       source = "hashicorp/local"
     }
     rancher2 = {
-      source = "rancher/rancher2"
+      source  = "rancher/rancher2"
       version = "1.24.2"
     }
     template = {
@@ -21,6 +21,10 @@ terraform {
     }
     cloudscale = {
       source = "cloudscale-ch/cloudscale"
+    }
+    restapi = {
+      source  = "Mastercard/restapi"
+      version = "1.18.0"
     }
 
   }

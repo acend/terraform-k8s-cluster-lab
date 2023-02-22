@@ -226,7 +226,7 @@ resource "helm_release" "csi-cloudscale" {
   name       = "csi-cloudscale"
   repository = "https://cloudscale-ch.github.io/csi-cloudscale"
   chart      = "csi-cloudscale"
-  version    = "1.3.1"
+  version    = "1.3.0"
   namespace  = "kube-system"
 
   set {

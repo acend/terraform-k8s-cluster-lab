@@ -52,6 +52,11 @@ resource "helm_release" "certmanager-webhook-hosttech" {
     value = "acme.acend.ch"
   }
 
+  set {
+    name = "certManager.serviceAccountName"
+    value = "certmanager-cert-manager"
+  }
+
 }
 
 

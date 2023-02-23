@@ -64,6 +64,10 @@
 
 resource "null_resource" "giteaUser" {
 
+  depends_on = [
+    helm_release.gitea
+  ]
+
   triggers = {
     giteaHost          = "gitea.${var.domain}"
     giteaAdminPassword = nonsensitive(random_password.admin-password.result)
@@ -125,6 +129,9 @@ EOH
 }
 
 resource "null_resource" "repo" {
+  depends_on = [
+   null_resource.giteaUser
+  ]
 
   triggers = {
     giteaHost          = "gitea.${var.domain}"
@@ -174,10 +181,6 @@ EOH
       USERNAME             = self.triggers.username
     }
   }
-
-  depends_on = [
-    null_resource.giteaUser
-  ]
 
   count = var.count-students
 }

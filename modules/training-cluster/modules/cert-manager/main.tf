@@ -64,7 +64,7 @@ resource "helm_release" "certmanager-webhook-hosttech" {
 # For Secret/Certificate sync across Namespaces
 resource "helm_release" "kubed" {
 
-  depends_on = [rancher2_namespace.cert-manager]
+  depends_on = [helm_release.cert-manager]
 
 
   name       = "config-syncer"

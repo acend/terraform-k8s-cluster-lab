@@ -1,23 +1,12 @@
 terraform {
   required_providers {
-    helm = {
-      source = "hashicorp/helm"
-    }
-    k8s = {
-      source = "banzaicloud/k8s"
-    }
-    kubernetes = {
-      source = "hashicorp/kubernetes"
-    }
 
+    hcloud = {
+      source  = "hetznercloud/hcloud"
+      version = "1.36.2"
+    }
     template = {
       source = "hashicorp/template"
-    }
-    rancher2 = {
-      source = "rancher/rancher2"
-    }
-    cloudscale = {
-      source = "cloudscale-ch/cloudscale"
     }
 
   }

@@ -12,13 +12,17 @@ variable "studentname-prefix" {
   default = "student"
 }
 
-variable "vm-flavor" {
-  type    = string
-  default = "flex-8-4"
+variable "location" {
+  type        = string
+  default     = "nbg1"
+  description = "hetzner location"
 }
-
-variable "ssh_keys" {
+variable "extra_ssh_keys" {
   type    = list(string)
   default = []
 }
 
+variable "cluster_name" {
+  type        = string
+  description = "name of the cluster"
+}

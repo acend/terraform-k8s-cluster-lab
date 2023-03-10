@@ -1,9 +1,3 @@
-variable "rancher_training_project" {
-}
-
-variable "rancher_system_project" {
-}
-
 variable "chart-repository" {
   type    = string
   default = "https://argoproj.github.io/argo-helm"
@@ -14,8 +8,9 @@ variable "chart-version" {
   default = "5.21.1"
 }
 
-variable "domain" {
-  default = "labapp.acend.ch"
+variable "cluster_name" {
+  type        = string
+  description = "name of the cluster"
 }
 
 variable "count-students" {
@@ -32,6 +27,7 @@ variable "studentname-prefix" {
   default = "student"
 }
 
-variable "kubeconfig" {
+variable "kubeconfig_raw" {
   type = string
+  
 }

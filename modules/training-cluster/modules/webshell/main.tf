@@ -1,33 +1,27 @@
-resource "rancher2_namespace" "student-namespace" {
+resource "kubernetes_namespace" "student" {
 
-  name       = var.student-name
-  project_id = var.rancher_training_project.id
-
-  labels = {
-    certificate-labapp            = "true" # this will copy the wildcard cert created with cert-manager using the kubed installation
-    "kubernetes.io/metadata.name" = var.student-name
+  metadata {
+    name  = var.student-name
+    labels = {
+      certificate-wildcard            = "true" # this will copy the wildcard cert created with cert-manager using the kubed installation
+      "kubernetes.io/metadata.name" = var.student-name
+    }
   }
+
 }
 
-resource "rancher2_namespace" "student-namespace-quotalab" {
+resource "kubernetes_namespace" "student-quotalab" {
 
-  name       = "${var.student-name}-quota"
-  project_id = var.rancher_quotalab_project.id
-
-  container_resource_limit {
-    limits_cpu      = "100m"
-    limits_memory   = "32Mi"
-    requests_cpu    = "10m"
-    requests_memory = "16Mi"
+  metadata {
+    name = "${var.student-name}-quota"
   }
-
 }
 
 // Allow to use the SA from Webshell Namespace to also access this quotalab student prod Namespace
 resource "kubernetes_role_binding" "student-quotalab" {
   metadata {
     name      = "admin-rb"
-    namespace = rancher2_namespace.student-namespace-quotalab.name
+    namespace = kubernetes_namespace.student-quotalab.metadata.0.name
   }
 
   role_ref {
@@ -53,7 +47,7 @@ resource "helm_release" "webshell" {
   repository = var.chart-repository
   chart      = "webshell"
   version    = var.chart-version
-  namespace  = rancher2_namespace.student-namespace.name
+  namespace  = kubernetes_namespace.student.metadata.0.name
 
   values = [
     "${templatefile(
@@ -108,7 +102,7 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "ingress.hosts[0].host"
-    value = "${var.student-name}.${var.domain}"
+    value = "${var.student-name}.${var.cluster_name}.labcluster.acend.ch"
   }
 
   set {
@@ -123,12 +117,12 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "ingress.tls[0].secretName"
-    value = "labapp-wildcard"
+    value = "acend-wildcard"
   }
 
   set {
     name  = "ingress.tls[0].hosts[0]"
-    value = "${var.student-name}.${var.domain}"
+    value = "${var.student-name}.${var.cluster_name}.labcluster.acend.ch"
   }
 
   set {
@@ -138,7 +132,7 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "theia.persistence.storageclass"
-    value = "cloudscale-volume-ssd"
+    value = "hcloud-volume"
   }
 
   set {
@@ -154,6 +148,11 @@ resource "helm_release" "webshell" {
   set {
     name  = "dind.persistence.enabled"
     value = "true"
+  }
+
+   set {
+    name  = "dind.persistence.storageclass"
+    value = "hcloud-volume"
   }
 
   set {

@@ -4,5 +4,5 @@ output "user-ssh-keys" {
 
 
 output "ip-address" {
-  value = cloudscale_server.user-vm.*.public_ipv4_address
+  value = hcloud_server.user-vm.*.ipv4_address
 }

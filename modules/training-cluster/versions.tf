@@ -12,15 +12,16 @@ terraform {
     local = {
       source = "hashicorp/local"
     }
-    rancher2 = {
-      source  = "rancher/rancher2"
-      version = "1.24.2"
-    }
     template = {
       source = "hashicorp/template"
     }
-    cloudscale = {
-      source = "cloudscale-ch/cloudscale"
+    hcloud = {
+      source  = "hetznercloud/hcloud"
+      version = "1.36.2"
+    }
+    ssh = {
+      source  = "loafoe/ssh"
+      version = "2.6.0"
     }
     restapi = {
       source  = "Mastercard/restapi"

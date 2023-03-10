@@ -1,17 +1,6 @@
-variable "rancher2_access_key" {
-  type = string
-}
-
-variable "rancher2_secret_key" {
-  type = string
-}
-
-variable "cloudscale_token" {
-  type = string
-}
-
-variable "rancher2_api_url" {
-  type = string
+variable "hcloud_api_token" {
+  type      = string
+  sensitive = true
 }
 
 variable "hosttech_dns_token" {
@@ -24,66 +13,105 @@ variable "hosttech-dns-zone-id" {
   description = "Zone ID of the hosttech DNS Zone where LoadBalancer A/AAAA records are created"
 }
 
-variable "node_flavor_master" {
-  description = "The cloudscale.ch VM flavor to use for the master nodes."
+variable "location" {
   type        = string
-  default     = "flex-8-4"
+  default     = "nbg1"
+  description = "hetzner location"
 }
 
-variable "node_flavor_worker" {
-  description = "The cloudscale.ch VM flavor to use for the worker nodes."
+variable "cluster_name" {
   type        = string
-  default     = "flex-8-4"
+  description = "name of the cluster"
 }
 
-variable "node_count_master" {
-  description = "The number of master nodes to provision (will have roles control-plane, etcd, worker)"
-  type        = number
+variable "rke2_version" {
+  type        = string
+  default     = "v1.26.0+rke2r2"
+  description = "Version of rke2 to install"
+}
+
+variable "network" {
+  type        = string
+  default     = "10.0.0.0/8"
+  description = "network to use"
+}
+variable "subnetwork" {
+  type        = string
+  default     = "10.0.0.0/24"
+  description = "subnetwork to use"
+}
+variable "networkzone" {
+  type        = string
+  default     = "eu-central"
+  description = "hetzner netzwork zone"
+}
+
+variable "internalbalancerip" {
+  type        = string
+  default     = "10.0.0.2"
+  description = "IP to use for control plane loadbalancer"
+}
+variable "lb_type" {
+  type        = string
+  default     = "lb11"
+  description = "Load balancer type"
+}
+
+
+variable "controlplane_type" {
+  type        = string
+  default     = "cpx31"
+  description = "machine type to use for the controlplanes"
+}
+
+variable "worker_type" {
+  type        = string
+  default     = "cpx41"
+  description = "machine type to use for the controlplanes"
+}
+
+variable "node_image_type" {
+  type        = string
+  default     = "ubuntu-22.04"
+  description = "Image Type for all Nodes"
+}
+
+variable "controlplane_count" {
   default     = 3
+  description = "Count of rke2 servers"
 
   validation {
-    condition     = var.node_count_master == 3
+    condition     = var.controlplane_count == 3
     error_message = "You must have 3 master nodes."
   }
 }
 
-variable "node_count_worker" {
-  description = "The number of worker nodes to provision (will have role worker)"
-  type        = number
-  default     = 0
+variable "worker_count" {
+  default     = 2
+  description = "Count of rke2 workers"
 }
-
-
-variable "cluster_name" {
-  type    = string
-  default = "acend-training-cluster"
-}
-
 
 variable "letsencrypt_email" {
   type    = string
   default = "sebastian@acend.ch"
 }
 
-variable "cluster_owner_group" {
-  type    = string
-  default = ""
+
+variable "extra_ssh_keys" {
+  type        = list(any)
+  default     = []
+  description = "Extra ssh keys to inject into vm's"
 }
 
-
-variable "kubernetes_version" {
-  type    = string
-  default = "v1.24.4+rke2r1"
+variable "k8s_api_hostnames" {
+  type        = list(string)
+  description = "Host Name of K8S API, added as SAN to API Certificate"
 }
 
-variable "ssh_keys" {
-  type    = list(string)
-  default = []
+variable "k8s-cluster-cidr" {
+  default = "10.244.0.0/16"
 }
 
-variable "domain" {
-  default = "labapp.acend.ch"
-}
 
 variable "count-students" {
   type    = number
@@ -113,4 +141,10 @@ variable "user-vms-enabled" {
 variable "webshell-rbac-enabled" {
   type    = bool
   default = true
+}
+
+variable "first_install" {
+  type = bool
+  default = false
+  description = "Indicate if this is the very first installation. RKE2 needs to handle the first controlplane node special when its the initial installation"
 }

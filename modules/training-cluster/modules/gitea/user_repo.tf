@@ -69,7 +69,7 @@ resource "null_resource" "giteaUser" {
   ]
 
   triggers = {
-    giteaHost          = "gitea.${var.domain}"
+    giteaHost          = "gitea.${var.cluster_name}.labcluster.acend.ch"
     giteaAdminPassword = nonsensitive(random_password.admin-password.result)
     giteaAdminUser     = "gitea_admin"
     password           = nonsensitive(var.student-passwords[count.index].result)
@@ -134,7 +134,7 @@ resource "null_resource" "repo" {
   ]
 
   triggers = {
-    giteaHost          = "gitea.${var.domain}"
+    giteaHost          = "gitea.${var.cluster_name}.labcluster.acend.ch"
     giteaAdminPassword = nonsensitive(random_password.admin-password.result)
     giteaAdminUser     = "gitea_admin"
     username           = "${var.studentname-prefix}${count.index + 1}"

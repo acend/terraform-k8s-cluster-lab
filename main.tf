@@ -1,3 +1,7 @@
+terraform {
+  backend "remote" {}
+}
+
 module "training-cluster" {
   source = "./modules/training-cluster"
 

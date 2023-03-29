@@ -3,9 +3,6 @@ terraform {
     helm = {
       source = "hashicorp/helm"
     }
-    k8s = {
-      source = "banzaicloud/k8s"
-    }
     kubernetes = {
       source = "hashicorp/kubernetes"
     }
@@ -17,15 +14,18 @@ terraform {
     }
     hcloud = {
       source  = "hetznercloud/hcloud"
-      version = "1.36.2"
     }
     ssh = {
       source  = "loafoe/ssh"
-      version = "2.6.0"
     }
     restapi = {
       source  = "Mastercard/restapi"
-      version = "1.18.0"
+    }
+    banzaicloud-k8s = {
+      source  = "banzaicloud/k8s"
+    }
+    metio-k8s = {
+      source  = "metio/k8s"
     }
 
   }

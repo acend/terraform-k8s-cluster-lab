@@ -1,4 +1,8 @@
 resource "kubernetes_namespace" "ingress-nginx" {
+
+  depends_on = [
+    time_sleep.wait_for_cluster_ready
+  ]
   metadata {
     name = "ingress-nginx"
   }

@@ -44,6 +44,12 @@ provider "restapi" {
   }
 }
 
+provider "banzaicloud-k8s" {
+    host                   = local.kubernetes_api
+    client_certificate     = local.client_certificate
+    client_key             = local.client_key
+    cluster_ca_certificate = local.cluster_ca_certificate
+}
 
 locals {
   argocd_enabled = var.argocd-enabled ? 1 : 0
@@ -71,9 +77,13 @@ resource "random_password" "student-passwords" {
 module "webshell" {
   source = "./modules/webshell"
 
-  depends_on = [module.student-vms]
+  depends_on = [
+    time_sleep.wait_for_cluster_ready,
+    module.student-vms
+  ]
 
-  cluster_name = var.cluster_name
+  cluster_name       = var.cluster_name
+  cluster_domain     = var.cluster_domain
 
   student-index            = count.index
   student-name             = "${var.studentname-prefix}${count.index + 1}"
@@ -98,6 +108,7 @@ module "student-vms" {
   extra_ssh_keys = var.extra_ssh_keys
 
   count = local.vms-enabled
+
 }
 
 
@@ -106,6 +117,7 @@ module "argocd" {
   source = "./modules/argocd"
 
   cluster_name       = var.cluster_name
+  cluster_domain     = var.cluster_domain
   count-students     = var.count-students
   student-passwords  = random_password.student-passwords
   studentname-prefix = var.studentname-prefix
@@ -115,6 +127,7 @@ module "argocd" {
   count = local.argocd_enabled
 
   depends_on = [
+    time_sleep.wait_for_cluster_ready,
     module.webshell // student namespaces are created in the webshell module
   ]
 }
@@ -124,10 +137,15 @@ module "gitea" {
   source = "./modules/gitea"
 
   cluster_name       = var.cluster_name
+  cluster_domain     = var.cluster_domain
   count-students     = var.count-students
   student-passwords  = random_password.student-passwords
   studentname-prefix = var.studentname-prefix
 
 
   count = local.gitea_enabled
+
+  depends_on = [
+     time_sleep.wait_for_cluster_ready
+  ]
 }

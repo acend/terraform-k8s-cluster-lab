@@ -24,9 +24,14 @@ variable "cluster_name" {
   description = "name of the cluster"
 }
 
+variable "cluster_domain" {
+  type        = string
+  description = "common subdomain for all cluster"
+  default     = "labcluster.acend.ch"
+}
 variable "rke2_version" {
   type        = string
-  default     = "v1.26.0+rke2r2"
+  default     = "v1.26.2+rke2r1"
   description = "Version of rke2 to install"
 }
 
@@ -102,12 +107,6 @@ variable "extra_ssh_keys" {
   default     = []
   description = "Extra ssh keys to inject into vm's"
 }
-
-variable "k8s_api_hostnames" {
-  type        = list(string)
-  description = "Host Name of K8S API, added as SAN to API Certificate"
-}
-
 variable "k8s-cluster-cidr" {
   default = "10.244.0.0/16"
 }
@@ -147,4 +146,10 @@ variable "first_install" {
   type = bool
   default = false
   description = "Indicate if this is the very first installation. RKE2 needs to handle the first controlplane node special when its the initial installation"
+}
+
+variable "cluster_admin" {
+  type        = list
+  default     = []
+  description = "user with cluster-admin permissions"
 }

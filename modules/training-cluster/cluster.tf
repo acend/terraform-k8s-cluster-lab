@@ -4,7 +4,7 @@ resource "tls_private_key" "terraform" {
 }
 
 resource "hcloud_ssh_key" "terraform" {
-  name       = "terraform"
+  name       = "terraform-${var.cluster_name}"
   public_key = tls_private_key.terraform.public_key_openssh
 }
 
@@ -19,6 +19,12 @@ resource "hcloud_placement_group" "controlplane" {
 }
 
 resource "hcloud_server" "controlplane" {
+
+  depends_on = [
+    hcloud_load_balancer_service.rke2,
+    hcloud_load_balancer_target.controlplane
+  ]
+
   count = var.controlplane_count
 
   lifecycle {
@@ -60,7 +66,7 @@ resource "hcloud_server" "controlplane" {
 
     controlplane_index = count.index,
 
-    k8s_api_hostnames = var.k8s_api_hostnames
+    k8s_api_hostnames = [ "api.${var.cluster_name}.${var.cluster_domain}"]
 
     k8s-cluster-cidr = var.k8s-cluster-cidr
 
@@ -124,6 +130,10 @@ resource "hcloud_server_network" "worker" {
 }
 
 resource "kubernetes_secret" "cloud_init_worker" {
+
+  depends_on = [
+    time_sleep.wait_for_cluster_ready
+  ]
   metadata {
     name      = "cloud-init-worker"
     namespace = "kube-system"
@@ -154,7 +164,7 @@ resource "null_resource" "cleanup-node-before-destroy" {
 
   triggers = {
     kubeconfig = base64encode(local.kubeconfig_raw)
-    node_name  = hcloud_server.worker[count.index].name
+    node_name  = "${var.cluster_name}-worker-${count.index}"
   }
   provisioner "local-exec" {
     when        = destroy
@@ -163,8 +173,7 @@ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stabl
 curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 chmod +x ./kubectl
-
-./kubectl drain node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
+./kubectl drain $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
 ./kubectl delete node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
 EOH
     interpreter = ["/bin/bash", "-c"]
@@ -181,56 +190,17 @@ EOH
   count = var.worker_count
 }
 
-resource "null_resource" "taint-controlplane-when-worker-available" {
+# resource "kubernetes_node_taint" "control-plane" {
 
-  triggers = {
-    kubeconfig  = base64encode(local.kubeconfig_raw)
-    clusterName = var.cluster_name
-  }
+#   count = local.hasWorker == 1 ? var.controlplane_count : 0
+#   metadata {
+#     name = "${var.cluster_name}-controlplane-${count.index}"
+#   }
 
-  provisioner "local-exec" {
-    command     = <<EOH
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
-chmod +x ./kubectl
+#   taint {
+#     key    = "node-role.kubernetes.io/control-plane"
+#     value  = "true"
+#     effect = "NoSchedule"
+#   }
 
-./kubectl taint node $CLUSTERNAME-controlplane-0 node-role.kubernetes.io/control-plane:NoSchedule --overwrite --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-./kubectl taint node $CLUSTERNAME-controlplane-1 node-role.kubernetes.io/control-plane:NoSchedule --overwrite --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-./kubectl taint node $CLUSTERNAME-controlplane-2 node-role.kubernetes.io/control-plane:NoSchedule --overwrite --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-
-EOH
-    interpreter = ["/bin/bash", "-c"]
-    environment = {
-      KUBECONFIG  = self.triggers.kubeconfig
-      CLUSTERNAME = self.triggers.clusterName
-    }
-  }
-
-  provisioner "local-exec" {
-    when        = destroy
-    command     = <<EOH
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
-chmod +x ./kubectl
-
-./kubectl taint node $CLUSTERNAME-controlplane-0 node-role.kubernetes.io/control-plane- --overwrite --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-./kubectl taint node $CLUSTERNAME-controlplane-1 node-role.kubernetes.io/control-plane- --overwrite --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-./kubectl taint node $CLUSTERNAME-controlplane-2 node-role.kubernetes.io/control-plane- --overwrite --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-EOH
-    interpreter = ["/bin/bash", "-c"]
-    environment = {
-      KUBECONFIG  = self.triggers.kubeconfig
-      CLUSTERNAME = self.triggers.clusterName
-    }
-  }
-
-  count = local.hasWorker
-
-  depends_on = [
-    hcloud_server.worker
-  ]
-}
-
-
+# } 

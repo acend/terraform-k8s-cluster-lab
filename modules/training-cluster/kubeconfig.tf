@@ -10,7 +10,39 @@ locals {
 
 }
 
+
+resource "null_resource" "wait_for_k8s_api" {
+
+  triggers = {
+    k8s_api_ip = hcloud_load_balancer.lb.ipv4
+  }
+  provisioner "local-exec" {
+    command     = <<EOH
+while true; do
+    curl -k https://$K8S_API_IP:6443 && break || sleep 3
+done
+EOH
+    interpreter = ["/bin/bash", "-c"]
+    environment = {
+      K8S_API_IP = self.triggers.k8s_api_ip
+    }
+  }
+
+  depends_on = [
+    hcloud_server.controlplane,
+    hcloud_server_network.controlplane,
+    hcloud_load_balancer_service.api,
+    hcloud_load_balancer_target.controlplane
+  ]
+
+
+}
+
 resource "ssh_resource" "getkubeconfig" {
+
+  depends_on = [
+    null_resource.wait_for_k8s_api
+  ]
 
   when = "create"
 
@@ -26,12 +58,4 @@ resource "ssh_resource" "getkubeconfig" {
     "until [ -f /etc/rancher/rke2/rke2.yaml ]; do sleep 10; done;",
     "cat /etc/rancher/rke2/rke2.yaml"
   ]
-}
-
-// Wait a to make sure lb has the targets (at least one) up and running
-resource "time_sleep" "wait_for_k8s_api" {
-  depends_on = [
-    ssh_resource.getkubeconfig
-  ]
-  create_duration = "120s"
 }

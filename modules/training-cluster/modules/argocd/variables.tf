@@ -5,12 +5,17 @@ variable "chart-repository" {
 
 variable "chart-version" {
   type    = string
-  default = "5.21.1"
+  default = "5.24.1"
 }
 
 variable "cluster_name" {
   type        = string
   description = "name of the cluster"
+}
+
+variable "cluster_domain" {
+  type        = string
+  description = "common subdomain for cluster"
 }
 
 variable "count-students" {

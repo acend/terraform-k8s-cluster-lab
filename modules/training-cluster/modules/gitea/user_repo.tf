@@ -1,75 +1,19 @@
-# resource "null_resource" "getGiteaToken" {
 
-#   triggers = {
-#     kubeconfig = base64encode(nonsensitive(var.kubeconfig))
-#     giteaHost = "gitea.${var.domain}"
-#     giteaAdminPassword = nonsensitive(random_password.admin-password.result)
-#     giteaAdminUser = "gitea_admin"
-#     always_run = "${timestamp()}"
-#   }
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [helm_release.gitea]
 
-#   provisioner "local-exec" {
-#     command = <<EOH
-# curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-# curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-# echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
-# chmod +x ./kubectl
+  create_duration = "30s"
+}
 
-# curl -o jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
-# chmod 0755 jq
-
-
-# ./kubectl -n gitea wait --for=condition=Ready Pods -l app=gitea --timeout=90s --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-
-# token_result=$(curl -XPOST -H "Content-Type: application/json"  -k -d '{"name":"admin-token-'$TIMESTAMP'"}' -s -u $GITEA_ADMIN_USER:$GITEA_ADMIN_PASSWORD https://$GITEA_HOST/api/v1/users/$GITEA_ADMIN_USER/tokens)
-# echo $token_result > ${path.module}/gitea_token_raw
-# echo $token_result | ./jq '.sha1' | sed 's/\"//g' > ${path.module}/gitea_token
-# cat ${path.module}/gitea_token_raw
-# cat ${path.module}/gitea_token
-
-
-# EOH
-#     interpreter = ["/bin/bash", "-c"]
-# environment = {
-#       KUBECONFIG = self.triggers.kubeconfig
-#       GITEA_HOST = self.triggers.giteaHost
-#       GITEA_ADMIN_USER = self.triggers.giteaAdminUser
-#       GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
-#       TIMESTAMP = self.triggers.always_run
-#   }
-#  }
-
-
-
-#  depends_on = [
-#    helm_release.gitea
-#  ]
-# }
-
-# data "local_file" "giteaToken" {
-#   filename = "${path.module}/gitea_token"
-
-#   depends_on = [
-#     null_resource.getGiteaToken
-#   ]
-# }
-
-# data "local_file" "giteaToken_raw" {
-#   filename = "${path.module}/gitea_token_raw"
-
-#   depends_on = [
-#     null_resource.getGiteaToken
-#   ]
-# }
 
 resource "null_resource" "giteaUser" {
 
   depends_on = [
-    helm_release.gitea
+    time_sleep.wait_30_seconds
   ]
 
   triggers = {
-    giteaHost          = "gitea.${var.cluster_name}.labcluster.acend.ch"
+    giteaHost          = "gitea.${var.cluster_name}.${var.cluster_domain}"
     giteaAdminPassword = nonsensitive(random_password.admin-password.result)
     giteaAdminUser     = "gitea_admin"
     password           = nonsensitive(var.student-passwords[count.index].result)
@@ -134,7 +78,7 @@ resource "null_resource" "repo" {
   ]
 
   triggers = {
-    giteaHost          = "gitea.${var.cluster_name}.labcluster.acend.ch"
+    giteaHost          = "gitea.${var.cluster_name}.${var.cluster_domain}"
     giteaAdminPassword = nonsensitive(random_password.admin-password.result)
     giteaAdminUser     = "gitea_admin"
     username           = "${var.studentname-prefix}${count.index + 1}"

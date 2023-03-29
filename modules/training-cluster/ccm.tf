@@ -1,6 +1,6 @@
 resource "kubernetes_secret" "hcloud" {
   depends_on = [
-    time_sleep.wait_for_k8s_api
+    null_resource.wait_for_k8s_api
   ]
   metadata {
     name      = "hcloud"
@@ -18,7 +18,7 @@ resource "kubernetes_secret" "hcloud" {
 
 resource "kubernetes_secret" "cloud-controller-manager" {
   depends_on = [
-    time_sleep.wait_for_k8s_api
+    null_resource.wait_for_k8s_api
   ]
   metadata {
     name = "cloud-controller-manager"
@@ -58,6 +58,10 @@ resource "kubernetes_deployment" "cloud-controller-manager" {
       spec[0].template[0].spec[0].toleration
     ]
   }
+
+  depends_on = [
+    kubernetes_cluster_role_binding.cloud-controller-manager
+  ]
 
   metadata {
     name      = "hcloud-cloud-controller-manager"
@@ -119,7 +123,7 @@ resource "kubernetes_deployment" "cloud-controller-manager" {
         priority_class_name = "system-cluster-critical"
 
         container {
-          image = "hetznercloud/hcloud-cloud-controller-manager:v1.13.2"
+          image = "hetznercloud/hcloud-cloud-controller-manager:v1.14.2"
           name  = "hcloud-cloud-controller-manager"
 
           resources {
@@ -177,12 +181,18 @@ resource "kubernetes_deployment" "cloud-controller-manager" {
             value = "true"
           }
 
-
-
         }
       }
-
     }
-
   }
 }
+
+resource "time_sleep" "wait_for_cluster_ready" {
+  // Wait for the ccm to be installed, only then the cluster is really ready
+  depends_on = [kubernetes_deployment.cloud-controller-manager ]
+
+  // give it some time to create routes
+  create_duration = "30s"
+}
+
+

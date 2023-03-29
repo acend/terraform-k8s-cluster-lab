@@ -34,6 +34,12 @@ resource "helm_release" "gitea" {
   chart      = "gitea"
   namespace  = kubernetes_namespace.gitea.metadata.0.name
 
+  
+  set {
+    name = "global.storageClass"
+    value = "hcloud-volume"
+  }
+  
   set {
     name  = "gitea.admin.password"
     value = random_password.admin-password.result
@@ -57,7 +63,7 @@ resource "helm_release" "gitea" {
 
   set {
     name  = "ingress.hosts[0].host"
-    value = "gitea.${var.cluster_name}.labcluster.acend.ch"
+    value = "gitea.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
@@ -72,7 +78,7 @@ resource "helm_release" "gitea" {
 
   set {
     name  = "ingress.tls[0].hosts[0]"
-    value = "gitea.${var.cluster_name}.labcluster.acend.ch"
+    value = "gitea.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {

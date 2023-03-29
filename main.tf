@@ -3,7 +3,6 @@ module "training-cluster" {
 
   first_install = true
 
-  k8s_api_hostnames = ["api.labcluster.acend.ch"]
   cluster_name       = var.cluster_name
 
   hcloud_api_token     = var.hcloud_api_token
@@ -14,6 +13,8 @@ module "training-cluster" {
   worker_type       = var.worker_type
   worker_count      = var.worker_count
   extra_ssh_keys    = var.extra_ssh_keys
+
+  cluster_admin = var.cluster_admin
 
   # Webshell
   count-students = var.count-students

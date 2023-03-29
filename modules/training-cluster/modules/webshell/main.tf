@@ -102,7 +102,7 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "ingress.hosts[0].host"
-    value = "${var.student-name}.${var.cluster_name}.labcluster.acend.ch"
+    value = "${var.student-name}.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {

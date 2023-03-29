@@ -74,3 +74,9 @@ variable "webshell-rbac-enabled" {
   type        = bool
   default     = true
 }
+
+variable "cluster_admin" {
+  type        = list
+  default     = []
+  description = "user with cluster-admin permissions"
+}

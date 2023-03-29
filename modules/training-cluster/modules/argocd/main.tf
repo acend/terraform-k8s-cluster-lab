@@ -219,7 +219,7 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.config.url"
-    value = "https://argocd.${var.cluster_name}.labcluster.acend.ch"
+    value = "https://argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
@@ -244,12 +244,12 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.ingress.hosts[0]"
-    value = "argocd.${var.cluster_name}.labcluster.acend.ch"
+    value = "argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
     name  = "server.ingress.tls[0].hosts[0]"
-    value = "argocd.${var.cluster_name}.labcluster.acend.ch"
+    value = "argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
@@ -274,12 +274,12 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.ingressGrpc.hosts[0]"
-    value = "argocd-grpc.${var.cluster_name}.labcluster.acend.ch"
+    value = "argocd-grpc.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
     name  = "server.ingressGrpc.tls[0].hosts[0]"
-    value = "argocd-grpc.${var.cluster_name}.labcluster.acend.ch"
+    value = "argocd-grpc.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {

@@ -61,7 +61,10 @@ resource "hcloud_load_balancer_target" "controlplane" {
   load_balancer_id = hcloud_load_balancer.lb.id
   label_selector   = "cluster=${var.cluster_name},controlplane=true"
   use_private_ip   = true
-  depends_on       = [hcloud_load_balancer_network.lb]
+  depends_on       = [
+    hcloud_load_balancer_network.lb,
+    hcloud_network_subnet.subnet
+  ]
 }
 
 resource "hcloud_firewall" "firewall" {

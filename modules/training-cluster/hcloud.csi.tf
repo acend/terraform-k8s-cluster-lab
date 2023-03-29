@@ -1,5 +1,9 @@
 resource "helm_release" "hcloud-csi-driver" {
 
+  depends_on = [
+    time_sleep.wait_for_cluster_ready
+  ]
+
   name       = "hcloud-csi-driver"
   repository = "https://helm-charts.mlohr.com/"
   chart      = "hcloud-csi-driver"

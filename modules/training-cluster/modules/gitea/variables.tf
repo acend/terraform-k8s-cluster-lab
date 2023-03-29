@@ -8,6 +8,11 @@ variable "cluster_name" {
   description = "name of the cluster"
 }
 
+variable "cluster_domain" {
+  type        = string
+  description = "common subdomain for cluster"
+}
+
 variable "count-students" {
   type    = number
   default = 0

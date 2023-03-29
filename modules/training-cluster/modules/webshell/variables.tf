@@ -35,3 +35,8 @@ variable "cluster_name" {
   type        = string
   description = "name of the cluster"
 }
+
+variable "cluster_domain" {
+  type        = string
+  description = "common subdomain for cluster"
+}

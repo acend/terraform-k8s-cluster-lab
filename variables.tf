@@ -18,21 +18,6 @@ variable "cluster_name" {
   default = "acend-training-cluster"
 }
 
-variable "domain" {
-  default = "labapp.acend.ch"
-}
-
-variable "controlplane_type" {
-  type        = string
-  default     = "cpx31"
-  description = "machine type to use for the controlplanes"
-}
-
-variable "worker_type" {
-  type        = string
-  default     = "cpx41"
-  description = "machine type to use for the controlplanes"
-}
 
 variable "worker_count" {
   default     = 2

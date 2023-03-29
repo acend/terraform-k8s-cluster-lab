@@ -9,8 +9,6 @@ module "training-cluster" {
   hosttech_dns_token   = var.hosttech_dns_token
   hosttech-dns-zone-id = var.hosttech-dns-zone-id
 
-  controlplane_type = var.controlplane_type
-  worker_type       = var.worker_type
   worker_count      = var.worker_count
   extra_ssh_keys    = var.extra_ssh_keys
 

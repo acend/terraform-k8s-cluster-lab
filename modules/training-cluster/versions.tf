@@ -3,28 +3,29 @@ terraform {
     helm = {
       source = "hashicorp/helm"
     }
-    k8s = {
-      source = "banzaicloud/k8s"
-    }
     kubernetes = {
       source = "hashicorp/kubernetes"
     }
     local = {
       source = "hashicorp/local"
     }
-    rancher2 = {
-      source  = "rancher/rancher2"
-      version = "1.24.2"
-    }
     template = {
       source = "hashicorp/template"
     }
-    cloudscale = {
-      source = "cloudscale-ch/cloudscale"
+    hcloud = {
+      source  = "hetznercloud/hcloud"
+    }
+    ssh = {
+      source  = "loafoe/ssh"
     }
     restapi = {
       source  = "Mastercard/restapi"
-      version = "1.18.0"
+    }
+    banzaicloud-k8s = {
+      source  = "banzaicloud/k8s"
+    }
+    metio-k8s = {
+      source  = "metio/k8s"
     }
 
   }

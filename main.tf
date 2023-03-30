@@ -1,4 +1,3 @@
-
 terraform {
   backend "remote" {}
 }
@@ -6,23 +5,18 @@ terraform {
 module "training-cluster" {
   source = "./modules/training-cluster"
 
-  cluster_name = var.cluster_name
-  domain       = var.domain
+  first_install = true
 
-  rancher2_access_key  = var.rancher2_access_key
-  rancher2_secret_key  = var.rancher2_secret_key
-  rancher2_api_url     = var.rancher2_api_url
-  cloudscale_token     = var.cloudscale_token
+  cluster_name       = var.cluster_name
+
+  hcloud_api_token     = var.hcloud_api_token
   hosttech_dns_token   = var.hosttech_dns_token
   hosttech-dns-zone-id = var.hosttech-dns-zone-id
-  cluster_owner_group  = var.cluster_owner_group
-  node_flavor_master   = var.node_flavor_master
-  node_flavor_worker   = var.node_flavor_worker
-  node_count_master    = var.node_count_master
-  node_count_worker    = var.node_count_worker
-  ssh_keys             = var.ssh_keys
 
+  worker_count      = var.worker_count
+  extra_ssh_keys    = var.extra_ssh_keys
 
+  cluster_admin = var.cluster_admin
 
   # Webshell
   count-students = var.count-students

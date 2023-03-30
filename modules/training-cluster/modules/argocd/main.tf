@@ -1,12 +1,13 @@
 
-resource "rancher2_namespace" "argocd-namespace" {
+resource "kubernetes_namespace" "argocd" {
 
-  name       = "argocd"
-  project_id = var.rancher_system_project.id
+  metadata {
+    name = "argocd"
 
-  labels = {
-    certificate-labapp            = "true"
-    "kubernetes.io/metadata.name" = "argocd"
+    labels = {
+      certificate-wildcard            = "true"
+      "kubernetes.io/metadata.name" = "argocd"
+    }
   }
 }
 
@@ -23,14 +24,15 @@ resource "kubernetes_cluster_role" "argocd" {
 }
 
 # Student Prod Namespaces
-resource "rancher2_namespace" "student-namespace-prod" {
+resource "kubernetes_namespace" "student-namespace-prod" {
 
-  name       = "${var.studentname-prefix}${count.index + 1}-prod"
-  project_id = var.rancher_training_project.id
+  metadata {
+    name = "${var.studentname-prefix}${count.index + 1}-prod"
 
-  labels = {
-    certificate-labapp            = "true"
-    "kubernetes.io/metadata.name" = "${var.studentname-prefix}${count.index + 1}-prod"
+    labels = {
+      certificate-wildcard          = "true"
+      "kubernetes.io/metadata.name" = "${var.studentname-prefix}${count.index + 1}-prod"
+    }
   }
 
   count = var.count-students
@@ -43,7 +45,7 @@ resource "kubernetes_role_binding" "student-prod" {
 
   metadata {
     name      = "admin-rb"
-    namespace = rancher2_namespace.student-namespace-prod[count.index].name
+    namespace = kubernetes_namespace.student-namespace-prod[count.index].metadata.0.name
   }
 
   role_ref {
@@ -64,7 +66,7 @@ resource "kubernetes_role_binding" "student-prod" {
 resource "kubernetes_role_binding" "argocd-prod" {
   metadata {
     name      = "argocd-rb"
-    namespace = rancher2_namespace.student-namespace-prod[count.index].name
+    namespace = kubernetes_namespace.student-namespace-prod[count.index].metadata.0.name
   }
 
   role_ref {
@@ -83,15 +85,17 @@ resource "kubernetes_role_binding" "argocd-prod" {
 }
 
 # Student Dev Namespaces
-resource "rancher2_namespace" "student-namespace-dev" {
+resource "kubernetes_namespace" "student-namespace-dev" {
 
-  name       = "${var.studentname-prefix}${count.index + 1}-dev"
-  project_id = var.rancher_training_project.id
+  metadata {
+    name = "${var.studentname-prefix}${count.index + 1}-dev"
 
-  labels = {
-    certificate-labapp            = "true"
-    "kubernetes.io/metadata.name" = "${var.studentname-prefix}${count.index + 1}-dev"
+    labels = {
+      certificate-labapp            = "true"
+      "kubernetes.io/metadata.name" = "${var.studentname-prefix}${count.index + 1}-dev"
+    }
   }
+
 
   count = var.count-students
 }
@@ -101,7 +105,7 @@ resource "rancher2_namespace" "student-namespace-dev" {
 resource "kubernetes_role_binding" "student-dev" {
   metadata {
     name      = "admin-rb"
-    namespace = rancher2_namespace.student-namespace-dev[count.index].name
+    namespace = kubernetes_namespace.student-namespace-dev[count.index].metadata.0.name
   }
 
   role_ref {
@@ -122,7 +126,7 @@ resource "kubernetes_role_binding" "student-dev" {
 resource "kubernetes_role_binding" "argocd-dev" {
   metadata {
     name      = "argocd-rb"
-    namespace = rancher2_namespace.student-namespace-dev[count.index].name
+    namespace = kubernetes_namespace.student-namespace-dev[count.index].metadata.0.name
   }
 
   role_ref {
@@ -167,7 +171,7 @@ resource "kubernetes_role_binding" "argocd" {
 resource "kubernetes_role_binding" "argocd-app" {
   metadata {
     name      = "argocd-app-${var.studentname-prefix}${count.index + 1}-rb"
-    namespace = rancher2_namespace.argocd-namespace.name
+    namespace = kubernetes_namespace.argocd.metadata.0.name
   }
 
   role_ref {
@@ -189,7 +193,7 @@ resource "kubernetes_role_binding" "argocd-app" {
 data "kubernetes_secret" "admin-secret" {
   metadata {
     name      = "argocd-initial-admin-secret"
-    namespace = rancher2_namespace.argocd-namespace.name
+    namespace = kubernetes_namespace.argocd.metadata.0.name
   }
 
   depends_on = [
@@ -204,7 +208,7 @@ resource "helm_release" "argocd" {
   name       = "argocd"
   repository = var.chart-repository
   chart      = "argo-cd"
-  namespace  = rancher2_namespace.argocd-namespace.name
+  namespace  = kubernetes_namespace.argocd.metadata.0.name
   version    = var.chart-version
 
 
@@ -215,7 +219,7 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.config.url"
-    value = "https://argocd.${var.domain}"
+    value = "https://argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
@@ -240,17 +244,17 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.ingress.hosts[0]"
-    value = "argocd.${var.domain}"
+    value = "argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
     name  = "server.ingress.tls[0].hosts[0]"
-    value = "argocd.${var.domain}"
+    value = "argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
     name  = "server.ingress.tls[0].secretName"
-    value = "labapp-wildcard"
+    value = "acend-wildcard"
   }
 
   set {
@@ -270,17 +274,17 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.ingressGrpc.hosts[0]"
-    value = "argocd-grpc.${var.domain}"
+    value = "argocd-grpc.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
     name  = "server.ingressGrpc.tls[0].hosts[0]"
-    value = "argocd-grpc.${var.domain}"
+    value = "argocd-grpc.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
     name  = "server.ingressGrpc.tls[0].secretName"
-    value = "labapp-wildcard"
+    value = "acend-wildcard"
   }
 
   set {
@@ -300,7 +304,7 @@ resource "helm_release" "argocd" {
 resource "null_resource" "cleanup-argo-cr-before-destroy" {
 
   triggers = {
-    kubeconfig = base64encode(var.kubeconfig)
+    kubeconfig = base64encode(var.kubeconfig_raw)
 
   }
   provisioner "local-exec" {

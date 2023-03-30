@@ -1,11 +1,3 @@
-variable "rancher_training_project" {
-}
-
-variable "rancher_quotalab_project" {
-}
-
-
-
 variable "chart-repository" {
   type    = string
   default = "https://acend.github.io/webshell-env/"
@@ -27,10 +19,6 @@ variable "student-password" {
   type = string
 }
 
-variable "domain" {
-  default = "labapp.acend.ch"
-}
-
 variable "user-vm-enabled" {
   type = bool
 }
@@ -41,4 +29,14 @@ variable "student-vms" {
 variable "rbac-enabled" {
   type    = bool
   default = true
+}
+
+variable "cluster_name" {
+  type        = string
+  description = "name of the cluster"
+}
+
+variable "cluster_domain" {
+  type        = string
+  description = "common subdomain for cluster"
 }

@@ -1,16 +1,16 @@
-variable "rancher_training_project" {
-}
-
-variable "rancher_system_project" {
-}
-
 variable "chart-repository" {
   type    = string
   default = "https://dl.gitea.io/charts/"
 }
 
-variable "domain" {
-  default = "labapp.acend.ch"
+variable "cluster_name" {
+  type        = string
+  description = "name of the cluster"
+}
+
+variable "cluster_domain" {
+  type        = string
+  description = "common subdomain for cluster"
 }
 
 variable "count-students" {
@@ -25,8 +25,4 @@ variable "student-passwords" {
 variable "studentname-prefix" {
   type    = string
   default = "student"
-}
-
-variable "kubeconfig" {
-  type = string
 }

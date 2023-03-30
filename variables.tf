@@ -1,19 +1,6 @@
-variable "rancher2_access_key" {
-  type = string
-}
-
-variable "rancher2_secret_key" {
+variable "hcloud_api_token" {
   type      = string
   sensitive = true
-}
-
-variable "cloudscale_token" {
-  type      = string
-  sensitive = true
-}
-
-variable "rancher2_api_url" {
-  type = string
 }
 
 variable "hosttech_dns_token" {
@@ -31,46 +18,16 @@ variable "cluster_name" {
   default = "acend-training-cluster"
 }
 
-variable "domain" {
-  default = "labapp.acend.ch"
+
+variable "worker_count" {
+  default     = 2
+  description = "Count of rke2 workers"
 }
 
-variable "node_flavor_master" {
-  description = "The cloudscale.ch VM flavor to use for the master nodes."
-  type        = string
-  default     = "flex-8-4"
-}
-
-variable "node_flavor_worker" {
-  description = "The cloudscale.ch VM flavor to use for the worker nodes."
-  type        = string
-  default     = "flex-8-4"
-}
-
-
-variable "node_count_master" {
-  description = "The number of master nodes to provision (will have roles control-plane, etcd, worker)"
-  type        = number
-  default     = 3
-}
-
-variable "node_count_worker" {
-  description = "The number of worker nodes to provision (will have role worker)"
-  type        = number
-  default     = 0
-}
-
-variable "cluster_owner_group" {
-  description = "The group_principal_id of a Rancher group which will become cluster owner"
-  type        = string
-  default     = ""
-}
-
-
-variable "ssh_keys" {
-  description = "SSH Public keys with access to the cloudscale.ch VM's"
-  type        = list(string)
+variable "extra_ssh_keys" {
+  type        = list(any)
   default     = []
+  description = "Extra ssh keys to inject into vm's"
 }
 
 variable "count-students" {
@@ -101,4 +58,10 @@ variable "webshell-rbac-enabled" {
   description = "Deploy RBAC to access Kubernetes Cluster for each student"
   type        = bool
   default     = true
+}
+
+variable "cluster_admin" {
+  type        = list
+  default     = []
+  description = "user with cluster-admin permissions"
 }

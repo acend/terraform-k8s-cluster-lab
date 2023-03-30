@@ -1,13 +1,13 @@
 variable "hcloud_api_token" {
-  type      = string
-  sensitive = true
+  type        = string
+  sensitive   = true
+  description = "Hetzner Cloud API Token"
 }
 
 variable "hosttech_dns_token" {
   type        = string
-  description = "hosttech dns api token"
+  description = "Hosttech DNS Api Token"
 }
-
 variable "hosttech-dns-zone-id" {
   type        = string
   description = "Zone ID of the hosttech DNS Zone where LoadBalancer A/AAAA records are created"
@@ -16,12 +16,18 @@ variable "hosttech-dns-zone-id" {
 variable "location" {
   type        = string
   default     = "nbg1"
-  description = "hetzner location"
+  description = "Hetzner location"
 }
 
 variable "cluster_name" {
   type        = string
-  description = "name of the cluster"
+  default     = "acend-training-cluster"
+  description = "The name for the cluster to be created. This is used also used in the DNS Name, or VM Hostname"
+
+  validation {
+    condition = can(regex("^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$", var.cluster_name))
+    error_message = "cluster_name must be a valid hostname"
+  }
 }
 
 variable "cluster_domain" {
@@ -123,33 +129,37 @@ variable "studentname-prefix" {
 }
 
 variable "argocd-enabled" {
-  type    = bool
-  default = false
+  description = "Switch to deploy argocd instance and configure it for the students"
+  type        = bool
+  default     = false
 }
 
 variable "gitea-enabled" {
-  type    = bool
-  default = false
+  description = "Switch to deploy Gitea"
+  type        = bool
+  default     = false
 }
 
 variable "user-vms-enabled" {
-  type    = bool
-  default = false
+  description = "Deploy a VM for each User"
+  type        = bool
+  default     = false
 }
 
 variable "webshell-rbac-enabled" {
-  type    = bool
-  default = true
-}
-
-variable "first_install" {
-  type = bool
-  default = false
-  description = "Indicate if this is the very first installation. RKE2 needs to handle the first controlplane node special when its the initial installation"
+  description = "Deploy RBAC to access Kubernetes Cluster for each student"
+  type        = bool
+  default     = true
 }
 
 variable "cluster_admin" {
   type        = list
   default     = []
   description = "user with cluster-admin permissions"
+}
+
+variable "first_install" {
+  type = bool
+  default = false
+  description = "Indicate if this is the very first installation. RKE2 needs to handle the first controlplane node special when its the initial installation"
 }

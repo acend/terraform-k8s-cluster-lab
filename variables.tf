@@ -1,21 +1,28 @@
 variable "hcloud_api_token" {
-  type      = string
-  sensitive = true
+  type        = string
+  sensitive   = true
+  description = "Hetzner Cloud API Token"
 }
 
 variable "hosttech_dns_token" {
   type        = string
-  description = "hosttech dns api token"
+  description = "Hosttech DNS Api Token"
 }
 
 variable "hosttech-dns-zone-id" {
   type        = string
-  description = "Zone ID of the hosttech DNS Zone where LoadBalancer A/AAAA records are created"
+  description = "Zone ID of the Hosttech DNS Zone where LoadBalancer A/AAAA records are created"
 }
 
 variable "cluster_name" {
-  type    = string
-  default = "acend-training-cluster"
+  type        = string
+  default     = "acend-training-cluster"
+  description = "The name for the cluster to be created. This is used also used in the DNS Name, or VM Hostname"
+
+  validation {
+    condition = can(regex("^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$", var.cluster_name))
+    error_message = "cluster_name must be a valid hostname"
+  }
 }
 
 

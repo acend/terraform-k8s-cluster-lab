@@ -45,11 +45,11 @@ provider "restapi" {
 }
 
 provider "banzaicloud-k8s" {
-    host                   = local.kubernetes_api
-    client_certificate     = local.client_certificate
-    client_key             = local.client_key
-    cluster_ca_certificate = local.cluster_ca_certificate
-    load_config_file       = false
+  host                   = local.kubernetes_api
+  client_certificate     = local.client_certificate
+  client_key             = local.client_key
+  cluster_ca_certificate = local.cluster_ca_certificate
+  load_config_file       = false
 }
 
 locals {
@@ -83,12 +83,12 @@ module "webshell" {
     module.student-vms
   ]
 
-  cluster_name       = var.cluster_name
-  cluster_domain     = var.cluster_domain
+  cluster_name   = var.cluster_name
+  cluster_domain = var.cluster_domain
 
-  student-index            = count.index
-  student-name             = "${var.studentname-prefix}${count.index + 1}"
-  student-password         = random_password.student-passwords[count.index].result
+  student-index    = count.index
+  student-name     = "${var.studentname-prefix}${count.index + 1}"
+  student-password = random_password.student-passwords[count.index].result
 
   user-vm-enabled = var.user-vms-enabled
   student-vms     = var.user-vms-enabled ? [module.student-vms[0]] : null
@@ -147,6 +147,6 @@ module "gitea" {
   count = local.gitea_enabled
 
   depends_on = [
-     time_sleep.wait_for_cluster_ready
+    time_sleep.wait_for_cluster_ready
   ]
 }

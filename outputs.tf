@@ -1,5 +1,5 @@
 output "admin_kubeconfig" {
-  value = module.training-cluster.kubeconfig_raw
+  value     = module.training-cluster.kubeconfig_raw
   sensitive = true
 }
 
@@ -15,11 +15,11 @@ output "argocd-admin-password" {
 }
 
 output "argocd-admin-username" {
-  value     = module.training-cluster.argocd-admin-username
+  value = module.training-cluster.argocd-admin-username
 }
 
 output "argocd-url" {
-  value     = module.training-cluster.argocd-url
+  value = module.training-cluster.argocd-url
 }
 
 // Gitea Output
@@ -30,11 +30,11 @@ output "gitea-admin-password" {
 }
 
 output "gitea-admin-username" {
-  value     = module.training-cluster.gitea-admin-username
+  value = module.training-cluster.gitea-admin-username
 }
 
 output "gitea-url" {
-  value     = module.training-cluster.gitea-url
+  value = module.training-cluster.gitea-url
 }
 
 // Student VM Output

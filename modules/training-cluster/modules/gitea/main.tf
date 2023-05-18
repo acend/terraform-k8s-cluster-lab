@@ -34,12 +34,12 @@ resource "helm_release" "gitea" {
   chart      = "gitea"
   namespace  = kubernetes_namespace.gitea.metadata.0.name
 
-  
+
   set {
-    name = "global.storageClass"
+    name  = "global.storageClass"
     value = "hcloud-volume"
   }
-  
+
   set {
     name  = "gitea.admin.password"
     value = random_password.admin-password.result

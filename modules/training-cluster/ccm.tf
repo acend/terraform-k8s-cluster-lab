@@ -189,7 +189,7 @@ resource "kubernetes_deployment" "cloud-controller-manager" {
 
 resource "time_sleep" "wait_for_cluster_ready" {
   // Wait for the ccm to be installed, only then the cluster is really ready
-  depends_on = [kubernetes_deployment.cloud-controller-manager ]
+  depends_on = [kubernetes_deployment.cloud-controller-manager]
 
   // give it some time to create routes
   create_duration = "30s"

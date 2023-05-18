@@ -25,7 +25,7 @@ variable "cluster_name" {
   description = "The name for the cluster to be created. This is used also used in the DNS Name, or VM Hostname"
 
   validation {
-    condition = can(regex("^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$", var.cluster_name))
+    condition     = can(regex("^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$", var.cluster_name))
     error_message = "cluster_name must be a valid hostname"
   }
 }
@@ -35,6 +35,7 @@ variable "cluster_domain" {
   description = "common subdomain for all cluster"
   default     = "cluster.acend.ch"
 }
+
 variable "rke2_version" {
   type        = string
   default     = "v1.27.1+rke2r1"
@@ -153,13 +154,13 @@ variable "webshell-rbac-enabled" {
 }
 
 variable "cluster_admin" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "user with cluster-admin permissions"
 }
 
 variable "first_install" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = "Indicate if this is the very first installation. RKE2 needs to handle the first controlplane node special when its the initial installation"
 }

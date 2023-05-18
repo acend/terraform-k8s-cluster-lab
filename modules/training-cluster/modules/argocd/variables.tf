@@ -34,5 +34,5 @@ variable "studentname-prefix" {
 
 variable "kubeconfig_raw" {
   type = string
-  
+
 }

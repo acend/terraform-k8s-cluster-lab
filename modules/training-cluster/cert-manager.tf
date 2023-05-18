@@ -15,7 +15,7 @@ resource "helm_release" "certmanager" {
   name       = "certmanager"
   repository = "https://charts.jetstack.io"
   chart      = "cert-manager"
-  version    = "v1.11.0"
+  version    = "v1.11.2"
   namespace  = kubernetes_namespace.cert-manager.metadata[0].name
 
   set {
@@ -53,7 +53,7 @@ resource "helm_release" "certmanager-webhook-hosttech" {
   }
 
   set {
-    name = "certManager.serviceAccountName"
+    name  = "certManager.serviceAccountName"
     value = "certmanager-cert-manager"
   }
 
@@ -63,7 +63,7 @@ resource "helm_release" "certmanager-webhook-hosttech" {
 
 # For Secret/Certificate sync across Namespaces
 resource "helm_release" "kubed" {
-  
+
   depends_on = [
     time_sleep.wait_for_cluster_ready
   ]
@@ -95,20 +95,20 @@ resource "k8s_cert_manager_io_cluster_issuer_v1" "clusterissuer-letsencrypt-prod
         name = "letsencrypt-prod"
       }
       server = "https://acme-v02.api.letsencrypt.org/directory"
-        solvers = [{
-          http01 = {
-            ingress = {
-              class = "nginx"
-            }
+      solvers = [{
+        http01 = {
+          ingress = {
+            class = "nginx"
           }
-        }]
-      }
+        }
+      }]
+    }
   }
 }
 
 resource "k8s_manifest" "clusterissuer-letsencrypt-prod" {
   provider = banzaicloud-k8s
-  content = k8s_cert_manager_io_cluster_issuer_v1.clusterissuer-letsencrypt-prod.yaml
+  content  = k8s_cert_manager_io_cluster_issuer_v1.clusterissuer-letsencrypt-prod.yaml
 }
 
 resource "k8s_cert_manager_io_cluster_issuer_v1" "clusterissuer-acend-hosttech" {
@@ -137,14 +137,14 @@ resource "k8s_cert_manager_io_cluster_issuer_v1" "clusterissuer-acend-hosttech" 
         }
         dns01 = {
           webhook = {
-            group_name = "acme.acend.ch"
+            group_name  = "acme.acend.ch"
             solver_name = "hosttech"
             config = {
               secretName = "hosttech-secret"
-              apiUrl = "https://api.ns1.hosttech.eu/api/user/v1"
+              apiUrl     = "https://api.ns1.hosttech.eu/api/user/v1"
             }
           }
-        }   
+        }
       }]
     }
   }
@@ -152,7 +152,7 @@ resource "k8s_cert_manager_io_cluster_issuer_v1" "clusterissuer-acend-hosttech" 
 
 resource "k8s_manifest" "clusterissuer-acend-hosttech" {
   provider = banzaicloud-k8s
-  content = k8s_cert_manager_io_cluster_issuer_v1.clusterissuer-acend-hosttech.yaml
+  content  = k8s_cert_manager_io_cluster_issuer_v1.clusterissuer-acend-hosttech.yaml
 }
 
 resource "k8s_cert_manager_io_certificate_v1" "certificate-acend-wildcard" {
@@ -163,7 +163,7 @@ resource "k8s_cert_manager_io_certificate_v1" "certificate-acend-wildcard" {
   ]
 
   metadata = {
-    name       = "acend-wildcard"
+    name      = "acend-wildcard"
     namespace = kubernetes_namespace.cert-manager.metadata[0].name
   }
 
@@ -181,13 +181,13 @@ resource "k8s_cert_manager_io_certificate_v1" "certificate-acend-wildcard" {
       annotations = {
         "kubed.appscode.com/sync" = "certificate-wildcard=true"
       }
-    }    
+    }
   }
 }
 
 resource "k8s_manifest" "certificate-acend-wildcard" {
   provider = banzaicloud-k8s
-  content = k8s_cert_manager_io_certificate_v1.certificate-acend-wildcard.yaml
+  content  = k8s_cert_manager_io_certificate_v1.certificate-acend-wildcard.yaml
 }
 
 resource "kubernetes_secret" "hosttech-secret" {

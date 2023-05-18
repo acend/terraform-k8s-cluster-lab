@@ -1,9 +1,9 @@
 resource "kubernetes_namespace" "student" {
 
   metadata {
-    name  = var.student-name
+    name = var.student-name
     labels = {
-      certificate-wildcard            = "true" # this will copy the wildcard cert created with cert-manager using the kubed installation
+      certificate-wildcard          = "true" # this will copy the wildcard cert created with cert-manager using the kubed installation
       "kubernetes.io/metadata.name" = var.student-name
     }
   }
@@ -150,7 +150,7 @@ resource "helm_release" "webshell" {
     value = "true"
   }
 
-   set {
+  set {
     name  = "dind.persistence.storageclass"
     value = "hcloud-volume"
   }

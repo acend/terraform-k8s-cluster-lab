@@ -13,19 +13,19 @@ terraform {
       source = "hashicorp/template"
     }
     hcloud = {
-      source  = "hetznercloud/hcloud"
+      source = "hetznercloud/hcloud"
     }
     ssh = {
-      source  = "loafoe/ssh"
+      source = "loafoe/ssh"
     }
     restapi = {
-      source  = "Mastercard/restapi"
+      source = "Mastercard/restapi"
     }
     banzaicloud-k8s = {
-      source  = "banzaicloud/k8s"
+      source = "banzaicloud/k8s"
     }
     metio-k8s = {
-      source  = "metio/k8s"
+      source = "metio/k8s"
     }
 
   }

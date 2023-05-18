@@ -11,7 +11,7 @@ resource "helm_release" "hcloud-csi-driver" {
   namespace  = "kube-system"
 
   set {
-    name = "secret.existingSecretName"
+    name  = "secret.existingSecretName"
     value = "hcloud"
   }
 }

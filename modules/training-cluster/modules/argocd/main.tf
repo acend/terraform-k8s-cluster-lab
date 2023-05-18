@@ -5,7 +5,7 @@ resource "kubernetes_namespace" "argocd" {
     name = "argocd"
 
     labels = {
-      certificate-wildcard            = "true"
+      certificate-wildcard          = "true"
       "kubernetes.io/metadata.name" = "argocd"
     }
   }

@@ -74,7 +74,7 @@ EOH
 
 resource "null_resource" "repo" {
   depends_on = [
-   null_resource.giteaUser
+    null_resource.giteaUser
   ]
 
   triggers = {

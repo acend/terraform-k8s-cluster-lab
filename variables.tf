@@ -16,7 +16,7 @@ variable "hosttech-dns-zone-id" {
 
 variable "cluster_name" {
   type        = string
-  default     = "acend-training-cluster"
+  default     = "training"
   description = "The name for the cluster to be created. This is used also used in the DNS Name, or VM Hostname"
 
   validation {

@@ -21,7 +21,7 @@ variable "location" {
 
 variable "cluster_name" {
   type        = string
-  default     = "acend-training-cluster"
+  default     = "training"
   description = "The name for the cluster to be created. This is used also used in the DNS Name, or VM Hostname"
 
   validation {
@@ -33,11 +33,11 @@ variable "cluster_name" {
 variable "cluster_domain" {
   type        = string
   description = "common subdomain for all cluster"
-  default     = "labcluster.acend.ch"
+  default     = "cluster.acend.ch"
 }
 variable "rke2_version" {
   type        = string
-  default     = "v1.26.2+rke2r1"
+  default     = "v1.27.1+rke2r1"
   description = "Version of rke2 to install"
 }
 

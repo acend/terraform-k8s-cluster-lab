@@ -132,7 +132,7 @@ resource "k8s_cert_manager_io_cluster_issuer_v1" "clusterissuer-acend-hosttech" 
       solvers = [{
         selector = {
           dnsNames = [
-            "*.${var.cluster_name}.labcluster.acend.ch"
+            "*.${var.cluster_name}.${split(".", var.cluster_domain)[0]}.acend.ch"
           ]
         }
         dns01 = {
@@ -170,7 +170,7 @@ resource "k8s_cert_manager_io_certificate_v1" "certificate-acend-wildcard" {
 
   spec = {
     dns_names = [
-      "*.${var.cluster_name}.labcluster.acend.ch"
+      "*.${var.cluster_name}.${split(".", var.cluster_domain)[0]}.acend.ch"
     ]
     issuer_ref = {
       kind = "ClusterIssuer"

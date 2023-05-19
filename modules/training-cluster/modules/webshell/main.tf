@@ -132,7 +132,7 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "theia.persistence.storageclass"
-    value = "hcloud-volume"
+    value = "longhorn"
   }
 
   set {

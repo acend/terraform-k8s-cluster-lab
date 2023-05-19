@@ -1,0 +1,51 @@
+longhornManager:
+  tolerations: 
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+longhornDriver:
+  tolerations: 
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+
+longhornUI:
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: true
+  tolerations: 
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+longhornConversionWebhook:
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: true
+  tolerations: 
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+longhornAdmissionWebhook:
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: true
+  tolerations: 
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+
+longhornRecoveryBackend:
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: true
+  tolerations: 
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"

@@ -15,7 +15,7 @@ longhornDriver:
 
 longhornUI:
   nodeSelector:
-    node-role.kubernetes.io/control-plane: true
+    node-role.kubernetes.io/control-plane: "true"
   tolerations: 
   - key: "node-role.kubernetes.io/control-plane"
     operator: "Equal"
@@ -24,7 +24,7 @@ longhornUI:
 
 longhornConversionWebhook:
   nodeSelector:
-    node-role.kubernetes.io/control-plane: true
+    node-role.kubernetes.io/control-plane: "true"
   tolerations: 
   - key: "node-role.kubernetes.io/control-plane"
     operator: "Equal"
@@ -33,7 +33,7 @@ longhornConversionWebhook:
 
 longhornAdmissionWebhook:
   nodeSelector:
-    node-role.kubernetes.io/control-plane: true
+    node-role.kubernetes.io/control-plane: "true"
   tolerations: 
   - key: "node-role.kubernetes.io/control-plane"
     operator: "Equal"
@@ -43,7 +43,7 @@ longhornAdmissionWebhook:
 
 longhornRecoveryBackend:
   nodeSelector:
-    node-role.kubernetes.io/control-plane: true
+    node-role.kubernetes.io/control-plane: "true"
   tolerations: 
   - key: "node-role.kubernetes.io/control-plane"
     operator: "Equal"

@@ -155,6 +155,11 @@ resource "helm_release" "webshell" {
     value = "hcloud-volume"
   }
 
+    set {
+    name  = "dind.persistence.pvcsize"
+    value = "10Gi"
+  }
+
   set {
     name  = "rbac.create"
     value = tostring(var.rbac-enabled)

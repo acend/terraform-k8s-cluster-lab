@@ -19,7 +19,6 @@ variable "location" {
 }
 variable "ssh_keys" {
   type    = string
-  default = []
 }
 
 variable "cluster_name" {

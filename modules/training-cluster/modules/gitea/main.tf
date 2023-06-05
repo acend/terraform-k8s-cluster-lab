@@ -56,6 +56,11 @@ resource "helm_release" "gitea" {
   }
 
   set {
+    name  = "ingress.className"
+    value = "nginx"
+  }
+
+  set {
     name  = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/force-ssl-redirect"
     value = "true"
     type  = "string"

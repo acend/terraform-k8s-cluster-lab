@@ -17,7 +17,7 @@ variable "location" {
   default     = "nbg1"
   description = "hetzner location"
 }
-variable "ssh_keys" {
+variable "ssh_key" {
   type    = string
 }
 

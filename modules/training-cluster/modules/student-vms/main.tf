@@ -38,7 +38,7 @@ resource "hcloud_server" "user-vm" {
     uservm : "true"
   }
 
-  ssh_keys = [var.var.ssh_keys]
+  ssh_keys = [var.var.ssh_key]
 
   user_data = data.template_file.cloudinit_uservm[count.index].rendered
 }

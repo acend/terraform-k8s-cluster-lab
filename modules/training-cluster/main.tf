@@ -80,7 +80,8 @@ module "webshell" {
 
   depends_on = [
     time_sleep.wait_for_cluster_ready,
-    module.student-vms
+    module.student-vms,
+    helm_release.longhorn # For the storage
   ]
 
   cluster_name   = var.cluster_name

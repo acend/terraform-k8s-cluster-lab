@@ -30,7 +30,9 @@ EOH
 
   depends_on = [
     hcloud_server.controlplane,
+    hcloud_server.worker,
     hcloud_server_network.controlplane,
+    hcloud_firewall.firewall,
     hcloud_load_balancer_service.api,
     hcloud_load_balancer_target.controlplane
   ]

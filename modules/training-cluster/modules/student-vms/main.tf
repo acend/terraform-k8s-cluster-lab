@@ -28,7 +28,7 @@ resource "hcloud_server" "user-vm" {
     ]
   }
 
-  name        = "vm-${var.studentname-prefix}-${count.index + 1}"
+  name        = "vm-${var.cluster-name}-${var.studentname-prefix}-${count.index + 1}"
   location    = var.location
   image       = "ubuntu-22.04"
   server_type = "cpx31"

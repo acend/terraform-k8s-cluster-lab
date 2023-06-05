@@ -2,6 +2,10 @@ resource "hcloud_network" "network" {
   name     = var.cluster_name
   ip_range = var.network
 
+  labels = {
+    cluster : var.cluster_name,
+  }
+
 }
 
 resource "hcloud_network_subnet" "subnet" {

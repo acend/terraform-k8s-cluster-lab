@@ -127,7 +127,8 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "theia.persistence.enabled"
-    value = "true"
+    value = tostring(var.theia-persistence-enabled)
+
   }
 
   set {
@@ -147,7 +148,7 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "dind.persistence.enabled"
-    value = "true"
+    value = tostring(var.dind-persistence-enabled)
   }
 
   set {

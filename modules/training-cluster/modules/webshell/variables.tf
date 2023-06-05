@@ -31,6 +31,16 @@ variable "rbac-enabled" {
   default = true
 }
 
+variable "dind-persistence-enabled" {
+  type    = bool
+  default = true
+}
+
+variable "theia-persistence-enabled" {
+  type    = bool
+  default = true
+}
+
 variable "cluster_name" {
   type        = string
   description = "name of the cluster"

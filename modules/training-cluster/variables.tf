@@ -153,6 +153,18 @@ variable "webshell-rbac-enabled" {
   default     = true
 }
 
+variable "dind-persistence-enabled" {
+  description = "Enable persistence for DinD container"
+  type        = bool
+  default     = true
+}
+
+variable "theia-persistence-enabled" {
+  description = "Enable persistence for theia container"
+  type        = bool
+  default     = true
+}
+
 variable "cluster_admin" {
   type        = list(any)
   default     = []

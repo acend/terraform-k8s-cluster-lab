@@ -94,6 +94,9 @@ module "webshell" {
   student-vms     = var.user-vms-enabled ? [module.student-vms[0]] : null
   rbac-enabled    = var.webshell-rbac-enabled
 
+  dind-persistence-enabled  = var.dind-persistence-enabled
+  theia-persistence-enabled = var.theia-persistence-enabled
+
   count = var.count-students
 }
 

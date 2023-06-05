@@ -109,7 +109,7 @@ module "student-vms" {
   student-passwords  = random_password.student-passwords
   studentname-prefix = var.studentname-prefix
 
-  extra_ssh_keys = var.extra_ssh_keys
+  ssh_key = hcloud_ssh_key.terraform.name
 
   count = local.vms-enabled
 

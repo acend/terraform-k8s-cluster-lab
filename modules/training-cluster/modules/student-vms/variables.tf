@@ -17,8 +17,8 @@ variable "location" {
   default     = "nbg1"
   description = "hetzner location"
 }
-variable "extra_ssh_keys" {
-  type    = list(string)
+variable "ssh_keys" {
+  type    = string
   default = []
 }
 

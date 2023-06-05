@@ -38,7 +38,7 @@ resource "hcloud_server" "user-vm" {
     uservm : "true"
   }
 
-  ssh_keys = ["terraform"]
+  ssh_keys = [var.var.ssh_keys]
 
   user_data = data.template_file.cloudinit_uservm[count.index].rendered
 }

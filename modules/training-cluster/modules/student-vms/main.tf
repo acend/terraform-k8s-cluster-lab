@@ -1,7 +1,3 @@
-provider "restapi" {
-  alias                = "theia"
-}
-
 resource "tls_private_key" "user-ssh-key" {
   algorithm   = "ECDSA"
   ecdsa_curve = "P384"

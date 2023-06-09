@@ -17,6 +17,41 @@ resource "kubernetes_namespace" "student-quotalab" {
   }
 }
 
+resource "kubernetes_resource_quota" "quotalab" {
+  metadata {
+    name      = "lab-quota"
+    namespace = kubernetes_namespace.student-quotalab.metadata.0.name
+  }
+  spec {
+    hard = {
+      request.cpu = 100m
+      request.memory = 100Mi
+    }
+  }
+}
+
+resource "kubernetes_limit_range" "quotalab" {
+  metadata {
+    name = "lab-limitrange"
+    namespace = kubernetes_namespace.student-quotalab.metadata.0.name
+  }
+  spec {
+    limit {
+      type = "Container"
+      default = {
+        cpu    = "100m"
+        memory = "32i"
+      }
+      default_request = {
+        cpu    = "10m"
+        memory = "16Mi"
+      }
+    }
+
+    }
+  }
+}
+
 // Allow to use the SA from Webshell Namespace to also access this quotalab student prod Namespace
 resource "kubernetes_role_binding" "student-quotalab" {
   metadata {

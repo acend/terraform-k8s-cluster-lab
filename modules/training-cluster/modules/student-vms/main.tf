@@ -1,4 +1,6 @@
-
+provider "restapi" {
+  alias                = "theia"
+}
 
 resource "tls_private_key" "user-ssh-key" {
   algorithm   = "ECDSA"
@@ -34,7 +36,6 @@ resource "hcloud_server" "user-vm" {
   server_type = "cpx31"
 
   labels = {
-    cluster : var.cluster_name,
     uservm : "true"
   }
 

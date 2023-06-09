@@ -33,7 +33,7 @@ module "training-cluster" {
 
   # RBAC in Webshell
   webshell-rbac-enabled = var.webshell-rbac-enabled
-  
+
   # Persistence in Theia and DinD
   dind-persistence-enabled  = var.dind-persistence-enabled
   theia-persistence-enabled = var.theia-persistence-enabled

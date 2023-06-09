@@ -24,8 +24,8 @@ resource "kubernetes_resource_quota" "quotalab" {
   }
   spec {
     hard = {
-      "request.cpu"    = "100m"
-      "request.memory" = "100Mi"
+      "requests.cpu"    = "100m"
+      "requests.memory" = "100Mi"
     }
   }
 }
@@ -40,7 +40,7 @@ resource "kubernetes_limit_range" "quotalab" {
       type = "Container"
       default = {
         cpu    = "100m"
-        memory = "32i"
+        memory = "32Mi"
       }
       default_request = {
         cpu    = "10m"

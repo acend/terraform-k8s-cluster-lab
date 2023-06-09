@@ -24,15 +24,15 @@ resource "kubernetes_resource_quota" "quotalab" {
   }
   spec {
     hard = {
-      request.cpu = 100m
-      request.memory = 100Mi
+      "request.cpu"    = "100m"
+      "request.memory" = "100Mi"
     }
   }
 }
 
 resource "kubernetes_limit_range" "quotalab" {
   metadata {
-    name = "lab-limitrange"
+    name      = "lab-limitrange"
     namespace = kubernetes_namespace.student-quotalab.metadata.0.name
   }
   spec {
@@ -48,7 +48,6 @@ resource "kubernetes_limit_range" "quotalab" {
       }
     }
 
-    }
   }
 }
 
@@ -191,7 +190,7 @@ resource "helm_release" "webshell" {
     value = "hcloud-volume"
   }
 
-    set {
+  set {
     name  = "dind.persistence.pvcsize"
     value = "10Gi"
   }

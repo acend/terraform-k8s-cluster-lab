@@ -203,4 +203,4 @@ resource "kubernetes_node_taint" "control-plane" {
     effect = "NoSchedule"
   }
 
-} 
+}

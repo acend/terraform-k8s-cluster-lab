@@ -18,7 +18,7 @@ variable "location" {
   description = "hetzner location"
 }
 variable "ssh_key" {
-  type    = string
+  type = string
 }
 
 variable "cluster_name" {

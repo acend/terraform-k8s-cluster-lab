@@ -21,7 +21,7 @@ resource "helm_release" "longhorn" {
   version    = "1.4.2"
   namespace  = kubernetes_namespace.longhorn-system.metadata.0.name
 
-    values = [
+  values = [
     "${templatefile("${path.module}/manifests/longhorn-values.yaml", {})}"
   ]
 

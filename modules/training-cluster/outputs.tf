@@ -33,3 +33,7 @@ output "gitea-url" {
 output "student-vm-ip-address" {
   value = var.user-vms-enabled ? module.student-vms[0].ip-address : []
 }
+
+output "student-vm-ipv6-address" {
+  value = var.user-vms-enabled ? module.student-vms[0].ipv6-address : []
+}

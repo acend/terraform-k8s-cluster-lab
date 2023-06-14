@@ -42,3 +42,7 @@ output "gitea-url" {
 output "student-vm-ip-address" {
   value = module.training-cluster.student-vm-ip-address
 }
+
+output "student-vm-ipv6-address" {
+  value = module.training-cluster.student-vm-ipv6-address
+}

@@ -1,3 +1,7 @@
+
+defaultSettings:
+  deletingConfirmationFlag: "true"
+
 longhornManager:
   tolerations: 
   - key: "node-role.kubernetes.io/control-plane"

@@ -115,7 +115,7 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "ingress.className"
-    value = "nginx"
+    value = "haproxy"
   }
 
   set {
@@ -126,12 +126,12 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-type"
-    value = "basic"
+    value = "basic-auth"
   }
 
   set {
     name  = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-secret"
-    value = "basic-auth"
+    value = "${kubernetes_namespace.student.metadata.0.name}/basic-auth"
   }
 
   set {

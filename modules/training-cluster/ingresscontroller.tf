@@ -85,3 +85,17 @@ resource "helm_release" "ingress-haproxy" {
   }
 
 }
+
+data "kubernetes_service" "ingress-haproxy" {
+
+  depends_on = [
+    helm_release.ingress-haproxy
+  ]
+  metadata {
+    name      = "ingress-haproxy-kubernetes-ingress"
+    namespace = kubernetes_namespace.ingress-haproxy.metadata[0].name
+  }
+
+}
+
+

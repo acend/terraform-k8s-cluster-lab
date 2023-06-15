@@ -58,9 +58,9 @@ data "kubernetes_service" "ingress-nginx" {
 resource "helm_release" "ingress-haproxy" {
 
   name       = "ingress-haproxy"
-  repository = "https://haproxy-ingress.github.io/charts"
-  chart      = "ingress-haproxy"
-  version    = "0.14.3"
+  repository = "https://haproxytech.github.io/helm-charts"
+  chart      = "kubernetes-ingress"
+  version    = "1.30.5"
   namespace  = kubernetes_namespace.ingress-haproxy.metadata[0].name
 
   set {
@@ -68,14 +68,20 @@ resource "helm_release" "ingress-haproxy" {
     value = "2"
   }
 
+
   set {
-    name  = "controller.ingressClassResource.enabled"
-    value = true
+    name  = "controller.defaultTLSSecret.secret"
+    value = "acend-wildcard"
   }
 
   set {
-    name  = "controller.extraArgs.default-ssl-certificate"
-    value = "cert-manager/acend-wildcard"
+    name  = "controller.defaultTLSSecret.secretNamespace"
+    value = "cert-manager"
+  }
+
+  set {
+    name  = "controller.service.type"
+    value = "LoadBalancer"
   }
 
 }

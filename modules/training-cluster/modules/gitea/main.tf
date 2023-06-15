@@ -57,7 +57,7 @@ resource "helm_release" "gitea" {
 
   set {
     name  = "ingress.className"
-    value = "nginx"
+    value = "haproxy"
   }
 
   set {

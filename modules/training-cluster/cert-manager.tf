@@ -15,7 +15,7 @@ resource "helm_release" "certmanager" {
   name       = "certmanager"
   repository = "https://charts.jetstack.io"
   chart      = "cert-manager"
-  version    = "v1.11.2"
+  version    = "v1.12.1"
   namespace  = kubernetes_namespace.cert-manager.metadata[0].name
 
   set {
@@ -98,7 +98,7 @@ resource "k8s_cert_manager_io_cluster_issuer_v1" "clusterissuer-letsencrypt-prod
       solvers = [{
         http01 = {
           ingress = {
-            class = "nginx"
+            ingressClassName = "haproxy"
           }
         }
       }]

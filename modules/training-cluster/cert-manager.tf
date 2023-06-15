@@ -177,7 +177,7 @@ resource "k8s_cert_manager_io_certificate_v1" "certificate-acend-wildcard" {
       name = "letsencrypt-prod-acend"
     }
     secret_name = "acend-wildcard"
-    secretTemplate = {
+    secret_template = {
       annotations = {
         "kubed.appscode.com/sync" = "certificate-wildcard=true"
       }

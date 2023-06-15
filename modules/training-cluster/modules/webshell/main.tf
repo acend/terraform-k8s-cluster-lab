@@ -105,7 +105,7 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "password"
-    value = var.student-password
+    value = "${bcrypt(var.student-password)}"
   }
 
   set {
@@ -131,7 +131,7 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-secret"
-    value = "${kubernetes_namespace.student.metadata.0.name}/basic-auth"
+    value = "basic-auth"
   }
 
   set {
@@ -156,7 +156,7 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "ingress.tls[0].hosts[0]"
-    value = "${var.student-name}.${var.cluster_name}.labcluster.acend.ch"
+    value = "${var.student-name}.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {

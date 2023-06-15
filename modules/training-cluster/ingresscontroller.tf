@@ -20,6 +20,11 @@ resource "helm_release" "ingress-haproxy" {
     value = "2"
   }
 
+  set {
+    name  = "controller.ingressClassResource.default"
+    value = "true"
+  }
+
 
   set {
     name  = "controller.defaultTLSSecret.secret"

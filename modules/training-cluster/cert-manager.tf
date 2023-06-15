@@ -98,7 +98,7 @@ resource "k8s_cert_manager_io_cluster_issuer_v1" "clusterissuer-letsencrypt-prod
       solvers = [{
         http01 = {
           ingress = {
-            ingressClassName = "haproxy"
+            class = "haproxy"
           }
         }
       }]

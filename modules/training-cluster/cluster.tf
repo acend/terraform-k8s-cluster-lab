@@ -190,17 +190,14 @@ EOH
   count = var.worker_count
 }
 
-resource "kubernetes_node_taint" "control-plane" {
-
-  count = local.hasWorker == 1 ? var.controlplane_count : 0
-  metadata {
-    name = "${var.cluster_name}-controlplane-${count.index}"
-  }
-
-  taint {
-    key    = "node-role.kubernetes.io/control-plane"
-    value  = "true"
-    effect = "NoSchedule"
-  }
-
-}
+# resource "kubernetes_node_taint" "control-plane" {
+#   count = local.hasWorker == 1 ? var.controlplane_count : 0
+#   metadata {
+#     name = "${var.cluster_name}-controlplane-${count.index}"
+#   }
+#   taint {
+#     key    = "node-role.kubernetes.io/control-plane"
+#     value  = "true"
+#     effect = "NoSchedule"
+#   }
+# }

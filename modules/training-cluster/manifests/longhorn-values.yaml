@@ -16,7 +16,6 @@ longhornDriver:
     value: "true"
     effect: "NoSchedule"
 
-
 longhornUI:
   nodeSelector:
     node-role.kubernetes.io/control-plane: "true"
@@ -43,7 +42,6 @@ longhornAdmissionWebhook:
     operator: "Equal"
     value: "true"
     effect: "NoSchedule"
-
 
 longhornRecoveryBackend:
   nodeSelector:

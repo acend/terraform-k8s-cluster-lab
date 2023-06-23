@@ -16,7 +16,23 @@ resource "helm_release" "ingress-haproxy" {
 
   set {
     name  = "controller.replicaCount"
-    value = "2"
+    value = "3"
+  }
+  set {
+    name  = "controller.tolerations[0].key"
+    value = "node-role.kubernetes.io/control-plane"
+  }
+  set {
+    name  = "controller.tolerations[0].operator"
+    value = "Equal"
+  }
+  set {
+    name  = "controller.tolerations[0].value"
+    value = "true"
+  }
+  set {
+    name  = "controller.tolerations[0].effect"
+    value = "NoSchedule"
   }
   set {
     name  = "controller.ingressClassResource.default"

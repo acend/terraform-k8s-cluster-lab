@@ -29,6 +29,7 @@ resource "helm_release" "ingress-haproxy" {
   set {
     name  = "controller.tolerations[0].value"
     value = "true"
+    type  = "string"
   }
   set {
     name  = "controller.tolerations[0].effect"

@@ -5,7 +5,6 @@ resource "hcloud_network" "network" {
   labels = {
     cluster : var.cluster_name,
   }
-
 }
 
 resource "hcloud_network_subnet" "subnet" {
@@ -23,7 +22,6 @@ resource "hcloud_load_balancer" "lb" {
   labels = {
     cluster : var.cluster_name,
   }
-
 }
 
 resource "hcloud_load_balancer_network" "lb" {

@@ -1,5 +1,4 @@
 resource "kubernetes_namespace" "student" {
-
   metadata {
     name = var.student-name
     labels = {
@@ -7,11 +6,9 @@ resource "kubernetes_namespace" "student" {
       "kubernetes.io/metadata.name" = var.student-name
     }
   }
-
 }
 
 resource "kubernetes_namespace" "student-quotalab" {
-
   metadata {
     name = "${var.student-name}-quota"
   }
@@ -71,12 +68,9 @@ resource "kubernetes_role_binding" "student-quotalab" {
   }
 
   count = var.rbac-enabled ? 1 : 0
-
 }
 
 resource "helm_release" "webshell" {
-
-
   name       = "webshell"
   repository = var.chart-repository
   chart      = "webshell"
@@ -187,7 +181,8 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "dind.persistence.storageclass"
-    value = "hcloud-volume"
+    value = "longhorn"
+    # value = "hcloud-volume"  # longhorn is more friendly on deletion
   }
 
   set {
@@ -199,6 +194,4 @@ resource "helm_release" "webshell" {
     name  = "rbac.create"
     value = tostring(var.rbac-enabled)
   }
-
-
 }

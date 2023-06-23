@@ -1,16 +1,13 @@
 resource "kubernetes_namespace" "longhorn-system" {
-
   metadata {
     name = "longhorn-system"
     labels = {
       "kubernetes.io/metadata.name" = "longhorn-system"
     }
   }
-
 }
 
 resource "helm_release" "longhorn" {
-
   depends_on = [
     time_sleep.wait_for_cluster_ready
   ]
@@ -24,6 +21,4 @@ resource "helm_release" "longhorn" {
   values = [
     "${templatefile("${path.module}/manifests/longhorn-values.yaml", {})}"
   ]
-
-
 }

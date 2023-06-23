@@ -1,7 +1,6 @@
 # Deploy Cert-Manager for Certificates
 
 resource "kubernetes_namespace" "cert-manager" {
-
   depends_on = [
     time_sleep.wait_for_cluster_ready
   ]
@@ -11,7 +10,6 @@ resource "kubernetes_namespace" "cert-manager" {
 }
 
 resource "helm_release" "certmanager" {
-
   name       = "certmanager"
   repository = "https://charts.jetstack.io"
   chart      = "cert-manager"

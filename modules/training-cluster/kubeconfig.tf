@@ -7,9 +7,7 @@ locals {
   client_certificate     = base64decode(local.kubeconfig.users[0].user.client-certificate-data)
   client_key             = base64decode(local.kubeconfig.users[0].user.client-key-data)
   cluster_ca_certificate = base64decode(local.kubeconfig.clusters[0].cluster.certificate-authority-data)
-
 }
-
 
 resource "null_resource" "wait_for_k8s_api" {
 
@@ -36,8 +34,6 @@ EOH
     hcloud_load_balancer_service.api,
     hcloud_load_balancer_target.controlplane
   ]
-
-
 }
 
 resource "ssh_resource" "getkubeconfig" {

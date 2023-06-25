@@ -192,7 +192,7 @@ EOH
 
 resource "null_resource" "wait_for_all_controlplane_nodes" {
 
-  count = local.hasWorker == 1 ? var.controlplane_count : 0
+  count = local.hasWorker == 1 ? 1 : 0
 
   triggers = {
     kubeconfig       = base64encode(local.kubeconfig_raw)

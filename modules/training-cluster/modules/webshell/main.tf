@@ -27,7 +27,7 @@ resource "helm_release" "webshell" {
 
   set {
     name  = "password"
-    value = bcrypt(var.student-password)
+    value = var.student-password
   }
 
   set {

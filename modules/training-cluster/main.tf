@@ -88,7 +88,7 @@ module "webshell" {
 
   student-index    = count.index
   student-name     = "${var.studentname-prefix}${count.index + 1}"
-  student-password = random_password.student-passwords[count.index].result
+  student-password = random_password.student-passwords[count.index].bcrypt_hash
 
   user-vm-enabled = var.user-vms-enabled
   student-vms     = var.user-vms-enabled ? [module.student-vms[0]] : null

@@ -213,7 +213,7 @@ resource "kubernetes_role_binding" "argocd" {
 resource "kubernetes_role_binding" "argocd-app" {
   metadata {
     name      = "argocd-app-${var.student-name}-rb"
-    namespace = "argocd"
+    namespace = var.argocd_namespace
   }
 
   role_ref {

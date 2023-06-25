@@ -97,6 +97,8 @@ module "webshell" {
   dind-persistence-enabled  = var.dind-persistence-enabled
   theia-persistence-enabled = var.theia-persistence-enabled
 
+  argocd_namespace = kubernetes_namespace.argocd.metadata.0.name
+
   count = var.count-students
 }
 

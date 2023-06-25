@@ -50,3 +50,8 @@ variable "cluster_domain" {
   type        = string
   description = "common subdomain for cluster"
 }
+
+variable "argocd_namespace" {
+  type        = string
+  description = "Namespace where argocd runs"
+}

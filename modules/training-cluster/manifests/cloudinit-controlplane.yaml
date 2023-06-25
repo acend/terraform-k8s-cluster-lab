@@ -82,6 +82,8 @@ write_files:
       - ${k8s_api_hostname}
      %{ endfor }
     token: ${rke2_cluster_secret}
+    node-taint:
+      - "node-role.kubernetes.io/control-plane=true:NoSchedule"
 - path: /opt/rke2/run_rke2.sh
   permissions: "0755"
   owner: root:root

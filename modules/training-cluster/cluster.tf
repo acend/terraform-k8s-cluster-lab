@@ -205,7 +205,7 @@ curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/b
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 chmod +x ./kubectl
 while true; do
-    if [ $(kubectl --kubeconfig <(echo $KUBECONFIG | base64 --decode) get node -l node-role.kubernetes.io/control-plane=true -o name --no-headers | wc -l) -eq $NUM_CONTROLPLANE ]; then echo ok; fi;
+    if [ $(./kubectl --kubeconfig <(echo $KUBECONFIG | base64 --decode) get node -l node-role.kubernetes.io/control-plane=true -o name --no-headers | wc -l) -eq $NUM_CONTROLPLANE ]; then echo ok; fi;
 done
 EOH
     interpreter = ["/bin/bash", "-c"]

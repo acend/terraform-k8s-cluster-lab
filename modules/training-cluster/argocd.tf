@@ -140,7 +140,7 @@ resource "helm_release" "argocd-training-project" {
 
   name       = "argocd-apps"
   repository = "https://argoproj.github.io/argo-helm"
-  chart      = "argo-cd-apps"
+  chart      = "argocd-apps"
   namespace  = kubernetes_namespace.argocd.metadata.0.name
   version    = "1.2.0"
 

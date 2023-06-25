@@ -7,15 +7,15 @@ output "webshell-links" {
 }
 
 output "argocd-admin-username" {
-  value = var.argocd-enabled ? module.argocd[0].admin-username : ""
+  value = "admin"
 }
 
 output "argocd-admin-password" {
-  value = var.argocd-enabled ? module.argocd[0].admin-password : ""
+  value = data.kubernetes_secret.argocd-admin-secret.data.password
 }
 
 output "argocd-url" {
-  value = var.argocd-enabled ? module.argocd[0].argocd-url : ""
+  value = "https://argocd.${var.cluster_name}.${var.cluster_domain}"
 }
 
 output "gitea-admin-password" {

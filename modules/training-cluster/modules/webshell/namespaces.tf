@@ -1,4 +1,4 @@
-// Main Namespace
+// Default student Namespace
 
 resource "kubernetes_namespace" "student" {
   metadata {
@@ -72,4 +72,159 @@ resource "kubernetes_role_binding" "student-quotalab" {
   }
 
   count = var.rbac-enabled ? 1 : 0
+}
+
+
+# Namespaces for ArgoCD Training
+# Student Prod Namespaces
+resource "kubernetes_namespace" "student-namespace-prod" {
+
+  metadata {
+    name = "${var.student-name}-prod"
+
+    labels = {
+      certificate-wildcard          = "true"
+      "kubernetes.io/metadata.name" = "${var.student-name}-prod"
+    }
+  }
+}
+
+
+// Allow to use the SA from Webshell Namespace to also access this argocd student prod Namespace
+resource "kubernetes_role_binding" "student-prod" {
+
+
+  metadata {
+    name      = "admin-rb"
+    namespace = kubernetes_namespace.student-namespace-prod.metadata.0.name
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "admin"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "webshell"
+    namespace = "${var.student-name}"
+  }
+
+}
+
+resource "kubernetes_role_binding" "argocd-prod" {
+  metadata {
+    name      = "argocd-rb"
+    namespace = kubernetes_namespace.student-namespace-prod.metadata.0.name
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "argocd"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "webshell"
+    namespace = "${var.student-name}"
+  }
+
+}
+
+# Student Dev Namespaces
+resource "kubernetes_namespace" "student-namespace-dev" {
+
+  metadata {
+    name = "${var.student-name}-dev"
+
+    labels = {
+      certificate-labapp            = "true"
+      "kubernetes.io/metadata.name" = "${var.student-name}-dev"
+    }
+  }
+
+}
+
+
+// Allow to use the SA from Webshell Namespace to also access this argocd student prod Namespace
+resource "kubernetes_role_binding" "student-dev" {
+  metadata {
+    name      = "admin-rb"
+    namespace = kubernetes_namespace.student-namespace-dev.metadata.0.name
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "admin"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "webshell"
+    namespace = "${var.student-name}"
+  }
+
+}
+
+resource "kubernetes_role_binding" "argocd-dev" {
+  metadata {
+    name      = "argocd-rb"
+    namespace = kubernetes_namespace.student-namespace-dev.metadata.0.name
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "argocd"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "webshell"
+    namespace = "${var.student-name}"
+  }
+}
+
+
+# Student  Namespaces
+resource "kubernetes_role_binding" "argocd" {
+  metadata {
+    name      = "argocd-rb"
+    namespace = "${var.student-name}"
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "argocd"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "webshell"
+    namespace = "${var.student-name}"
+  }
+}
+
+// Allow access to argocd resrouces in argocd namespace
+resource "kubernetes_role_binding" "argocd-app" {
+  metadata {
+    name      = "argocd-app-${var.student-name}-rb"
+    namespace = "argocd"
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "argocd"
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "webshell"
+    namespace = "${var.student-name}"
+  }
 }

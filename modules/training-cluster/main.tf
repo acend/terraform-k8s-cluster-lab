@@ -53,7 +53,6 @@ provider "banzaicloud-k8s" {
 }
 
 locals {
-  argocd_enabled = var.argocd-enabled ? 1 : 0
   gitea_enabled  = var.gitea-enabled ? 1 : 0
   vms-enabled    = var.user-vms-enabled ? 1 : 0
   hasWorker      = var.worker_count > 0 ? 1 : 0
@@ -114,27 +113,6 @@ module "student-vms" {
 
   count = local.vms-enabled
 
-}
-
-
-# Deploy ArgoCD and configure it for the students
-module "argocd" {
-  source = "./modules/argocd"
-
-  cluster_name       = var.cluster_name
-  cluster_domain     = var.cluster_domain
-  count-students     = var.count-students
-  student-passwords  = random_password.student-passwords
-  studentname-prefix = var.studentname-prefix
-
-  kubeconfig_raw = local.kubeconfig_raw
-
-  count = local.argocd_enabled
-
-  depends_on = [
-    time_sleep.wait_for_cluster_ready,
-    module.webshell // student namespaces are created in the webshell module
-  ]
 }
 
 # Deploy Gitea and configure it for the students

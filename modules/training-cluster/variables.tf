@@ -129,12 +129,6 @@ variable "studentname-prefix" {
   default = "user"
 }
 
-variable "argocd-enabled" {
-  description = "Switch to deploy argocd instance and configure it for the students"
-  type        = bool
-  default     = false
-}
-
 variable "gitea-enabled" {
   description = "Switch to deploy Gitea"
   type        = bool

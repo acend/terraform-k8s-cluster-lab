@@ -22,9 +22,6 @@ module "training-cluster" {
   # Webshell
   count-students = var.count-students
 
-  # Argocd
-  argocd-enabled = var.argocd-enabled
-
   # Gitea
   gitea-enabled = var.gitea-enabled
 

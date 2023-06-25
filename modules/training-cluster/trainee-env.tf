@@ -40,7 +40,7 @@ resource "helm_release" "appset-trainee-webshell" {
         passwords = random_password.student-passwords,
         rbac-enabled = var.webshell-rbac-enabled,
         dind-persistence-enabled = var.dind-persistence-enabled,
-        theia-persistence-enabled = var.theia-persistence-enabled,
+        theia-persistence-enabled = var.theia-persistence-enabled
     }),
   ]
 

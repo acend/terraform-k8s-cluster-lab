@@ -19,6 +19,11 @@ variable "student-password" {
   type = string
 }
 
+variable "student-password-bcrypt" {
+  type = string
+}
+
+
 variable "user-vm-enabled" {
   type = bool
 }

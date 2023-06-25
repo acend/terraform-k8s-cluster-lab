@@ -1,3 +1,3 @@
-workspaces { name = "training-cluster-default" }
+workspaces { name = "training-cluster-cilium" }
 hostname     = "app.terraform.io"
 organization = "acend"

@@ -1,0 +1,29 @@
+applicationsets:
+- name: trainee-env
+  namespace: argocd
+  generators:
+  - list:
+      elements:
+      #%{~ for i in range(count-students) ~}$
+      %{~ for i in range(1) ~}
+      - trainee-name: test-${studentname-prefix}${i+1}
+      %{~ endfor ~}
+  template:
+    metadata:
+      name: '{{trainee-name}}-env'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/acend/terraform-k8s-cluster-lab
+        targetRevision: HEAD
+        path: 'charts/user-env'
+        helm:
+          releaseName: '{{trainee-name}}-env'
+          values: |
+            user: {{trainee-name}}
+      destination:
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

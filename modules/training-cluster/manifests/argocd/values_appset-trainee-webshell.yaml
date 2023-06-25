@@ -1,0 +1,62 @@
+applicationsets:
+- name: trainee-webshell
+  namespace: argocd
+  generators:
+  - list:
+      elements:
+      #%{~ for i in range(count-students) ~}
+      %{~ for i in range(1) ~}
+      - trainee-name: test-${studentname-prefix}${i+1}
+        password: ${passwords[i].bcrypt_hash}
+      %{~ endfor ~}
+  template:
+    metadata:
+      name: '{{trainee-name}}-webshell'
+    spec:
+      project: default
+      source:
+        chart: webshell
+        repoURL: https://argoproj.github.io/argo-helm
+        targetRevision: 0.3.3
+        helm:
+          releaseName: '{{trainee-name}}-webshell
+          values: |
+            user: {{trainee-name}}
+            password: {{password}}
+            ingress:
+              enabled: true
+              className: haproxy
+              annotations:
+                nginx.ingress.kubernetes.io/auth-type: basic-auth
+                nginx.ingress.kubernetes.io/auth-secret: basic-auth
+              hosts:
+              - host: {{trainee-name}}.${cluster_name}.${cluster_domain}
+                paths:
+                - path: /
+                  pathType: ImplementationSpecific
+              tls:
+              - hosts:
+                - {{trainee-name}}.${cluster_name}.${cluster_domain}
+                secretName: acend-wildcard
+            theia:
+              persistence:
+                enabled: ${tostring(theia-persistence-enabled)}
+                storageclass: longhorn
+            dind:
+              persistence:
+                enabled: ${tostring(dind-persistence-enabled)}
+                storageclass: longhorn
+                pvcsize: 10Gi
+            podSecurityContext:
+              fsGroup: 1001
+            updateStrategy:
+              type: Recreate
+            rbac:
+              create: ${tostring(rbac-enabled)}           
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: {{trainee-name}}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

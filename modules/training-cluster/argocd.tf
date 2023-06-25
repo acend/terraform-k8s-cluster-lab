@@ -127,11 +127,25 @@ resource "helm_release" "argocd" {
   values = [
     templatefile("${path.module}/manifests/argocd/values_account_student.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students, passwords = random_password.student-passwords }),
     templatefile("${path.module}/manifests/argocd/values_rbacConfig_policy.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students }),
-    templatefile("${path.module}/manifests/argocd/values_projects.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students }),
     templatefile("${path.module}/manifests/argocd/values_resource-exclude.yaml", {}),
   ]
 
 }
+
+resource "helm_release" "argocd-project" {
+
+  name       = "argocd-apps"
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argo-cd-apps"
+  namespace  = kubernetes_namespace.argocd.metadata.0.name
+  version    = "1.2.0"
+
+
+  values = [
+    templatefile("${path.module}/manifests/argocd/values_projects.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students }),
+  ]
+
+}   
 
 resource "null_resource" "cleanup-argo-cr-before-destroy" {
 

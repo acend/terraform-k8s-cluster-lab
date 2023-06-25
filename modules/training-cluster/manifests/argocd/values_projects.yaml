@@ -1,26 +1,25 @@
-server:
-  additionalProjects:
-   - name: argocd-training
-     namespace: argocd
-     additionalLabels: {}
-     additionalAnnotations: {}
-     finalizers:
-     - resources-finalizer.argocd.argoproj.io
-     description: ArgoCD Training Project
-     sourceRepos:
-     - '*'
-     destinations:
-     %{~ for i in range(count-students) ~}
-     - namespace: ${studentname-prefix}${i+1}
-       server: https://kubernetes.default.svc
-     - namespace: ${studentname-prefix}${i+1}-prod
-       server: https://kubernetes.default.svc
-     - namespace: ${studentname-prefix}${i+1}-dev
-       server: https://kubernetes.default.svc
-     %{~ endfor ~}
-     clusterResourceWhitelist: []
-     namespaceResourceBlacklist: []
-     namespaceResourceWhitelist: []
-     orphanedResources: {}
-     roles: []
-     syncWindows: []
+projects:
+  - name: argocd-training
+    namespace: argocd
+    additionalLabels: {}
+    additionalAnnotations: {}
+    finalizers:
+    - resources-finalizer.argocd.argoproj.io
+    description: ArgoCD Training Project
+    sourceRepos:
+    - '*'
+    destinations:
+    %{~ for i in range(count-students) ~}
+    - namespace: ${studentname-prefix}${i+1}
+      server: https://kubernetes.default.svc
+    - namespace: ${studentname-prefix}${i+1}-prod
+      server: https://kubernetes.default.svc
+    - namespace: ${studentname-prefix}${i+1}-dev
+      server: https://kubernetes.default.svc
+    %{~ endfor ~}
+    clusterResourceWhitelist: []
+    namespaceResourceBlacklist: []
+    namespaceResourceWhitelist: []
+    orphanedResources: {}
+    roles: []
+    syncWindows: []

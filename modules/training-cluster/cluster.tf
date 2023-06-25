@@ -228,7 +228,7 @@ EOH
 
 resource "kubernetes_node_taint" "control-plane" {
 
-  depends_on = [ 
+  depends_on = [
     null_resource.wait_for_all_controlplane_nodes
   ]
 

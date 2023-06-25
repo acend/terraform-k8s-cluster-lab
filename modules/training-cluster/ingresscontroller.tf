@@ -11,7 +11,7 @@ resource "helm_release" "ingress-haproxy" {
   name       = "ingress-haproxy"
   repository = "https://haproxytech.github.io/helm-charts"
   chart      = "kubernetes-ingress"
-  version    = "1.30.5"
+  version    = "1.31.0"
   namespace  = kubernetes_namespace.ingress-haproxy.metadata[0].name
 
   set {

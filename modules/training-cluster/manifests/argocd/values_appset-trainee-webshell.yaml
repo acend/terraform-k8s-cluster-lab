@@ -51,7 +51,7 @@ applicationsets:
             updateStrategy:
               type: Recreate
             rbac:
-              create: ${tostring(rbac-enabled)}           
+              create: ${tostring(rbac-enabled)}       
       destination:
         server: https://kubernetes.default.svc
         namespace: {{trainee-name}}

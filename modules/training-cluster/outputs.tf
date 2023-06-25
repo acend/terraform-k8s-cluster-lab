@@ -3,7 +3,7 @@ output "kubeconfig_raw" {
 }
 
 output "webshell-links" {
-  value = module.webshell.*.student-direct-webshelllink
+  value = "%{for link in module.webshell.*.student-direct-webshelllink}${link}  \n%{ endfor }"
 }
 
 output "argocd-admin-username" {

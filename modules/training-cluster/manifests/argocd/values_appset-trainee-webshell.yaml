@@ -18,7 +18,7 @@ applicationsets:
         repoURL: https://argoproj.github.io/argo-helm
         targetRevision: 0.3.3
         helm:
-          releaseName: '{{trainee-name}}-webshell
+          releaseName: '{{trainee-name}}-webshell'
           values: |
             user: {{trainee-name}}
             password: {{password}}

@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    certificate-wildcard: "true"
+    kubernetes.io/metadata.name: {{ .Values.user }}
+  name: {{ .Values.user }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    certificate-wildcard: "true"
+    kubernetes.io/metadata.name: {{ .Values.user }}-quota
+  name: {{ .Values.user }}-quota

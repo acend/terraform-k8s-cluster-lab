@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: lab-limitrange
+  namespace: {{ .Values.user }}-quota
+spec:
+  limits:
+  - default:
+      cpu: 100m
+      memory: 32Mi
+    defaultRequest:
+      cpu: 10m
+      memory: 16Mi
+    type: Container
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: lab-quota
+  namespace: {{ .Values.user }}-quota
+spec:
+  hard:
+    requests.cpu: 100m
+    requests.memory: 100Mi
+status:
+  hard:
+    requests.cpu: 100m
+    requests.memory: 100Mi
+  used:
+    requests.cpu: "0"
+    requests.memory: "0"

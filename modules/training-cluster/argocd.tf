@@ -132,7 +132,11 @@ resource "helm_release" "argocd" {
 
 }
 
-resource "helm_release" "argocd-project" {
+resource "helm_release" "argocd-training-project" {
+
+  depends_on = [ 
+    helm_release.argocd
+   ]
 
   name       = "argocd-apps"
   repository = "https://argoproj.github.io/argo-helm"

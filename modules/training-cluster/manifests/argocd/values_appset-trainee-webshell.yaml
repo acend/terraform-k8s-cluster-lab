@@ -6,7 +6,7 @@ applicationsets:
       elements:
       %{~ for i in range(count-students) ~}
       - trainee-name: test-${studentname-prefix}${i+1}
-        password: ${passwords[i].bcrypt_hash}
+        password: '${passwords[i].bcrypt_hash}'
       %{~ endfor ~}
   template:
     metadata:

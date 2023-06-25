@@ -200,6 +200,10 @@ resource "null_resource" "wait_for_all_controlplane_nodes" {
   }
   provisioner "local-exec" {
     command     = <<EOH
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+chmod +x ./kubectl
 while true; do
     if [ $(kubectl --kubeconfig <(echo $KUBECONFIG | base64 --decode) get node -l node-role.kubernetes.io/control-plane=true -o name --no-headers | wc -l) -eq $NUM_CONTROLPLANE ]; then echo ok; fi;
 done

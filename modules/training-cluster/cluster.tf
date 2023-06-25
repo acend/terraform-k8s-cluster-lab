@@ -190,6 +190,7 @@ EOH
   count = var.worker_count
 }
 
+<<<<<<< HEAD
 # resource "kubernetes_node_taint" "control-plane" {
 #   count = local.hasWorker == 1 ? var.controlplane_count : 0
 #   metadata {
@@ -201,3 +202,46 @@ EOH
 #     effect = "NoSchedule"
 #   }
 # }
+=======
+resource "null_resource" "wait_for_all_controlplane_nodes" {
+
+  count = local.hasWorker == 1 ? var.controlplane_count : 0
+
+  triggers = {
+    kubeconfig       = base64encode(local.kubeconfig_raw)
+    num_controlplane = var.controlplane_count
+  }
+  provisioner "local-exec" {
+    command     = <<EOH
+while true; do
+    if [ $(kubectl --kubeconfig <(echo $KUBECONFIG | base64 --decode) get node -l node-role.kubernetes.io/control-plane=true -o name --no-headers | wc -l) -eq $NUM_CONTROLPLANE ]; then echo ok; fi;
+done
+EOH
+    interpreter = ["/bin/bash", "-c"]
+    environment = {
+      KUBECONFIG       = self.triggers.kubeconfig
+      NUM_CONTROLPLANE = self.triggers.num_controlplane
+    }
+  }
+
+}
+
+resource "kubernetes_node_taint" "control-plane" {
+
+  depends_on = [ 
+    null_resource.wait_for_all_controlplane_nodes
+  ]
+
+  count = local.hasWorker == 1 ? var.controlplane_count : 0
+  metadata {
+    name = "${var.cluster_name}-controlplane-${count.index}"
+  }
+
+  taint {
+    key    = "node-role.kubernetes.io/control-plane"
+    value  = "true"
+    effect = "NoSchedule"
+  }
+
+}
+>>>>>>> 3efae44 (wait for all controlplane nodes)

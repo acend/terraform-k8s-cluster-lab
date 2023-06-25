@@ -190,19 +190,6 @@ EOH
   count = var.worker_count
 }
 
-<<<<<<< HEAD
-# resource "kubernetes_node_taint" "control-plane" {
-#   count = local.hasWorker == 1 ? var.controlplane_count : 0
-#   metadata {
-#     name = "${var.cluster_name}-controlplane-${count.index}"
-#   }
-#   taint {
-#     key    = "node-role.kubernetes.io/control-plane"
-#     value  = "true"
-#     effect = "NoSchedule"
-#   }
-# }
-=======
 resource "null_resource" "wait_for_all_controlplane_nodes" {
 
   count = local.hasWorker == 1 ? var.controlplane_count : 0
@@ -244,4 +231,3 @@ resource "kubernetes_node_taint" "control-plane" {
   }
 
 }
->>>>>>> 3efae44 (wait for all controlplane nodes)

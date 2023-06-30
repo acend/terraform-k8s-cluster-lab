@@ -68,7 +68,7 @@ resource "kubernetes_role_binding" "student-quotalab" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = var.student-name
+    namespace = kubernetes_namespace.student.metadata.0.name
   }
 
   count = var.rbac-enabled ? 1 : 0
@@ -108,7 +108,7 @@ resource "kubernetes_role_binding" "student-prod" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "${var.student-name}"
+    namespace = kubernetes_namespace.student.metadata.0.name
   }
 
 }
@@ -128,7 +128,7 @@ resource "kubernetes_role_binding" "argocd-prod" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "${var.student-name}"
+    namespace = kubernetes_namespace.student.metadata.0.name
   }
 
 }
@@ -164,7 +164,7 @@ resource "kubernetes_role_binding" "student-dev" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "${var.student-name}"
+    namespace = kubernetes_namespace.student.metadata.0.name
   }
 
 }
@@ -184,7 +184,7 @@ resource "kubernetes_role_binding" "argocd-dev" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "${var.student-name}"
+    namespace = kubernetes_namespace.student.metadata.0.name
   }
 }
 
@@ -193,7 +193,7 @@ resource "kubernetes_role_binding" "argocd-dev" {
 resource "kubernetes_role_binding" "argocd" {
   metadata {
     name      = "argocd-rb"
-    namespace = "${var.student-name}"
+    namespace = kubernetes_namespace.student.metadata.0.name
   }
 
   role_ref {
@@ -205,7 +205,7 @@ resource "kubernetes_role_binding" "argocd" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "${var.student-name}"
+    namespace = kubernetes_namespace.student.metadata.0.name
   }
 }
 
@@ -225,6 +225,6 @@ resource "kubernetes_role_binding" "argocd-app" {
   subject {
     kind      = "ServiceAccount"
     name      = "webshell"
-    namespace = "${var.student-name}"
+    namespace = kubernetes_namespace.student.metadata.0.name
   }
 }

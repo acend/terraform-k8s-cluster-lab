@@ -64,7 +64,7 @@ resource "kubernetes_deployment" "welcome" {
         }
 
         annotations = {
-          config_checksum = md5(kubernetes_config_map.welcome-content.data)
+          config_checksum = md5(kubernetes_config_map.welcome-content.data["index.html"])
         }
       }
 

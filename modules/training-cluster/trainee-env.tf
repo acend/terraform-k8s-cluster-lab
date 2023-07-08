@@ -24,10 +24,10 @@ resource "helm_release" "appset-trainee-webshell" {
   ]
 
   name       = "trainee-webshell"
-  repository = "https://acend.github.io/webshell-env/"
-  chart      = "webshell"
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argocd-apps"
   namespace  = kubernetes_namespace.argocd.metadata.0.name
-  version    = "0.3.3"
+  version    = "1.2.0"
 
 
   values = [

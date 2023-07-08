@@ -5,28 +5,28 @@ applicationsets:
   - list:
       elements:
       %{~ for i in range(count-students) ~}
-      - trainee-name: ${studentname-prefix}${i+1}
+      - traineename: ${studentname-prefix}${i+1}
         password: ${passwords[i].bcrypt_hash}
         %{ if user-vm-enabled }
-        ipv4-address: ${ipv4-address[i]}
-        ipv6-addrss: ${ipv6-address[i]}
-        ssh-public-key: ${chomp(ssh-keys[i].public_key_openssh)}
-        ssh-private-key: ${base64encode(ssh-keys[i].private_key_pem)}
+        ipv4address: ${ipv4-address[i]}
+        ipv6addrss: ${ipv6-address[i]}
+        sshpublickey: ${chomp(ssh-keys[i].public_key_openssh)}
+        sshprivatekey: ${base64encode(ssh-keys[i].private_key_pem)}
         %{ endif }
       %{~ endfor ~}
   template:
     metadata:
-      name: '{{trainee-name}}-webshell'
+      name: '{{traineename}}-webshell'
     spec:
       project: default
       source:
         chart: webshell
-        repoURL: https://argoproj.github.io/argo-helm
+        repoURL: https://acend.github.io/webshell-env/
         targetRevision: 0.3.3
         helm:
-          releaseName: '{{trainee-name}}-webshell'
+          releaseName: '{{traineename}}-webshell'
           values: |
-            user: {{trainee-name}}
+            user: {{traineename}}
             password: {{password}}
             ingress:
               enabled: true
@@ -35,13 +35,13 @@ applicationsets:
                 nginx.ingress.kubernetes.io/auth-type: basic-auth
                 nginx.ingress.kubernetes.io/auth-secret: basic-auth
               hosts:
-              - host: {{trainee-name}}.${cluster_name}.${cluster_domain}
+              - host: {{traineename}}.${cluster_name}.${cluster_domain}
                 paths:
                 - path: /
                   pathType: ImplementationSpecific
               tls:
               - hosts:
-                - {{trainee-name}}.${cluster_name}.${cluster_domain}
+                - {{traineename}}.${cluster_name}.${cluster_domain}
                 secretName: acend-wildcard
             theia:
               persistence:
@@ -63,7 +63,7 @@ applicationsets:
               command:
               - sh
               - -c
-              - echo Welcome to the acend theia ide > /home/project/welcome && echo Your VM IP is {{ipv4-address}} / {{ipv6-address}} >> /home/project/welcome && echo You can login to your training VM using ssh -i id_ecdsa {{trainee-name}}@{{ipv4-address}} or ssh -i id_ecdsa {{trainee-name}}@{{ipv6-address}}>> /home/project/welcome && echo {{ssh-private-key}} | base64 -d > /home/project/id_ecdsa && chown 1001:1001 /home/project/id_ecdsa && chmod 600 /home/project/id_ecdsa
+              - echo Welcome to the acend theia ide > /home/project/welcome && echo Your VM IP is {{ipv4address}} / {{ipv6address}} >> /home/project/welcome && echo You can login to your training VM using ssh -i id_ecdsa {{traineename}}@{{ipv4address}} or ssh -i id_ecdsa {{traineename}}@{{ipv6address}}>> /home/project/welcome && echo {{ssh-private-key}} | base64 -d > /home/project/id_ecdsa && chown 1001:1001 /home/project/id_ecdsa && chmod 600 /home/project/id_ecdsa
             %{ else }
             init:
               command:
@@ -73,7 +73,7 @@ applicationsets:
             %{ endif }    
       destination:
         server: https://kubernetes.default.svc
-        namespace: {{trainee-name}}
+        namespace: {{traineename}}
       syncPolicy:
         automated:
           prune: true

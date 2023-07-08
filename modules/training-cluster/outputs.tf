@@ -7,7 +7,7 @@ output "argocd-admin-username" {
 }
 
 output "argocd-admin-password" {
-  value = data.kubernetes_secret.argocd-admin-secret.data.password
+  value = random_password.argocd-admin-secret.result
 }
 
 output "argocd-url" {

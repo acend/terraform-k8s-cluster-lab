@@ -66,7 +66,7 @@ resource "helm_release" "argocd" {
   }
 
   set {
-    name  = "configs.secrets.argocdServerAdminPassword"
+    name  = "configs.secret.argocdServerAdminPassword"
     value = random_password.argocd-admin-password.bcrypt_hash
   }
 

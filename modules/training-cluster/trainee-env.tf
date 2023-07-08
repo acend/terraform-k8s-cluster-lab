@@ -1,5 +1,7 @@
 resource "helm_release" "appset-trainee-env" {
 
+  count = var.count-students > 0 ? 1 : 0
+
   depends_on = [
     helm_release.argocd
   ]
@@ -18,6 +20,8 @@ resource "helm_release" "appset-trainee-env" {
 }
 
 resource "helm_release" "appset-trainee-webshell" {
+
+  count = var.count-students > 0 ? 1 : 0
 
   depends_on = [
     helm_release.argocd

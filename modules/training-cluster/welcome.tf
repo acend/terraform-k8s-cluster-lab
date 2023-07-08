@@ -62,6 +62,10 @@ resource "kubernetes_deployment" "welcome" {
         labels = {
           app = "welcome"
         }
+
+        annotations = {
+          config_checksum = md5(kubernetes_config_map.welcome-content.data)
+        }
       }
 
       spec {

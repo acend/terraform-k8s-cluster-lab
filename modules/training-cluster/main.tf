@@ -53,8 +53,8 @@ provider "banzaicloud-k8s" {
 }
 
 locals {
-  vms-enabled   = var.user-vms-enabled ? 1 : 0
-  hasWorker     = var.worker_count > 0 ? 1 : 0
+  vms-enabled = var.user-vms-enabled ? 1 : 0
+  hasWorker   = var.worker_count > 0 ? 1 : 0
 }
 
 resource "random_password" "rke2_cluster_secret" {

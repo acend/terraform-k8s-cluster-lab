@@ -4,8 +4,6 @@ provider "restapi" {
   write_returns_object = true
   username             = "gitea_admin"
   password             = random_password.gitea-admin-password.result
-
-  debug = true
 }
 
 resource "kubernetes_namespace" "gitea" {
@@ -117,25 +115,23 @@ resource "restapi_object" "gitea-user" {
   ]
 
 
-  provider     = restapi.gitea
-  path         = "/api/v1/admin/users"
-  read_path    = "/api/v1/users/{id}"
-  debug = true
+  provider  = restapi.gitea
+  path      = "/api/v1/admin/users"
+  read_path = "/api/v1/users/{id}"
 
-  data         = "${jsonencode({
-    email = "${var.studentname-prefix}${count.index + 1}@gitea.${var.cluster_name}.${var.cluster_domain}"
-    full_name = "${var.studentname-prefix}${count.index + 1}"
-    login_name = "${var.studentname-prefix}${count.index + 1}"
+  data = (jsonencode({
+    email                = "${var.studentname-prefix}${count.index + 1}@gitea.${var.cluster_name}.${var.cluster_domain}"
+    full_name            = "${var.studentname-prefix}${count.index + 1}"
+    login_name           = "${var.studentname-prefix}${count.index + 1}"
     must_change_password = false
-    password = random_password.student-passwords[count.index].result
-    send_notify = false
-    source_id = 0
-    username = "${var.studentname-prefix}${count.index + 1}"
-    visibility = "public"
-    })
-    }"
+    password             = random_password.student-passwords[count.index].result
+    send_notify          = false
+    source_id            = 0
+    username             = "${var.studentname-prefix}${count.index + 1}"
+    visibility           = "public"
+  }))
   id_attribute = "username"
-  count = var.count-students
+  count        = var.count-students
 }
 
 
@@ -149,14 +145,13 @@ resource "restapi_object" "gitea-repo" {
   path         = "/api/v1/repo/{repo_owner}/{id}"
   create_path  = "/api/v1/repos/migrate"
   destroy_path = "/api/v1/repo/{repo_owner}/{id}"
-  data         = "${jsonencode({
+  data = (jsonencode({
     clone_addr = "https://github.com/acend/argocd-training-examples.git"
-    private = false
-    repo_name = "argocd-training-examples"
+    private    = false
+    repo_name  = "argocd-training-examples"
     repo_owner = "${var.studentname-prefix}${count.index + 1}"
 
-    })
-    }"
+  }))
   id_attribute = "repo_name"
 
   count = var.count-students

@@ -46,8 +46,8 @@ resource "helm_release" "appset-trainee-webshell" {
         dind-persistence-enabled  = var.dind-persistence-enabled,
         theia-persistence-enabled = var.theia-persistence-enabled
         user-vm-enabled           = var.user-vms-enabled
-        ipv4-address              = var.user-vms-enabled ? module.student-vms[0].ip-address: ""
-        ipv6-address              = var.user-vms-enabled ? module.student-vms[0].ipv6-address: ""
+        ipv4-address              = var.user-vms-enabled ? module.student-vms[0].ip-address : ""
+        ipv6-address              = var.user-vms-enabled ? module.student-vms[0].ipv6-address : ""
         ssh-keys                  = var.user-vms-enabled ? module.student-vms[0].user-ssh-keys : ""
     }),
   ]

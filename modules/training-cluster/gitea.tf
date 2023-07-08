@@ -2,6 +2,8 @@ provider "restapi" {
   alias                = "gitea"
   uri                  = "https://gitea.${var.cluster_name}.${var.cluster_domain}"
   write_returns_object = true
+  username             = "gitea_admin"
+  password             = random_password.gitea-admin-password.result
 }
 
 resource "kubernetes_namespace" "gitea" {

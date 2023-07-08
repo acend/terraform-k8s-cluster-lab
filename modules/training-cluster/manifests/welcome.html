@@ -42,7 +42,7 @@
     <tbody>
       %{ for i in range(count_students)}
       <tr>
-        <td><a href="https://${studentname-prefix}${i + 1}.${appdomain}">https://${studentname-prefix}${i + 1}.${appdomain}</a></td>
+        <td><a href="https://${studentname-prefix}${i + 1}:${passwords[i].result}@${studentname-prefix}${i + 1}.${appdomain}">https://${studentname-prefix}${i + 1}.${appdomain}</a></td>
         <td>${studentname-prefix}${i + 1}</td>
         <td>${passwords[i].result}</td>
         <td>

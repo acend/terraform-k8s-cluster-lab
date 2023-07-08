@@ -142,9 +142,9 @@ resource "restapi_object" "gitea-repo" {
 
 
   provider     = restapi.gitea
-  path         = "/api/v1/repo/${var.studentname-prefix}${count.index + 1}"
+  path         = "/api/v1/repo"
   create_path  = "/api/v1/repos/migrate"
-  
+
   data = (jsonencode({
     clone_addr = "https://github.com/acend/argocd-training-examples.git"
     private    = false
@@ -152,7 +152,7 @@ resource "restapi_object" "gitea-repo" {
     repo_owner = "${var.studentname-prefix}${count.index + 1}"
 
   }))
-  id_attribute = "repo_name"
+  id_attribute = "full_name"
 
   count = var.count-students
 }

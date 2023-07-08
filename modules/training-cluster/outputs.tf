@@ -7,7 +7,7 @@ output "argocd-admin-username" {
 }
 
 output "argocd-admin-password" {
-  value = random_password.argocd-admin-secret.result
+  value = random_password.argocd-admin-password.result
 }
 
 output "argocd-url" {

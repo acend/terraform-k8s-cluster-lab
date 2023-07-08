@@ -5,8 +5,14 @@ applicationsets:
   - list:
       elements:
       %{~ for i in range(count-students) ~}
-      - trainee-name: test-${studentname-prefix}${i+1}
-        password: '${passwords[i].bcrypt_hash}'
+      - trainee-name: ${studentname-prefix}${i+1}
+        password: ${passwords[i].bcrypt_hash}
+        %{ if user-vm-enabled }
+        ipv4-address: ${ipv4-address[i]}
+        ipv6-addrss: ${ipv6-address[i]}
+        ssh-public-key: ${chomp(ssh-keys[i].public_key_openssh)}
+        ssh-private-key: ${base64encode(ssh-keys[i].private_key_pem)}
+        %{ endif }
       %{~ endfor ~}
   template:
     metadata:
@@ -51,7 +57,20 @@ applicationsets:
             updateStrategy:
               type: Recreate
             rbac:
-              create: ${tostring(rbac-enabled)}       
+              create: ${tostring(rbac-enabled)}   
+            %{ if user-vm-enabled }
+            init:
+              command:
+              - sh
+              - -c
+              - echo Welcome to the acend theia ide > /home/project/welcome && echo Your VM IP is {{ipv4-address}} / {{ipv6-address}} >> /home/project/welcome && echo You can login to your training VM using ssh -i id_ecdsa {{trainee-name}}@{{ipv4-address}} or ssh -i id_ecdsa {{trainee-name}}@{{ipv6-address}}>> /home/project/welcome && echo {{ssh-private-key}} | base64 -d > /home/project/id_ecdsa && chown 1001:1001 /home/project/id_ecdsa && chmod 600 /home/project/id_ecdsa
+            %{ else }
+            init:
+              command:
+              - sh
+              - -c
+              - echo Welcome to the acend theia ide > /home/project/welcome
+            %{ endif }    
       destination:
         server: https://kubernetes.default.svc
         namespace: {{trainee-name}}

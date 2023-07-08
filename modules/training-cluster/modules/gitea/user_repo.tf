@@ -107,24 +107,24 @@ EOH
     }
   }
 
-#  provisioner "local-exec" {
-#    when        = destroy
-#    command     = <<EOH
-#curl -X 'DELETE' \
-#  "https://$GITEA_HOST/api/v1/repos/$USERNAME/argocd-training-examples/" \
-#  -H 'accept: application/json' \
-#  -u $GITEA_ADMIN_USER:$GITEA_ADMIN_PASSWORD \
-#  -H 'Content-Type: application/json'
-#
-#EOH
-#    interpreter = ["/bin/bash", "-c"]
-#    environment = {
-#      GITEA_HOST           = self.triggers.giteaHost
-#      GITEA_ADMIN_USER     = self.triggers.giteaAdminUser
-#      GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
-#      USERNAME             = self.triggers.username
-#    }
-#  }
+  #  provisioner "local-exec" {
+  #    when        = destroy
+  #    command     = <<EOH
+  #curl -X 'DELETE' \
+  #  "https://$GITEA_HOST/api/v1/repos/$USERNAME/argocd-training-examples/" \
+  #  -H 'accept: application/json' \
+  #  -u $GITEA_ADMIN_USER:$GITEA_ADMIN_PASSWORD \
+  #  -H 'Content-Type: application/json'
+  #
+  #EOH
+  #    interpreter = ["/bin/bash", "-c"]
+  #    environment = {
+  #      GITEA_HOST           = self.triggers.giteaHost
+  #      GITEA_ADMIN_USER     = self.triggers.giteaAdminUser
+  #      GITEA_ADMIN_PASSWORD = self.triggers.giteaAdminPassword
+  #      USERNAME             = self.triggers.username
+  #    }
+  #  }
 
   count = var.count-students
 }

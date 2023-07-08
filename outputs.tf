@@ -3,10 +3,10 @@ output "admin_kubeconfig" {
   sensitive = true
 }
 
-output "webshell-infos" {
-  value = module.training-cluster.webshell-links
+# output "webshell-infos" {
+#   value = module.training-cluster.webshell-links
 
-}
+# }
 
 // Argo CD Output
 output "argocd-admin-password" {

@@ -1,9 +1,9 @@
 
 resource "kubernetes_namespace" "argocd" {
 
-  depends_on = [ 
+  depends_on = [
     time_sleep.wait_for_cluster_ready,
-   ]
+  ]
 
   metadata {
     name = "argocd"
@@ -17,7 +17,7 @@ resource "kubernetes_namespace" "argocd" {
 
 resource "kubernetes_cluster_role" "argocd" {
 
-  depends_on = [ 
+  depends_on = [
     time_sleep.wait_for_cluster_ready,
   ]
 
@@ -60,13 +60,8 @@ resource "helm_release" "argocd" {
   }
 
   set {
-    name  = "server.config.url"
+    name  = "configs.cm.url"
     value = "https://argocd.${var.cluster_name}.${var.cluster_domain}"
-  }
-
-  set {
-    name  = "server.metrics.enabled"
-    value = "true"
   }
 
   set {
@@ -75,7 +70,7 @@ resource "helm_release" "argocd" {
   }
 
   set {
-    name  = "server.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/server-ssl"
+    name  = "server.ingress.annotations.ingress\\.kubernetes\\.io/server-ssl"
     value = "true"
   }
 
@@ -96,7 +91,7 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.ingress.https"
-    value = "true"
+    value = "false"
   }
 
   set {
@@ -121,7 +116,7 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.ingressGrpc.https"
-    value = "true"
+    value = "false"
   }
 
   values = [
@@ -134,9 +129,9 @@ resource "helm_release" "argocd" {
 
 resource "helm_release" "argocd-training-project" {
 
-  depends_on = [ 
+  depends_on = [
     helm_release.argocd
-   ]
+  ]
 
   name       = "argocd-apps"
   repository = "https://argoproj.github.io/argo-helm"
@@ -149,7 +144,7 @@ resource "helm_release" "argocd-training-project" {
     templatefile("${path.module}/manifests/argocd/values_projects.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students }),
   ]
 
-}   
+}
 
 resource "null_resource" "cleanup-argo-cr-before-destroy" {
 

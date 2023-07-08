@@ -65,12 +65,12 @@ resource "helm_release" "argocd" {
   }
 
   set {
-    name  = "server.ingress.enabled"
+    name  = "configs.cm.params.server.insecure"
     value = "true"
   }
 
   set {
-    name  = "server.ingress.annotations.ingress\\.kubernetes\\.io/server-ssl"
+    name  = "server.ingress.enabled"
     value = "true"
   }
 
@@ -87,11 +87,6 @@ resource "helm_release" "argocd" {
   set {
     name  = "server.ingress.tls[0].secretName"
     value = "acend-wildcard"
-  }
-
-  set {
-    name  = "server.ingress.https"
-    value = "false"
   }
 
   set {
@@ -112,11 +107,6 @@ resource "helm_release" "argocd" {
   set {
     name  = "server.ingressGrpc.tls[0].secretName"
     value = "acend-wildcard"
-  }
-
-  set {
-    name  = "server.ingressGrpc.https"
-    value = "false"
   }
 
   values = [

@@ -85,18 +85,3 @@ module "student-vms" {
   count = local.vms-enabled
 
 }
-
-# Deploy Gitea and configure it for the students
-module "gitea" {
-  source = "./modules/gitea"
-
-  cluster_name       = var.cluster_name
-  cluster_domain     = var.cluster_domain
-  count-students     = var.count-students
-  student-passwords  = random_password.student-passwords
-  studentname-prefix = var.studentname-prefix
-
-  depends_on = [
-    time_sleep.wait_for_cluster_ready
-  ]
-}

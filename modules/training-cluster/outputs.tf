@@ -15,13 +15,13 @@ output "argocd-url" {
 }
 
 output "gitea-admin-password" {
-  value = module.gitea.admin-password
+  value = random_password.gitea-admin-password.result
 }
 
 output "gitea-admin-username" {
-  value = module.gitea.admin-username
+  value = "gitea_admin"
 }
 
 output "gitea-url" {
-  value = module.gitea.gitea-url
+  value = "https://gitea.${var.cluster_name}.${var.cluster_domain}"
 }

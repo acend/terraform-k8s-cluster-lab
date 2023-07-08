@@ -1,3 +1,8 @@
+provider "restapi" {
+  alias                = "gitea"
+  uri                  = "https://gitea.${var.cluster_name}.${var.cluster_domain}"
+  write_returns_object = true
+}
 
 resource "kubernetes_namespace" "gitea" {
 
@@ -12,14 +17,14 @@ resource "kubernetes_namespace" "gitea" {
 }
 
 # Create admin password for gitea admin
-resource "random_password" "admin-password" {
+resource "random_password" "gitea-admin-password" {
   length           = 16
   special          = true
   override_special = "_%@"
 }
 
 # Create pg password for gitea postgresdb
-resource "random_password" "pg-password" {
+resource "random_password" "gitea-pg-password" {
   length           = 16
   special          = true
   override_special = "_%@"
@@ -30,7 +35,7 @@ resource "helm_release" "gitea" {
 
 
   name       = "gitea"
-  repository = var.chart-repository
+  repository = "https://dl.gitea.io/charts/"
   chart      = "gitea"
   namespace  = kubernetes_namespace.gitea.metadata.0.name
 
@@ -42,12 +47,12 @@ resource "helm_release" "gitea" {
 
   set {
     name  = "gitea.admin.password"
-    value = random_password.admin-password.result
+    value = random_password.gitea-admin-password.result
   }
 
   set {
     name  = "gitea.postgresql.global.postgresql.postgresqlPassword"
-    value = random_password.pg-password.result
+    value = random_password.gitea-pg-password.result
   }
 
   set {

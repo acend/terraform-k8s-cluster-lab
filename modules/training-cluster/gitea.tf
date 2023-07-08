@@ -145,7 +145,7 @@ resource "restapi_object" "gitea-repo" {
     clone_addr = "https://github.com/acend/argocd-training-examples.git"
     private    = false
     repo_name  = "argocd-training-examples"
-    repo_owner = restapi_object.gitea-user.api_data.username
+    repo_owner = restapi_object.gitea-user[count.index].api_data.username
 
   }))
   id_attribute = "full_name"

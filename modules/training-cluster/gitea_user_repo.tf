@@ -40,7 +40,7 @@ resource "restapi_object" "gitea-repo" {
   provider     = restapi.gitea
   path         = "/api/v1/repo/{repo_owner}/{id}"
   create_path  = "/api/v1/repos/migrate"
-  destroy_path = "7api/v1/repo/{repo_owner}/{id}"
+  destroy_path = "/api/v1/repo/{repo_owner}/{id}"
   data         = "${jsonencode({
     clone_addr = "https://github.com/acend/argocd-training-examples.git"
     private = false

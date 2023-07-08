@@ -22,9 +22,6 @@ module "training-cluster" {
   # Webshell
   count-students = var.count-students
 
-  # Gitea
-  gitea-enabled = var.gitea-enabled
-
   # User VMs
   user-vms-enabled = var.user-vms-enabled
 

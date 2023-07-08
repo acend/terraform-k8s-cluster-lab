@@ -49,12 +49,6 @@ variable "count-students" {
   default     = 0
 }
 
-variable "gitea-enabled" {
-  description = "Switch to deploy Gitea"
-  type        = bool
-  default     = false
-}
-
 variable "user-vms-enabled" {
   description = "Deploy a VM for each User"
   type        = bool

@@ -3,11 +3,6 @@ output "admin_kubeconfig" {
   sensitive = true
 }
 
-# output "webshell-infos" {
-#   value = module.training-cluster.webshell-links
-
-# }
-
 // Argo CD Output
 output "argocd-admin-password" {
   value     = module.training-cluster.argocd-admin-password
@@ -35,14 +30,4 @@ output "gitea-admin-username" {
 
 output "gitea-url" {
   value = module.training-cluster.gitea-url
-}
-
-// Student VM Output
-
-output "student-vm-ip-address" {
-  value = module.training-cluster.student-vm-ip-address
-}
-
-output "student-vm-ipv6-address" {
-  value = module.training-cluster.student-vm-ipv6-address
 }

@@ -53,7 +53,6 @@ provider "banzaicloud-k8s" {
 }
 
 locals {
-  gitea_enabled = var.gitea-enabled ? 1 : 0
   vms-enabled   = var.user-vms-enabled ? 1 : 0
   hasWorker     = var.worker_count > 0 ? 1 : 0
 }
@@ -71,37 +70,6 @@ resource "random_password" "student-passwords" {
 
   count = var.count-students
 }
-
-
-# Deploy Webshell with a student Namespace to work in 
-# module "webshell" {
-#   source = "./modules/webshell"
-
-#   depends_on = [
-#     time_sleep.wait_for_cluster_ready,
-#     module.student-vms,
-#     helm_release.longhorn # For the storage
-#   ]
-
-#   cluster_name   = var.cluster_name
-#   cluster_domain = var.cluster_domain
-
-#   student-index           = count.index
-#   student-name            = "${var.studentname-prefix}${count.index + 1}"
-#   student-password        = random_password.student-passwords[count.index].result
-#   student-password-bcrypt = random_password.student-passwords[count.index].bcrypt_hash
-
-#   user-vm-enabled = var.user-vms-enabled
-#   student-vms     = var.user-vms-enabled ? [module.student-vms[0]] : null
-#   rbac-enabled    = var.webshell-rbac-enabled
-
-#   dind-persistence-enabled  = var.dind-persistence-enabled
-#   theia-persistence-enabled = var.theia-persistence-enabled
-
-#   argocd_namespace = kubernetes_namespace.argocd.metadata.0.name
-
-#   count = var.count-students
-# }
 
 module "student-vms" {
   source = "./modules/student-vms"
@@ -127,9 +95,6 @@ module "gitea" {
   count-students     = var.count-students
   student-passwords  = random_password.student-passwords
   studentname-prefix = var.studentname-prefix
-
-
-  count = local.gitea_enabled
 
   depends_on = [
     time_sleep.wait_for_cluster_ready

@@ -17,7 +17,6 @@ resource "kubernetes_config_map" "welcome-content" {
       appdomain          = "${var.cluster_name}.${var.cluster_domain}",
       cluster_domain     = var.cluster_domain,
       cluster_name       = var.cluster_name,
-      gitea_enabled      = var.gitea-enabled
     })}"
   }
 }

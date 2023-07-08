@@ -5,7 +5,7 @@ applicationsets:
   - list:
       elements:
       %{~ for i in range(count-students) ~}
-      - trainee-name: test-${studentname-prefix}${i+1}
+      - trainee-name: ${studentname-prefix}${i+1}
       %{~ endfor ~}
   template:
     metadata:

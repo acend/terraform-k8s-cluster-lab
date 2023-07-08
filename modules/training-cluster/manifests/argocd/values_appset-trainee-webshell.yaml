@@ -5,14 +5,14 @@ applicationsets:
   - list:
       elements:
       %{~ for i in range(count-students) ~}
-      - traineename: ${studentname-prefix}${i+1}
-        password: ${passwords[i].bcrypt_hash}
-        %{ if user-vm-enabled }
-        ipv4address: ${ipv4-address[i]}
-        ipv6addrss: ${ipv6-address[i]}
-        sshpublickey: ${chomp(ssh-keys[i].public_key_openssh)}
-        sshprivatekey: ${base64encode(ssh-keys[i].private_key_pem)}
-        %{ endif }
+      - traineename: "${studentname-prefix}${i+1}"
+        password: "${passwords[i].bcrypt_hash}"
+        %{~ if user-vm-enabled ~}
+        ipv4address: "${ipv4-address[i]}"
+        ipv6addrss: "${ipv6-address[i]}"
+        sshpublickey: "${chomp(ssh-keys[i].public_key_openssh)}"
+        sshprivatekey: "${base64encode(ssh-keys[i].private_key_pem)}"
+        %{~ endif ~}
       %{~ endfor ~}
   template:
     metadata:

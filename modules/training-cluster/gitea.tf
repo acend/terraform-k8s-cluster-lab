@@ -142,9 +142,9 @@ resource "restapi_object" "gitea-repo" {
 
 
   provider     = restapi.gitea
-  path         = "/api/v1/repo/${var.studentname-prefix}${count.index + 1}/{id}"
+  path         = "/api/v1/repo/${var.studentname-prefix}${count.index + 1}"
   create_path  = "/api/v1/repos/migrate"
-  destroy_path = "/api/v1/repo/${var.studentname-prefix}${count.index + 1}/{id}"
+  
   data = (jsonencode({
     clone_addr = "https://github.com/acend/argocd-training-examples.git"
     private    = false

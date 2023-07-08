@@ -8,6 +8,10 @@ provider "restapi" {
 
 resource "kubernetes_namespace" "gitea" {
 
+  depends_on = [
+    time_sleep.wait_for_cluster_ready,
+  ]
+
   metadata {
     name = "gitea"
 
@@ -34,6 +38,10 @@ resource "random_password" "gitea-pg-password" {
 
 
 resource "helm_release" "gitea" {
+
+  depends_on = [ 
+    helm_release.hcloud-csi-driver # for storage
+   ]
 
 
   name       = "gitea"

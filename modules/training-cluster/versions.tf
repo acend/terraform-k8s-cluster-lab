@@ -21,13 +21,6 @@ terraform {
     restapi = {
       source = "Mastercard/restapi"
     }
-    banzaicloud-k8s = {
-      source = "banzaicloud/k8s"
-    }
-    metio-k8s = {
-      source = "metio/k8s"
-    }
-
   }
   required_version = ">= 1.3.3"
 }

@@ -66,7 +66,7 @@ resource "helm_release" "argocd" {
   }
 
   set {
-    name  = "configs.cm.params.server.insecure"
+    name  = "configs.cm.params.server\\.insecure"
     value = "true"
   }
 
@@ -78,12 +78,6 @@ resource "helm_release" "argocd" {
   set {
     name  = "server.ingress.enabled"
     value = "true"
-  }
-
-  set {
-    name  = "server.ingress.annotations.ingress\\.kubernetes\\.io/server-ssl"
-    value = "true"
-    type  = "string"
   }
 
   set {

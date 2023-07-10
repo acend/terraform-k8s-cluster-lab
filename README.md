@@ -6,9 +6,24 @@ This setup provisions a Kubernetes Cluster to be used with our trainings.
 
 We use [Hetzner](https://www.hetzner.com/cloud) as our cloud provider and [RKE2](https://docs.rke2.io/) to create the kubernetes cluster. [Kubernetes Cloud Controller Manager for Hetzner Cloud](https://github.com/hetznercloud/hcloud-cloud-controller-manager) to provision lobalancer from a Kubernetes service (type `Loadbalancer`) objects and also configure the networking & native routing for the Kubernetes cluster network traffic.
 
-Cluster setup is based on https://github.com/acend/infrastructure
+Cluster setup is based on our [infrastructure](https://github.com/acend/infrastructure) setup.
 
+In order to deploy our acend Kubernetes Cluster the following steps are necessary:
 
+1. Terraform to deploy base infrastructure
+   * VM's for controlplane and worker nodes
+   * Network
+   * Loadbalancer for Kubernetes API and RKE2
+   * Firewall
+   * Hetzner Cloud Controller Manager for the Kubernetes Cluster Networking
+   * Storage Provisioner (hcloud csi, longhorn)
+   * Ingresscontroller
+   * Cert-Manager
+   * Gitea
+2. Terraform to deploy and bootstrap ArgoCD
+3. ArgoCD to deploy resources student/user resources
+
+For more details on the cluster design and setup see the [documentation](https://github.com/acend/infrastructure/tree/main/docs#cluster-basic-design--configuration-and-setup-procedure) in our main infrastructure repository.
 
 ### Components
 
@@ -55,7 +70,7 @@ We use a local [Gitea](https://about.gitea.com/) installation that is used in ou
 
 ## Training Environment
 
-The training environment contains:
+The training environment contains the following per student/user:
 
 * Credentials
 * All necessary namespaces
@@ -67,7 +82,7 @@ It is deployed with ArgoCD using ApplicationSets. The ApplicationSets are deploy
 
 ## Usage
 
-Rhis repo can be used standalone or included as module from an other repo.
+This repo can be used standalone or included as module from an other repo.
 
 Currently we use terraform cloud as state backend. Login into terraform cloud with your account using:
 

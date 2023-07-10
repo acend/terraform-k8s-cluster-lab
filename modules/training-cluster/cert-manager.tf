@@ -31,6 +31,11 @@ resource "helm_release" "certmanager" {
     value = "ClusterIssuer"
   }
 
+  set {
+    name  = "dns01RecursiveNameservers"
+    value = "8.8.8.8:53"
+  }
+
 }
 
 resource "helm_release" "certmanager-webhook-hosttech" {
@@ -199,4 +204,22 @@ resource "kubernetes_secret" "hosttech-secret" {
     token = var.hosttech_dns_token
   }
 
+}
+
+
+
+data "kubernetes_secret" "acend-wildcard" {
+
+  metadata {
+    name      = "acend-wildcard"
+    namespace = kubernetes_namespace.cert-manager.metadata[0].name
+  }
+
+}
+
+resource "time_sleep" "wait_for_ssl_ready" {
+  // Wait for the acend-wildcard to be ready before we can use resources like gitea.
+  depends_on = [data.kubernetes_secret.acend-wildcard]
+
+  create_duration = "30s"
 }

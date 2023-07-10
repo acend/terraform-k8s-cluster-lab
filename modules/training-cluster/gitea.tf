@@ -111,7 +111,7 @@ resource "helm_release" "gitea" {
 
 // Wait until gitea is really ready
 resource "time_sleep" "wait_30_seconds" {
-  depends_on = [helm_release.gitea]
+  depends_on = [helm_release.gitea, time_sleep.wait_for_ssl_ready]
 
   create_duration = "30s"
 }

@@ -66,24 +66,6 @@ resource "helm_release" "certmanager-webhook-hosttech" {
   }
 
 }
-
-
-
-# For Secret/Certificate sync across Namespaces
-resource "helm_release" "kubed" {
-
-  depends_on = [
-    time_sleep.wait_for_cluster_ready
-  ]
-
-  name       = "config-syncer"
-  repository = "https://charts.appscode.com/stable/"
-  chart      = "config-syncer"
-  version    = "v0.14.0-rc.0"
-  namespace  = "kube-system"
-
-}
-
 resource "k8s_cert_manager_io_cluster_issuer_v1" "clusterissuer-letsencrypt-prod" {
 
   provider = metio-k8s

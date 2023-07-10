@@ -2,7 +2,7 @@ applications:
 - name: argocd
   project: default
   source:
-    repoURL: https://github.com/acend/infrastructure.git
+    repoURL: https://github.com/acend/terraform-k8s-cluster-lab
     targetRevision: HEAD
     path: deploy/bootstrap
   destination:

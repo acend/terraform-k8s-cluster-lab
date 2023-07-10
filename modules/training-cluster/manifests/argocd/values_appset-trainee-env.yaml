@@ -5,11 +5,12 @@ applicationsets:
   - list:
       elements:
       %{~ for i in range(count-students) ~}
-      - trainee-name: ${studentname-prefix}${i+1}
+      - traineename: ${studentname-prefix}${i+1}
+        password: "${passwords[i].result}"
       %{~ endfor ~}
   template:
     metadata:
-      name: '{{trainee-name}}-env'
+      name: '{{traineename}}-env'
     spec:
       project: default
       source:
@@ -17,9 +18,10 @@ applicationsets:
         targetRevision: HEAD
         path: 'charts/user-env'
         helm:
-          releaseName: '{{trainee-name}}-env'
+          releaseName: '{{traineename}}-env'
           values: |
-            user: {{trainee-name}}
+            user: {{traineename}}
+            password: {{password}}
       destination:
         server: https://kubernetes.default.svc
       syncPolicy:

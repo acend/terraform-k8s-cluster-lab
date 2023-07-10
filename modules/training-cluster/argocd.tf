@@ -61,7 +61,7 @@ resource "helm_release" "argocd" {
   }
 
 
-  
+
 
   set {
     name  = "configs.cm.url"

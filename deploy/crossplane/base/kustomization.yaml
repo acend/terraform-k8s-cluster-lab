@@ -4,6 +4,7 @@ namespace: crossplane
 
 resources:
   - namespace.yaml
+  - terraform-provider.yaml
 
 helmCharts:
   - name: crossplane

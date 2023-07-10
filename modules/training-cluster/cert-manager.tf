@@ -13,7 +13,7 @@ resource "helm_release" "certmanager" {
   name       = "certmanager"
   repository = "https://charts.jetstack.io"
   chart      = "cert-manager"
-  version    = "v1.12.1"
+  version    = "v1.12.2"
   namespace  = kubernetes_namespace.cert-manager.metadata[0].name
 
   set {
@@ -34,6 +34,11 @@ resource "helm_release" "certmanager" {
   set {
     name  = "dns01RecursiveNameservers"
     value = "8.8.8.8:53"
+  }
+
+  set {
+    name  = "dns01RecursiveNameserversOnly"
+    value = true
   }
 
 }

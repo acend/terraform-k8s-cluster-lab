@@ -56,6 +56,14 @@ resource "helm_release" "argocd" {
   }
 
   set {
+    name  = "server.config.kustomize\\.buildOptions"
+    value = "--enable-helm"
+  }
+
+
+  
+
+  set {
     name  = "configs.cm.url"
     value = "https://argocd.${var.cluster_name}.${var.cluster_domain}"
   }

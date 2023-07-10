@@ -76,6 +76,11 @@ resource "helm_release" "argocd" {
   }
 
   set {
+    name  = "server.ingress.annotations.ingress\\.kubernetes\\.io/server-ssl"
+    value = "true"
+  }
+
+  set {
     name  = "server.ingress.hosts[0]"
     value = "argocd.${var.cluster_name}.${var.cluster_domain}"
   }

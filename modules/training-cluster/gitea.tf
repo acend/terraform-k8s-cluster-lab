@@ -110,10 +110,10 @@ resource "helm_release" "gitea" {
 
 
 // Wait until gitea is really ready
-resource "time_sleep" "wait_30_seconds" {
-  depends_on = [helm_release.gitea, time_sleep.wait_for_ssl_ready]
+resource "time_sleep" "wait_60_seconds" {
+  depends_on = [helm_release.gitea]
 
-  create_duration = "30s"
+  create_duration = "60s"
 }
 
 
@@ -121,7 +121,7 @@ module "gitea_user_repo" {
   source = "./modules/gitea-user-repo"
 
   depends_on = [
-    time_sleep.wait_30_seconds
+    time_sleep.wait_60_seconds
   ]
   providers = {
     restapi = restapi.gitea

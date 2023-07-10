@@ -2,7 +2,7 @@ resource "kubernetes_secret" "hosttech-secret" {
 
   metadata {
     name      = "hosttech-secret"
-    namespace = kubernetes_namespace.cert-manager.metadata[0].name
+    namespace = "cert-manager"
   }
 
   data = {

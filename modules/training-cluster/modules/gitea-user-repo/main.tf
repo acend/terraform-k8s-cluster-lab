@@ -1,9 +1,18 @@
+terraform {
+  required_providers {
+    restapi = {
+      source = "Mastercard/restapi"
+    }
+  }
+}
+
+
 variable "student_name" {
-    type = string
+  type = string
 }
 
 variable "student_password" {
-    type = string
+  type = string
 }
 
 variable "cluster_name" {
@@ -36,8 +45,8 @@ resource "restapi_object" "gitea-user" {
 
 resource "restapi_object" "gitea-repo" {
 
-  path         = "/api/v1/repos"
-  create_path  = "/api/v1/repos/migrate"
+  path        = "/api/v1/repos"
+  create_path = "/api/v1/repos/migrate"
 
   data = (jsonencode({
     clone_addr = "https://github.com/acend/argocd-training-examples.git"

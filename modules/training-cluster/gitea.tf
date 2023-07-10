@@ -39,9 +39,9 @@ resource "random_password" "gitea-pg-password" {
 
 resource "helm_release" "gitea" {
 
-  depends_on = [ 
+  depends_on = [
     helm_release.hcloud-csi-driver # for storage
-   ]
+  ]
 
 
   name       = "gitea"
@@ -127,10 +127,10 @@ module "gitea_user_repo" {
     restapi = restapi.gitea
   }
 
-  student_name = "${var.studentname-prefix}${count.index + 1}"
+  student_name     = "${var.studentname-prefix}${count.index + 1}"
   stundet_password = random_password.student-passwords[count.index].result
-  cluster_name = var.cluster_name
-  cluster_domain = var.cluster_domain
+  cluster_name     = var.cluster_name
+  cluster_domain   = var.cluster_domain
 
 
   coint = var.count-students

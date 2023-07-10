@@ -5,6 +5,7 @@ namespace: crossplane
 resources:
   - namespace.yaml
   - terraform-provider.yaml
+  - rbac.yaml
 
 helmCharts:
   - name: crossplane

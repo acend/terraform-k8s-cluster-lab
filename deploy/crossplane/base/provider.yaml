@@ -19,7 +19,8 @@ metadata:
   name: provider-kubernetes
 spec:
   package: "xpkg.upbound.io/crossplane-contrib/provider-kubernetes:v0.9.0"
-  controllerConfigRef: kubernetes-provider-config
+  controllerConfigRef:
+    name: kubernetes-provider-config
 ---
 apiVersion: pkg.crossplane.io/v1alpha1
 kind: ControllerConfig
@@ -34,4 +35,5 @@ metadata:
   name: provider-helm
 spec:
   package: "xpkg.upbound.io/crossplane-contrib/provider-helm:v0.15.0"
-  controllerConfigRef: helm-provider-config
+  controllerConfigRef: 
+    name: helm-provider-config

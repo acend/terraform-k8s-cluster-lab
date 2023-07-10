@@ -39,11 +39,6 @@ resource "random_password" "gitea-pg-password" {
 
 resource "helm_release" "gitea" {
 
-  depends_on = [
-    helm_release.hcloud-csi-driver # for storage
-  ]
-
-
   name       = "gitea"
   repository = "https://dl.gitea.io/charts/"
   chart      = "gitea"

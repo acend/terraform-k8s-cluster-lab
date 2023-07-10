@@ -117,47 +117,21 @@ resource "time_sleep" "wait_30_seconds" {
 }
 
 
-resource "restapi_object" "gitea-user" {
+module "gitea_user_repo" {
+  source = "./modules/gitea_user-repo"
+
   depends_on = [
     time_sleep.wait_30_seconds
   ]
+  providers = {
+    restapi = restapi.gitea
+  }
+
+  student_name = "${var.studentname-prefix}${count.index + 1}"
+  stundet_password = random_password.student-passwords[count.index].result
+  cluster_name = var.cluster_name
+  cluster_domain = var.cluster_domain
 
 
-  provider  = restapi.gitea
-  path      = "/api/v1/admin/users"
-  read_path = "/api/v1/users/{id}"
-
-  data = (jsonencode({
-    email                = "${var.studentname-prefix}${count.index + 1}@gitea.${var.cluster_name}.${var.cluster_domain}"
-    full_name            = "${var.studentname-prefix}${count.index + 1}"
-    login_name           = "${var.studentname-prefix}${count.index + 1}"
-    must_change_password = false
-    password             = random_password.student-passwords[count.index].result
-    send_notify          = false
-    source_id            = 0
-    username             = "${var.studentname-prefix}${count.index + 1}"
-    visibility           = "public"
-  }))
-  id_attribute = "username"
-  count        = var.count-students
+  coint = var.count-students
 }
-
-
-resource "restapi_object" "gitea-repo" {
-
-  provider     = restapi.gitea
-  path         = "/api/v1/repos"
-  create_path  = "/api/v1/repos/migrate"
-
-  data = (jsonencode({
-    clone_addr = "https://github.com/acend/argocd-training-examples.git"
-    private    = false
-    repo_name  = "argocd-training-examples"
-    repo_owner = restapi_object.gitea-user[count.index].api_data.username
-
-  }))
-  id_attribute = "full_name"
-
-  count = var.count-students
-}
-

@@ -128,10 +128,10 @@ module "gitea_user_repo" {
   }
 
   student_name     = "${var.studentname-prefix}${count.index + 1}"
-  stundet_password = random_password.student-passwords[count.index].result
+  student_password = random_password.student-passwords[count.index].result
   cluster_name     = var.cluster_name
   cluster_domain   = var.cluster_domain
 
 
-  coint = var.count-students
+  count = var.count-students
 }

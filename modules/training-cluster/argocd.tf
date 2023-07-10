@@ -60,9 +60,6 @@ resource "helm_release" "argocd" {
     value = "--enable-helm"
   }
 
-
-
-
   set {
     name  = "configs.cm.url"
     value = "https://argocd.${var.cluster_name}.${var.cluster_domain}"

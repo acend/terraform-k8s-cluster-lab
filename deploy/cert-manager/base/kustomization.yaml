@@ -1,0 +1,65 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - clusterissuer.yaml
+
+
+helmCharts:
+  - name: cert-manager
+    releaseName: cert-manager
+    namespace: cert-manager
+    version: v1.12.2
+    repo: https://charts.jetstack.io
+    valuesInLine:
+      extraArgs:
+      - --dns01-recursive-nameservers-only
+      - --dns01-recursive-nameservers=1.1.1.1:53
+      installCRDs: true
+      ingressShim:
+        defaultIssuerName: letsencrypt-prod
+        defaultIssuerKind: ClusterIssuer
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: "true"
+      tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
+      webhook:
+        nodeSelector:
+          node-role.kubernetes.io/control-plane: "true"
+        tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
+      cainjector:
+        nodeSelector:
+          node-role.kubernetes.io/control-plane: "true"
+        tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
+
+  - name: cert-manager-webhook-hosttech
+    releaseName: cert-manager-webhook-hosttech
+    namespace: cert-manager
+    version: 0.3.0
+    repo: https://piccobit.github.io/helm-charts
+    valuesInLine:
+      groupName: acme.acend.ch
+
+patches:
+- target:
+    kind: Certificate
+    name: cert-manager-webhook-hosttech-ca
+  patch: |-
+    - op: replace
+      path: /spec/duration
+      value: 43800h0m0s
+- target:
+    kind: Certificate
+    name: cert-manager-webhook-hosttech-webhook-tls
+  patch: |-
+    - op: replace
+      path: /spec/duration
+      value: 8760h0m0s

@@ -44,14 +44,6 @@ provider "restapi" {
   }
 }
 
-provider "banzaicloud-k8s" {
-  host                   = local.kubernetes_api
-  client_certificate     = local.client_certificate
-  client_key             = local.client_key
-  cluster_ca_certificate = local.cluster_ca_certificate
-  load_config_file       = false
-}
-
 locals {
   vms-enabled = var.user-vms-enabled ? 1 : 0
   hasWorker   = var.worker_count > 0 ? 1 : 0

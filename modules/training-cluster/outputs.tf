@@ -1,5 +1,6 @@
 output "kubeconfig_raw" {
   value = local.kubeconfig_raw
+  sensitive = true
 }
 
 output "argocd-admin-username" {

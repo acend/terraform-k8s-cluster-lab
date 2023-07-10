@@ -80,11 +80,15 @@ The training environment contains the following per student/user:
 
 It is deployed with ArgoCD using ApplicationSets. The ApplicationSets are deployed with Terraform
 
+### Access to the training environment
+
+There is a Welcome page deployed at https://welcome.${cluster_name}.{cluster_domain} which contains a list for each student/user with the URL for the Webshell and also credentials.
+
 ## Usage
 
 This repo can be used standalone or included as module from an other repo.
 
-Currently we use terraform cloud as state backend. Login into terraform cloud with your account using:
+This repo currently uses terraform cloud as state backend. Login into terraform cloud with your account using:
 
 ```bash
 terraform login
@@ -100,8 +104,14 @@ terraform apply
 
 ### inluded as module
 
-See [training-setup](https://github.com/acend/training-setup) for an example
+Everything is contained in the `training-cluster` module and can be included in other repos. See [training-setup](https://github.com/acend/training-setup) for an example
 
 ## Variables
 
 Check `main.tf` for an example cluster.
+
+## Admin Access to the cluster
+
+The admin Kubeconfig file is available in the `kubeconfig_raw` output variable of the `training-cluster` module.
+
+e.g. `terraform output -raw admin_kubeconfig > kubeconfig.yaml`

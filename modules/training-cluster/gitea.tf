@@ -118,7 +118,7 @@ resource "time_sleep" "wait_30_seconds" {
 
 
 module "gitea_user_repo" {
-  source = "./modules/gitea_user-repo"
+  source = "./modules/gitea-user-repo"
 
   depends_on = [
     time_sleep.wait_30_seconds

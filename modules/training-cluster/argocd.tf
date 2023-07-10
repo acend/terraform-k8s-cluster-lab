@@ -86,7 +86,7 @@ resource "helm_release" "argocd" {
   set {
     name  = "server.ingress.annotations.ingress\\.kubernetes\\.io/server-ssl"
     value = "true"
-    type  = string
+    type  = "string"
   }
 
   set {

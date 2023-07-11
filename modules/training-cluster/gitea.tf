@@ -36,6 +36,19 @@ resource "random_password" "gitea-pg-password" {
   override_special = "_%@"
 }
 
+resource "kubernetes_secret" "gitea-admin-password" {
+
+  metadata {
+    name      = "admin-credentials"
+    namespace = kubernetes_namespace.gitea.metadata.0.name
+  }
+
+  data = {
+    username = "gitea_admin"
+    password = "random_password.gitea-admin-password.result"
+  }
+}
+
 
 resource "helm_release" "gitea" {
 
@@ -51,8 +64,8 @@ resource "helm_release" "gitea" {
   }
 
   set {
-    name  = "gitea.admin.password"
-    value = random_password.gitea-admin-password.result
+    name  = "gitea.admin.existingSecret"
+    value = kubernetes_secret.gitea-admin-password.metadata.0.name
   }
 
   set {

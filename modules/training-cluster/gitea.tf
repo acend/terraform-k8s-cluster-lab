@@ -60,7 +60,7 @@ resource "helm_release" "gitea" {
 
   set {
     name  = "global.storageClass"
-    value = "hcloud-volume"
+    value = "hcloud-volumes"
   }
 
   set {

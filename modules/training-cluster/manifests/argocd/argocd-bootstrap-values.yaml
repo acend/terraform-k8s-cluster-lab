@@ -4,7 +4,7 @@ applications:
   source:
     repoURL: https://github.com/acend/terraform-k8s-cluster-lab
     targetRevision: HEAD
-    path: deploy/bootstrap/${overlay}
+    path: deploy/bootstrap/overlays/${overlay}
   destination:
     server: https://kubernetes.default.svc
     namespace: ${namespace}

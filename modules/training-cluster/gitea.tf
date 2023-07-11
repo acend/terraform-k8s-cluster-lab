@@ -45,7 +45,7 @@ resource "kubernetes_secret" "gitea-admin-password" {
 
   data = {
     username = "gitea_admin"
-    password = "random_password.gitea-admin-password.result"
+    password = random_password.gitea-admin-password.result
   }
 }
 

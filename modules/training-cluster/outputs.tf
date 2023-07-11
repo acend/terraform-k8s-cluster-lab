@@ -14,15 +14,3 @@ output "argocd-admin-password" {
 output "argocd-url" {
   value = "https://argocd.${var.cluster_name}.${var.cluster_domain}"
 }
-
-output "gitea-admin-password" {
-  value = random_password.gitea-admin-password.result
-}
-
-output "gitea-admin-username" {
-  value = "gitea_admin"
-}
-
-output "gitea-url" {
-  value = "https://gitea.${var.cluster_name}.${var.cluster_domain}"
-}

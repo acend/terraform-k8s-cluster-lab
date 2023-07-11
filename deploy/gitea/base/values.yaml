@@ -1,0 +1,19 @@
+global:
+  storageClass: hcloud-volumes
+
+gitea:
+  admin:
+    existingSecret: gitea-admin-credentials
+    
+ingress:
+  enabled: true
+  className: haproxy
+  hosts:
+  - host: gitea.training.cluster.acend.ch
+    paths:
+    - path: /
+      pathType: Prefix
+  tls:
+  - hosts:
+    - gitea.training.cluster.acend.ch
+    secretName: acend-wildcard

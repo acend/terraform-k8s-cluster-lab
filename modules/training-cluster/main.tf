@@ -63,7 +63,7 @@ resource "random_password" "student-passwords" {
   count = var.count-students
 }
 
-resouece "kubernetes_config_map" "cluster-settings" {
+resource "kubernetes_config_map" "cluster-settings" {
 
   depends_on = [
     time_sleep.wait_for_cluster_ready,

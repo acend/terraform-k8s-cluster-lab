@@ -185,6 +185,7 @@ resource "helm_release" "argocd-bootstrap" {
   values = [
     templatefile("${path.module}/manifests/argocd/argocd-bootstrap-values.yaml", {
       namespace = helm_release.argocd.namespace
+      overlay   = "${var.cluster_name}.${var.cluster_domain}"
     }),
   ]
 }

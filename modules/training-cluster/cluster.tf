@@ -80,8 +80,6 @@ resource "hcloud_server_network" "controlplane" {
   network_id = hcloud_network.network.id
 }
 
-
-
 // Worker Node
 resource "hcloud_server" "worker" {
   count = var.worker_count

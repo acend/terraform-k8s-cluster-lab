@@ -1,26 +1,25 @@
-global:
-  configs:
-    rbac: 
-      policy.csv: |
-        p, role:student, applications, *, */*, allow
-        p, role:student, clusters, get, *, allow
-        p, role:student, clusters, update, *, allow
-        p, role:student, repositories, get, *, allow
-        p, role:student, repositories, create, *, allow
-        p, role:student, repositories, update, *, allow
-        p, role:student, repositories, delete, *, allow
+configs:
+  rbac: 
+    policy.csv: |
+      p, role:student, applications, *, */*, allow
+      p, role:student, clusters, get, *, allow
+      p, role:student, clusters, update, *, allow
+      p, role:student, repositories, get, *, allow
+      p, role:student, repositories, create, *, allow
+      p, role:student, repositories, update, *, allow
+      p, role:student, repositories, delete, *, allow
 
-        p, role:student, projects, get, *, allow
-        p, role:student, projects, create, *, allow
-        p, role:student, projects, update, *, allow
-        p, role:student, projects, delete, *, allow
+      p, role:student, projects, get, *, allow
+      p, role:student, projects, create, *, allow
+      p, role:student, projects, update, *, allow
+      p, role:student, projects, delete, *, allow
 
-        p, role:student, projects, get, argocd-training, allow
+      p, role:student, projects, get, argocd-training, allow
 
-        %{~ for i in range(count-students) ~}
-        g, ${studentname-prefix}${i+1}, role:student
-        %{~ endfor ~}
+      %{~ for i in range(count-students) ~}
+      g, ${studentname-prefix}${i+1}, role:student
+      %{~ endfor ~}
 
-        %{~ for admin in cluster_admin ~}
-        g, ${admin}, role:admin
-        %{~ endfor ~}
+      %{~ for admin in cluster_admin ~}
+      g, ${admin}, role:admin
+      %{~ endfor ~}

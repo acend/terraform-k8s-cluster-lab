@@ -1,0 +1,28 @@
+controller:
+  metrics:
+    enabled: true
+
+configs:
+  cm:
+    params:
+      server.insecure: true
+
+server:
+  config:
+    kustomize.buildOptions: "--enable-helm"
+    resource.exclusions: |
+      - kinds:
+        - "CiliumIdentity"
+        - "ciliumidentities"
+        - "CiliumEndpoint"
+        - "ciliumendpoints"
+        - "CiliumNode"
+        - "ciliumnodes"
+  ingress:
+    enabled: true
+    tls:
+    - secretName: acend-wildcard
+  ingressGrpc:
+    enabled: true
+    tls:
+    - secretName: acend-wildcard

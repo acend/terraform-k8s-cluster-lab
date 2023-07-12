@@ -10,7 +10,7 @@ spec:
     server: https://kubernetes.default.svc
   project: infra
   source:
-    path: deploy/gitea/base
+    path: deploy/gitea/overlays/training.cluster.acend.ch
     repoURL: https://github.com/acend/terraform-k8s-cluster-lab
     targetRevision: HEAD
   syncPolicy:

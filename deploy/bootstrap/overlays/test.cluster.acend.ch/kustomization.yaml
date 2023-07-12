@@ -12,3 +12,10 @@ patches:
   target:
     kind: Application
     name: gitea
+- patch: |-
+    - op: replace
+      path: /spec/source/path
+      value: deploy/cert-manager/overlays/test.cluster.acend.ch
+  target:
+    kind: Application
+    name: cert-manager

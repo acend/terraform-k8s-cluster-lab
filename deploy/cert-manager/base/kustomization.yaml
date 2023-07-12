@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - clusterissuer.yaml
+  - wildcard-certificate.yaml
 
 
 helmCharts:

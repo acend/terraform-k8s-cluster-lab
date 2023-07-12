@@ -29,35 +29,14 @@ resource "helm_release" "argocd" {
   namespace  = kubernetes_namespace.argocd.metadata.0.name
   version    = "5.37.1"
 
-
-  set {
-    name  = "controller.metrics.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "server.config.kustomize\\.buildOptions"
-    value = "--enable-helm"
-  }
-
   set {
     name  = "configs.cm.url"
     value = "https://argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
-    name  = "configs.cm.params.server\\.insecure"
-    value = "true"
-  }
-
-  set {
     name  = "configs.secret.argocdServerAdminPassword"
     value = random_password.argocd-admin-password.bcrypt_hash
-  }
-
-  set {
-    name  = "server.ingress.enabled"
-    value = "true"
   }
 
   set {
@@ -71,16 +50,6 @@ resource "helm_release" "argocd" {
   }
 
   set {
-    name  = "server.ingress.tls[0].secretName"
-    value = "acend-wildcard"
-  }
-
-  set {
-    name  = "server.ingressGrpc.enabled"
-    value = "true"
-  }
-
-  set {
     name  = "server.ingressGrpc.hosts[0]"
     value = "argocd-grpc.${var.cluster_name}.${var.cluster_domain}"
   }
@@ -90,12 +59,8 @@ resource "helm_release" "argocd" {
     value = "argocd-grpc.${var.cluster_name}.${var.cluster_domain}"
   }
 
-  set {
-    name  = "server.ingressGrpc.tls[0].secretName"
-    value = "acend-wildcard"
-  }
-
   values = [
+    templatefile("${path.module}/manifests/argocd/values.yaml", {}),
     templatefile("${path.module}/manifests/argocd/values_account_student.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students, passwords = random_password.student-passwords }),
     templatefile("${path.module}/manifests/argocd/values_rbacConfig_policy.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students, cluster_admin = var.cluster_admin})
   ]

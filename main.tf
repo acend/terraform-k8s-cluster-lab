@@ -18,7 +18,7 @@ provider "restapi" {
 }
 provider "kubernetes" {
   alias = "acend"
-  host  = "https://api.k8s-prod.acend.ch"
+  host  = "https://k8s-prod.acend.ch"
 }
 
 module "training-cluster" {

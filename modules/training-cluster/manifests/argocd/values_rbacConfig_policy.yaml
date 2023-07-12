@@ -14,6 +14,9 @@ configs:
       p, role:student, projects, update, *, allow
       p, role:student, projects, delete, *, allow
 
+      p, role:student, projects, *, infra, deny
+      p, role:student, projects, *, trainee-environment, deny
+
       p, role:student, projects, get, argocd-training, allow
 
       %{~ for i in range(count-students) ~}

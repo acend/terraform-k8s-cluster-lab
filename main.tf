@@ -17,7 +17,7 @@ provider "restapi" {
   }
 }
 provider "kubernetes" {
-  alias = acend
+  alias = "acend"
   host  = "https://api.k8s-prod.acend.ch"
 }
 

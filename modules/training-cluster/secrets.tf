@@ -1,14 +1,13 @@
-data "kubernetes_namespace" "cert-manager" {
-  metadata {
-    name = "cert-manager"
-  }
-}
-
 resource "kubernetes_secret" "hosttech-secret" {
-
+  depends_on = [
+    null_resource.wait_for_k8s_api
+  ]
   metadata {
     name      = "hosttech-secret"
-    namespace = data.kubernetes_namespace.cert-manager.metadata.0.name
+    namespace = "kube-system"
+    annotations = {
+      "kubed.appscode.com/sync" = "app=cert-manager"
+    }
   }
 
   data = {

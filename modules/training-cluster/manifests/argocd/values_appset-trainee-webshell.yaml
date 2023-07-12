@@ -18,7 +18,7 @@ applicationsets:
     metadata:
       name: '{{traineename}}-webshell'
     spec:
-      project: default
+      project: trainee-environment
       source:
         chart: webshell
         repoURL: https://acend.github.io/webshell-env/

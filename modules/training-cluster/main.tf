@@ -1,7 +1,3 @@
-provider "hcloud" {
-  token = var.hcloud_api_token
-}
-
 provider "kubernetes" {
   # On initial deploy, use this to get the credentials via ssh from rke2
   # Afterwards, update variables and change to them

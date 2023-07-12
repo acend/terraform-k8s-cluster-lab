@@ -2,6 +2,10 @@ terraform {
   backend "remote" {}
 }
 
+provider "hcloud" {
+  token = var.hcloud_api_token
+}
+
 provider "restapi" {
   alias                = "hosttech_dns"
   uri                  = "https://api.ns1.hosttech.eu"
@@ -17,6 +21,7 @@ module "training-cluster" {
 
   providers = {
     restapi.hosttech_dns = restapi.hosttech_dns
+    hcloud               = hcloud
   }
 
   source = "./modules/training-cluster"

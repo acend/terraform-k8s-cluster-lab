@@ -19,7 +19,7 @@ terraform {
       source = "loafoe/ssh"
     }
     restapi = {
-      source = "Mastercard/restapi"
+      source                = "Mastercard/restapi"
       configuration_aliases = [restapi.hosttech_dns]
     }
   }

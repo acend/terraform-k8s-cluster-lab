@@ -4,6 +4,8 @@ resources:
   - cert-manager.yaml
   - config-syncer.yaml
   - crossplane.yaml
+  - crossplane-provider.yaml
+  - crossplane-provider-config.yaml
   - hetzner-csi.yaml
   - kubernetes-secret-generator.yaml
   - longhorn.yaml

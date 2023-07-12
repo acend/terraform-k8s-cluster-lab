@@ -1,0 +1,19 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: crossplane-provider
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  project: infra
+  source:
+    path: deploy/crossplane-provider/base
+    repoURL: https://github.com/acend/terraform-k8s-cluster-lab
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -63,21 +63,6 @@ resource "random_password" "student-passwords" {
   count = var.count-students
 }
 
-resource "kubernetes_config_map" "cluster-settings" {
-
-  depends_on = [
-    time_sleep.wait_for_cluster_ready,
-  ]
-  metadata {
-    name     = "cluster-settings"
-    namespace = "kube-system"
-  }
-
-  data = {
-    cluster_default_domain = "${var.cluster_name}.${var.cluster_domain}"
-  }
-}
-
 module "student-vms" {
   source = "./modules/student-vms"
 

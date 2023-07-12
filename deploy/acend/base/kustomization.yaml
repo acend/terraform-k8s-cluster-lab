@@ -5,4 +5,5 @@ namespace: crossplane
 resources:
   - providerconfig.yaml
   - giteauser.yaml
+  - roles.yaml
 

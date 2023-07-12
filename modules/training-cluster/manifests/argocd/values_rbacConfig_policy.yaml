@@ -24,7 +24,7 @@ configs:
       p, role:student, projects, get, argocd-training, allow
 
       %{~ for i in range(count-students) ~}
-      %{~ if join("",[studentname-prefix,i]) not in cluster_admin }
+      %{~ if contains(cluster_admin, join("", tolist([studentname-prefix,i+1]))) == false ~}
       g, ${studentname-prefix}${i+1}, role:student
       %{~ endif ~}
       %{~ endfor ~}

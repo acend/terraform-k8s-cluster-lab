@@ -8,3 +8,4 @@ resources:
   - kubernetes-secret-generator.yaml
   - longhorn.yaml
   - gitea.yaml
+  - acend.yaml

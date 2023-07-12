@@ -1,0 +1,165 @@
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xgiteausers.acend.ch
+spec:
+  group: acend.ch
+  names:
+    kind: XGiteaUser
+    plural: xgiteausers
+  claimNames:
+    kind: GiteaUser
+    plural: giteausers
+  defaultCompositionRef:
+    name: giteauser
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              parameters:
+                type: object
+                properties:
+                  student_name:
+                    type: string
+                  student_password:
+                    type: string
+                  cluster_name:
+                    type: string
+                  cluster_domain:
+                    type: string
+                required:
+                - student_name
+                - student_password
+                - cluster_name
+                - cluster_domain
+            required:
+              - parameters
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: giteauser
+  labels:
+    crossplane.io/xrd: xgiteausers.acend.ch
+spec:
+  compositeTypeRef:
+    apiVersion: acend.ch/v1alpha1
+    kind: XGiteaUser
+  resources:
+  - name: tf_giteauser
+    base:
+      apiVersion: tf.upbound.io/v1beta1
+      kind: Workspace
+      spec:
+        writeConnectionSecretToRef:
+          name: gitea-info
+        providerConfigRef:
+          name: gitea
+        forProvider:
+          source: Inline
+          module: |
+            terraform {
+              required_providers {
+                restapi = {
+                  source = "Mastercard/restapi"
+                }
+              }
+            }
+
+            variable "student_name" {
+              type = string
+            }
+
+            variable "student_password" {
+              type = string
+            }
+
+            variable "cluster_name" {
+              type = string
+            }
+
+            variable "cluster_domain" {
+              type = string
+            }
+
+            resource "restapi_object" "gitea-user" {
+
+              path      = "/api/v1/admin/users"
+              read_path = "/api/v1/users/{id}"
+
+              data = (jsonencode({
+                email                = "${var.student_name}@gitea.${var.cluster_name}.${var.cluster_domain}"
+                full_name            = var.student_name
+                login_name           = var.student_name
+                must_change_password = false
+                password             = var.student_password
+                send_notify          = false
+                source_id            = 0
+                username             = var.student_name
+                visibility           = "public"
+              }))
+              id_attribute = "username"
+            }
+
+
+            resource "restapi_object" "gitea-repo" {
+
+              path        = "/api/v1/repos"
+              create_path = "/api/v1/repos/migrate"
+
+              data = (jsonencode({
+                clone_addr = "https://github.com/acend/argocd-training-examples.git"
+                private    = false
+                repo_name  = "argocd-training-examples"
+                repo_owner = restapi_object.gitea-user.api_data.username
+
+              }))
+              id_attribute = "full_name"
+            }
+
+            output "gitea-full-name" {
+              value = restapi_object.gitea-user.api_data.full_name
+            }
+
+            output "repo-original-url" {
+              value = restapi_object.gitea-repo.api_data.original_url
+            }
+
+            output "repo-html_url" {
+              value = restapi_object.gitea-repo.api_data.html_url
+            }
+
+            output "repo-clone_url" {
+              value = restapi_object.gitea-repo.api_data.clone_url
+            }
+
+          vars:
+            - key: student_name
+            - key: student_password
+            - key: cluster_name
+            - key: cluster_domain
+    patches:
+      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
+        toFieldPath: "metadata.annotations[crossplane.io/external-name]"
+        transforms:
+        - type: string
+          string:
+            fmt: "giteauser-%s"
+      - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
+        toFieldPath: spec.writeConnectionSecretToRef.namespace
+      - fromFieldPath: spec.parameters.student_name
+        toFieldPath: spec.forProvider.vars[0].value
+      - fromFieldPath: spec.parameters.student_password
+        toFieldPath: spec.forProvider.vars[1].value
+      - fromFieldPath: spec.parameters.cluster_name
+        toFieldPath: spec.forProvider.vars[2].value
+      - fromFieldPath: spec.parameters.cluster_domain
+        toFieldPath: spec.forProvider.vars[3].value

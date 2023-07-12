@@ -22,6 +22,8 @@ applicationsets:
           values: |
             user: {{traineename}}
             password: {{password}}
+            cluster_name: ${cluster_domain}
+            cluster_domain: ${cluster_domain}
       destination:
         server: https://kubernetes.default.svc
       syncPolicy:

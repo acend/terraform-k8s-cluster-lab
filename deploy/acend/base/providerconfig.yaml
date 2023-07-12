@@ -1,0 +1,39 @@
+apiVersion: tf.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: gitea
+spec:
+  credentials:
+    - filename: gitea-admin-credentials
+      source: Secret
+      secretRef:
+        name: gitea-admin-credentials
+        namespace: gitea
+        key: password
+  configuration: |
+    variable "username" {
+      type    = string
+      default = "gitea_admin"
+    }
+
+    variable "gitea_uri" {
+      type = string
+      default = "http://gitea-http.gitea.svc.cluster.local:3000"
+    }
+
+    provider "restapi" {
+      uri                  = var.gitea_uri
+      write_returns_object = true
+      username             = var.username
+      password             = file("gitea-admin-credentials")
+    }
+
+
+    // Modules _must_ use remote state. The provider does not persist state.
+    terraform {
+      backend "kubernetes" {
+        secret_suffix     = "providerconfig-tf-gitea"
+        namespace         = "crossplane"
+        in_cluster_config = true
+      }
+    }

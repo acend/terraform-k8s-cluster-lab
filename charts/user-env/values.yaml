@@ -1,2 +1,5 @@
 user: user1
 password: supersecret
+
+cluster_name: training
+cluster_domain: cluster.acend.ch

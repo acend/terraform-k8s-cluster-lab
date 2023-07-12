@@ -1,0 +1,11 @@
+apiVersion: acend.ch/v1alpha1
+kind: GiteaUser
+metadata:
+  namespace: {{ .Values.user }}
+  name: {{ .Values.user }}
+spec:
+  parameters:
+    student_name: {{ .Values.user }}
+    student_password: {{ .Values.password }}
+    cluster_name: {{ .Values.cluster_name }}
+    cluster_domain: {{ .Values.cluster_domain }}

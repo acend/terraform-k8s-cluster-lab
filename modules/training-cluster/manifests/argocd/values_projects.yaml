@@ -54,6 +54,9 @@ projects:
     clusterResourceWhitelist:
     - group: '*'
       kind: '*'
+    clusterResourceBlacklist:
+    - group: '*'
+      kind: 'XGiteaUser*'
     namespaceResourceBlacklist: []
     namespaceResourceWhitelist: []
     orphanedResources: {}

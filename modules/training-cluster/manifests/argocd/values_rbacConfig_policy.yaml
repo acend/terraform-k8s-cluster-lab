@@ -20,3 +20,7 @@ global:
         %{~ for i in range(count-students) ~}
         g, ${studentname-prefix}${i+1}, role:student
         %{~ endfor ~}
+
+        %{~ for admin in cluster_admin ~}
+        g, ${admin}, role:admin
+        %{~ endfor ~}

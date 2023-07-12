@@ -8,7 +8,7 @@ spec:
   destination:
     namespace: kube-system
     server: https://kubernetes.default.svc
-  project: default
+  project: infra
   source:
     path: deploy/config-syncer/base
     repoURL: https://github.com/acend/terraform-k8s-cluster-lab

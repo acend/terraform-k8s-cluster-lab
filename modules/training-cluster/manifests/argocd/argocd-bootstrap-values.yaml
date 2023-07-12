@@ -1,6 +1,6 @@
 applications: 
 - name: argocd
-  project: default
+  project: infra
   source:
     repoURL: https://github.com/acend/terraform-k8s-cluster-lab
     targetRevision: HEAD

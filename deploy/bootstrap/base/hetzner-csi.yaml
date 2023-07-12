@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: kube-system
     server: https://kubernetes.default.svc
-  project: default
+  project: infra
   source:
     path: deploy/kubernetes
     repoURL: https://github.com/hetznercloud/csi-driver.git

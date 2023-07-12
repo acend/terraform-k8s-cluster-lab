@@ -27,7 +27,23 @@ projects:
     namespace: argocd
     additionalLabels: {}
     additionalAnnotations: {}
-    description: ArgoCD Training Project
+    description: All infrastructure apps
+    sourceRepos:
+    - '*'
+    destinations:
+    - namespace: '*'
+      server: '*'
+    clusterResourceWhitelist: []
+    namespaceResourceBlacklist: []
+    namespaceResourceWhitelist: []
+    orphanedResources: {}
+    roles: []
+    syncWindows: []
+  - name: trainee-environment
+    namespace: argocd
+    additionalLabels: {}
+    additionalAnnotations: {}
+    description: Project with all apps for the trainee environments
     sourceRepos:
     - '*'
     destinations:

@@ -20,6 +20,7 @@ terraform {
     }
     restapi = {
       source = "Mastercard/restapi"
+      configuration_aliases = [restapi.hosttech_dns]
     }
   }
   required_version = ">= 1.3.3"

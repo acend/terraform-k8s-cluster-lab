@@ -33,17 +33,6 @@ provider "helm" {
   }
 }
 
-provider "restapi" {
-  alias                = "hosttech_dns"
-  uri                  = "https://api.ns1.hosttech.eu"
-  write_returns_object = true
-
-  headers = {
-    Authorization = "Bearer ${var.hosttech_dns_token}"
-    ContentType   = "application/json"
-  }
-}
-
 locals {
   vms-enabled = var.user-vms-enabled ? 1 : 0
   hasWorker   = var.worker_count > 0 ? 1 : 0

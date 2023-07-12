@@ -2,7 +2,23 @@ terraform {
   backend "remote" {}
 }
 
+provider "restapi" {
+  alias                = "hosttech_dns"
+  uri                  = "https://api.ns1.hosttech.eu"
+  write_returns_object = true
+
+  headers = {
+    Authorization = "Bearer ${var.hosttech_dns_token}"
+    ContentType   = "application/json"
+  }
+}
+
 module "training-cluster" {
+
+  providers = {
+    restapi.hosttech_dns = restapi.hosttech_dns
+  }
+
   source = "./modules/training-cluster"
 
   first_install = true

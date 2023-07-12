@@ -5,4 +5,4 @@ metadata:
   name: gitea
   labels:
     app: gitea
-    certificate-wildcard: true
+    certificate-wildcard: "true"

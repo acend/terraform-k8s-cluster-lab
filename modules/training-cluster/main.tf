@@ -1,4 +1,6 @@
 provider "kubernetes" {
+
+  alias = local
   # On initial deploy, use this to get the credentials via ssh from rke2
   # Afterwards, update variables and change to them
   host                   = local.kubernetes_api

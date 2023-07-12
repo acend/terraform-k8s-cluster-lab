@@ -1,4 +1,6 @@
 resource "kubernetes_secret" "cloud-controller-manager" {
+  provider = kubernetes.local
+
   depends_on = [
     null_resource.wait_for_k8s_api
   ]
@@ -8,6 +10,7 @@ resource "kubernetes_secret" "cloud-controller-manager" {
 }
 
 resource "kubernetes_service_account" "cloud-controller-manager" {
+  provider = kubernetes.local
   metadata {
     name      = "cloud-controller-manager"
     namespace = "kube-system"
@@ -18,6 +21,7 @@ resource "kubernetes_service_account" "cloud-controller-manager" {
 }
 
 resource "kubernetes_cluster_role_binding" "cloud-controller-manager" {
+  provider = kubernetes.local
   metadata {
     name = "system:cloud-controller-manager"
   }
@@ -34,6 +38,7 @@ resource "kubernetes_cluster_role_binding" "cloud-controller-manager" {
 }
 
 resource "kubernetes_deployment" "cloud-controller-manager" {
+  provider = kubernetes.local
 
   lifecycle {
     ignore_changes = [

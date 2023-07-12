@@ -16,12 +16,17 @@ provider "restapi" {
     ContentType   = "application/json"
   }
 }
+provider "kubernetes" {
+  alias = acend
+  host  = "https://api.k8s-prod.acend.ch"
+}
 
 module "training-cluster" {
 
   providers = {
     restapi.hosttech_dns = restapi.hosttech_dns
     hcloud               = hcloud
+    kubernetes.acend     = kubernetes.acend
   }
 
   source = "./modules/training-cluster"

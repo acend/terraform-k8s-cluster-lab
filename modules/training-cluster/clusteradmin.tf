@@ -1,4 +1,5 @@
 resource "kubernetes_cluster_role_binding" "cluster-admin" {
+  provider = kubernetes.local
 
   depends_on = [
     time_sleep.wait_for_cluster_ready

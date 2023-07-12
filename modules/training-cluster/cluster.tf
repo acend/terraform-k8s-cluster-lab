@@ -128,6 +128,7 @@ resource "hcloud_server_network" "worker" {
 }
 
 resource "kubernetes_secret" "cloud_init_worker" {
+  provider = kubernetes.local
 
   depends_on = [
     time_sleep.wait_for_cluster_ready

@@ -4,7 +4,8 @@ terraform {
       source = "hashicorp/helm"
     }
     kubernetes = {
-      source = "hashicorp/kubernetes"
+      source                = "hashicorp/kubernetes"
+      configuration_aliases = [kubernetes.local, kubernetes.acend]
     }
     local = {
       source = "hashicorp/local"

@@ -1,4 +1,5 @@
 resource "kubernetes_namespace" "ingress-haproxy" {
+  provider = kubernetes.local
   depends_on = [
     time_sleep.wait_for_cluster_ready
   ]
@@ -54,6 +55,8 @@ resource "helm_release" "ingress-haproxy" {
 }
 
 data "kubernetes_service" "ingress-haproxy" {
+  provider = kubernetes.local
+
   depends_on = [
     helm_release.ingress-haproxy
   ]

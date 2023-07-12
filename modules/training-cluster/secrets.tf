@@ -1,4 +1,6 @@
 resource "kubernetes_secret" "hosttech-secret" {
+  provider = kubernetes.local
+
   depends_on = [
     null_resource.wait_for_k8s_api
   ]
@@ -16,6 +18,8 @@ resource "kubernetes_secret" "hosttech-secret" {
 }
 
 resource "kubernetes_secret" "hcloud" {
+  provider = kubernetes.local
+
   depends_on = [
     null_resource.wait_for_k8s_api
   ]
@@ -28,6 +32,34 @@ resource "kubernetes_secret" "hcloud" {
     token          = var.hcloud_api_token
     network        = hcloud_network.network.id
     hcloudApiToken = var.hcloud_api_token
+  }
+
+  type = "Opaque"
+}
+
+resource "kubernetes_secret" "argocd-cluster" {
+  provider = kubernetes.acend
+
+  metadata {
+    name      = var.cluster_name
+    namespace = "argocd"
+
+    labels = {
+      "argocd.argoproj.io/secret-type" = "cluster"
+      "flavor"                         = "k8s"
+    }
+  }
+
+  data = {
+    name   = var.cluster_name
+    server = local.kubernetes_api
+    config = jsonencode({
+      tlsClientConfig = {
+        caData   = base64decode(local.kubeconfig.clusters[0].cluster.certificate-authority-data)
+        certData = base64decode(local.kubeconfig.users[0].user.client-certificate-data)
+        keyData  = base64decode(local.kubeconfig.users[0].user.client-key-data)
+      }
+    })
   }
 
   type = "Opaque"

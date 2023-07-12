@@ -1,5 +1,7 @@
 resource "kubernetes_config_map" "welcome-content" {
 
+  provider = kubernetes.local
+
   depends_on = [
     time_sleep.wait_for_cluster_ready,
   ]
@@ -22,6 +24,8 @@ resource "kubernetes_config_map" "welcome-content" {
 }
 
 resource "kubernetes_service" "welcome" {
+
+  provider = kubernetes.local
   metadata {
     name      = "welcome"
     namespace = "default"
@@ -41,6 +45,8 @@ resource "kubernetes_service" "welcome" {
 }
 
 resource "kubernetes_deployment" "welcome" {
+
+  provider = kubernetes.local
   metadata {
     name = "welcome"
     labels = {
@@ -100,6 +106,8 @@ resource "kubernetes_deployment" "welcome" {
 }
 
 resource "kubernetes_ingress_v1" "welcome" {
+
+  provider = kubernetes.local
   metadata {
     name      = "welcome"
     namespace = "default"

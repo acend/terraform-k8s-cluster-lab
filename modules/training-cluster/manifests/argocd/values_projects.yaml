@@ -23,3 +23,19 @@ projects:
     orphanedResources: {}
     roles: []
     syncWindows: []
+  - name: infra
+    namespace: argocd
+    additionalLabels: {}
+    additionalAnnotations: {}
+    description: ArgoCD Training Project
+    sourceRepos:
+    - '*'
+    destinations:
+    - namespace: '*'
+      server: '*'
+    clusterResourceWhitelist: []
+    namespaceResourceBlacklist: []
+    namespaceResourceWhitelist: []
+    orphanedResources: {}
+    roles: []
+    syncWindows: []

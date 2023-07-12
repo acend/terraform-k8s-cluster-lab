@@ -3,9 +3,8 @@ controller:
     enabled: true
 
 configs:
-  cm:
-    params:
-      server.insecure: true
+  params:
+    server.insecure: true
 
 server:
   config:

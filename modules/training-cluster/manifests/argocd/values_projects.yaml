@@ -33,7 +33,9 @@ projects:
     destinations:
     - namespace: '*'
       server: '*'
-    clusterResourceWhitelist: []
+    clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
     namespaceResourceBlacklist: []
     namespaceResourceWhitelist: []
     orphanedResources: {}
@@ -49,7 +51,9 @@ projects:
     destinations:
     - namespace: '*'
       server: '*'
-    clusterResourceWhitelist: []
+    clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
     namespaceResourceBlacklist: []
     namespaceResourceWhitelist: []
     orphanedResources: {}

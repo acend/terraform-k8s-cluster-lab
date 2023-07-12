@@ -7,7 +7,7 @@ patches:
 - patch: |-
     - op: replace
       path: /spec/dnsNames/0
-      value: *.test.cluster.acend.ch
+      value: '*.test.cluster.acend.ch'
   target:
     kind: Certificate
     name: acend-wildcard

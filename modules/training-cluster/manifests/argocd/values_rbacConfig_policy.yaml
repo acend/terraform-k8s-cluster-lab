@@ -2,6 +2,10 @@ configs:
   rbac: 
     policy.csv: |
       p, role:student, applications, *, */*, allow
+
+      p, role:student, applications, *, infra/*, deny
+      p, role:student, applications, *, trainee-environment/*, deny
+
       p, role:student, clusters, get, *, allow
       p, role:student, clusters, update, *, allow
       p, role:student, repositories, get, *, allow
@@ -20,7 +24,9 @@ configs:
       p, role:student, projects, get, argocd-training, allow
 
       %{~ for i in range(count-students) ~}
+      %{~ if join("",[studentname-prefix,i]) not in cluster_admin}
       g, ${studentname-prefix}${i+1}, role:student
+      %{~ endig ~}
       %{~ endfor ~}
 
       %{~ for admin in cluster_admin ~}

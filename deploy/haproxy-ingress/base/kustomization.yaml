@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+
+helmCharts:
+  - name: kubernetes-ingress
+    releaseName: ingress-haproxy
+    namespace: ingress-haproxy
+    version: 1.32.1
+    repo: https://haproxytech.github.io/helm-charts
+    valuesFile: values.yaml

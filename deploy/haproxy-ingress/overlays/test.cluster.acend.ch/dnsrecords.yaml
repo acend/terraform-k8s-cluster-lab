@@ -1,0 +1,20 @@
+---
+apiVersion: acend.ch/v1alpha1
+kind: IngressDNSRecord
+metadata:
+  name: ingress-a-record
+spec:
+  parameters:
+    type: A
+    name: "*.test.cluster"
+    comment: "Ingress Wildcard for Training Cluster test.cluster.acend.ch"
+---
+apiVersion: acend.ch/v1alpha1
+kind: IngressDNSRecord
+metadata:
+  name: ingress-aaaa-record
+spec:
+  parameters:
+    type: AAAA
+    name: "*.test.cluster"
+    comment: "Ingress Wildcard for Training Cluster test.cluster.acend.ch"

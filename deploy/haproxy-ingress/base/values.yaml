@@ -1,0 +1,17 @@
+controller:
+  replicaCount: 3
+  tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Equal
+    value: "true"
+    effect: "NoSchedule"
+
+  ingressClassResource:
+    default: true
+
+  defaultTLSSecret:
+    secret: acend-wildcard
+    secretNamespace: cert-manager
+
+  service:
+    type: LoadBalancer

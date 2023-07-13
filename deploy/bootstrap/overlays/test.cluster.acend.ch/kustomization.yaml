@@ -19,3 +19,10 @@ patches:
   target:
     kind: Application
     name: cert-manager
+- patch: |-
+    - op: replace
+      path: /spec/source/path
+      value: deploy/haproxy-ingress/overlays/test.cluster.acend.ch
+  target:
+    kind: Application
+    name: haproxy-ingress

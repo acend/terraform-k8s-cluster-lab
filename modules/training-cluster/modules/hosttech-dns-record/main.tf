@@ -36,7 +36,6 @@ variable "ipv6" {
 
 
 resource "restapi_object" "a-record" {
-  provider = restapi.hosttech_dns
   path     = "/api/user/v1/zones/${var.hosttech-dns-zone-id}/records"
 
   data = (jsonencode({
@@ -53,7 +52,6 @@ resource "restapi_object" "a-record" {
 }
 
 resource "restapi_object" "aaaa-record" {
-  provider = restapi.hosttech_dns
   path     = "/api/user/v1/zones/${var.hosttech-dns-zone-id}/records"
 
   data = jsonencode({

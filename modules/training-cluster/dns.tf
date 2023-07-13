@@ -14,6 +14,11 @@ resource "restapi_object" "api-aaaa-record" {
 
 
 module "ingress-a-record" {
+
+  providers = {
+    restapi = restapi.hosttech_dns
+  }
+
   source = "./modules/hosttech-dns-record"
 
   type    = "A"
@@ -25,6 +30,9 @@ module "ingress-a-record" {
 
 }
 module "ingress-aaaa-record" {
+  providers = {
+    restapi = restapi.hosttech_dns
+  }
   source = "./modules/hosttech-dns-record"
 
   type    = "AAAA"

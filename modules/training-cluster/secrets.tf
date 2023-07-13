@@ -65,3 +65,60 @@ resource "kubernetes_secret" "argocd-cluster" {
 
   type = "Opaque"
 }
+
+resource "kubernetes_secret" "secretstore-secret" {
+  provider = kubernetes.acend
+
+  metadata {
+    name      = "credentials-${var.cluster_name}"
+    namespace = "external-secrets"
+  }
+
+  data = {
+    cert = local.kubeconfig.users[0].user.client-certificate-data
+    key  = local.kubeconfig.users[0].user.client-key-data
+    ca   = local.kubeconfig.clusters[0].cluster.certificate-authority-data
+  }
+
+  type = "Opaque"
+}
+
+resource "kubernetes_manifest" "external-secrets-secretstore" {
+
+  provider = kubernetes.acend
+  manifest = {
+    "apiVersion" = "external-secrets.io/v1beta1"
+    "kind"       = "SecretStore"
+    "metadata" = {
+      "name" = "cluster-${var.cluster_name}"
+    }
+    "provider" = {
+      "kubernetes" = {
+        "server" = {
+          "url" = "https://api.${var.cluster_name}.${var.cluster_domain}:6443"
+          "caProvider" = {
+            "type"      = "Secret"
+            "name"      = "credentials-${var.cluster_name}"
+            "key"       = "ca"
+            "namespace" = "external-secrets"
+          }
+        }
+
+        "auth" = {
+          "cert" = {
+            "clientCert" = {
+              "name"      = "credentials-${var.cluster_name}"
+              "key"       = "cert"
+              "namespace" = "external-secrets"
+            },
+            "clientKey" = {
+              "name"      = "credentials-${var.cluster_name}"
+              "key"       = "key"
+              "namespace" = "external-secrets"
+            }
+          }
+        }
+      }
+    }
+  }
+}

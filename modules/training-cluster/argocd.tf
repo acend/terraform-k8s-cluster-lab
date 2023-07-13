@@ -87,23 +87,3 @@ resource "helm_release" "argocd-training-project" {
   ]
 
 }
-
-resource "helm_release" "argocd-bootstrap" {
-
-  depends_on = [
-    helm_release.argocd
-  ]
-
-  name       = "argocd-bootstrap"
-  repository = "https://argoproj.github.io/argo-helm"
-  chart      = "argocd-apps"
-  namespace  = kubernetes_namespace.argocd.metadata.0.name
-  version    = "1.2.0"
-
-  values = [
-    templatefile("${path.module}/manifests/argocd/argocd-bootstrap-values.yaml", {
-      namespace = helm_release.argocd.namespace
-      overlay   = "${var.cluster_name}.${var.cluster_domain}"
-    }),
-  ]
-}

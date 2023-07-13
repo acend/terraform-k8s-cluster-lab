@@ -47,12 +47,13 @@ resource "kubernetes_secret" "argocd-cluster" {
     labels = {
       "argocd.argoproj.io/secret-type" = "cluster"
       "flavor"                         = "k8s"
+      "type"                           = "training"
     }
   }
 
   data = {
     name   = "${var.cluster_name}.${var.cluster_domain}"
-    server = local.kubernetes_api
+    server = server = "https://api.${var.cluster_name}.${var.cluster_domain}:6443"
     config = jsonencode({
       tlsClientConfig = {
         caData   = local.kubeconfig.clusters[0].cluster.certificate-authority-data

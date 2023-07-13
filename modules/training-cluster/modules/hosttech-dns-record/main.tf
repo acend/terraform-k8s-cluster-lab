@@ -17,7 +17,7 @@ variable "name" {
 }
 
 variable "ttl" {
-  type    = "number"
+  type    = number
   default = 3600
 }
 

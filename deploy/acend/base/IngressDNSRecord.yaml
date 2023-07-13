@@ -158,20 +158,8 @@ spec:
             - key: ipv6
             - key: comment
     patches:
-      - type: CombineFromComposite
-        combine:
-          variables:
-          - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
-          - fromFieldPath: spec.parameters.type
-          strategy: string
-          string:
-            fmt: "hosttech-record-%s-%s"
+      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
         toFieldPath: "metadata.annotations[crossplane.io/external-name]"
-        transforms:
-        - type: string
-          string:
-            type: Convert
-            convert: ToLower
       - fromFieldPath: spec.parameters.type
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.name

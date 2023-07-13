@@ -54,3 +54,43 @@ spec:
         in_cluster_config = true
       }
     }
+---
+apiVersion: tf.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: hosttech
+spec:
+  credentials:
+    - filename: hosttech-secret
+      source: Secret
+      secretRef:
+        name: hosttech-secret
+        namespace: cert-manager
+        key: token
+  configuration: |
+    terraform {
+      required_providers {
+        restapi = {
+          source = "Mastercard/restapi"
+        }
+      }
+    }
+
+    provider "restapi" {
+      uri                  = "https://api.ns1.hosttech.eu"
+      write_returns_object = true
+
+      headers = {
+        Authorization = "Bearer ${file("hosttech-secret")}"
+        ContentType   = "application/json"
+      }
+    }
+
+    // Modules _must_ use remote state. The provider does not persist state.
+    terraform {
+      backend "kubernetes" {
+        secret_suffix     = "providerconfig-tf-hosttech"
+        namespace         = "crossplane"
+        in_cluster_config = true
+      }
+    }

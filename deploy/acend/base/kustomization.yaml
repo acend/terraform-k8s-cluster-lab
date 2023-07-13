@@ -4,5 +4,6 @@ namespace: crossplane
 
 resources:
   - giteauser.yaml
+  - IngressDNSRecord.yaml
   - roles.yaml
 

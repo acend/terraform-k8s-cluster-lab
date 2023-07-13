@@ -1,0 +1,184 @@
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xingressdnsrecords.acend.ch
+spec:
+  group: acend.ch
+  names:
+    kind: XIngressDNSRecord
+    plural: xingressdnsrecords
+  claimNames:
+    kind: IngressDNSRecord
+    plural: ingressdnsrecords
+  defaultCompositionRef:
+    name: ingressdnsrecords
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              parameters:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  name:
+                    type: string
+                  comment:
+                    type: string
+                required:
+                - type
+                - name
+                - comment
+            required:
+              - parameters
+          status:
+            description: A Status represents the observed state
+            properties:
+              ipv4:
+                type: string
+                x-kubernetes-preserve-unknown-fields: true
+              ipv6:
+                type: string
+                x-kubernetes-preserve-unknown-fields: true
+            type: object
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: ingressdnsrecords
+  labels:
+    crossplane.io/xrd: xingressdnsrecords.acend.ch
+spec:
+  compositeTypeRef:
+    apiVersion: acend.ch/v1alpha1
+    kind: XIngressDNSRecord
+  resources:
+  - name: k8s-svc
+    base:
+      apiVersion: kubernetes.crossplane.io/v1alpha1
+      kind: Object
+      spec:
+        managementPolicy: Observe
+        forProvider:
+          manifest:
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: ingress-haproxy-kubernetes-ingress
+              namespace: ingress-haproxy
+        providerConfigRef:
+          name: default
+    patches:
+      - fromFieldPath: "spec.parameters.type"
+        toFieldPath: "metadata.name"
+        transforms:
+        - type: string
+          string:
+            fmt: "ingress-svc-%s"
+        - type: string
+          string:
+            type: Convert
+            convert: ToLower
+      - type: ToCompositeFieldPath
+        fromFieldPath: status.atProvider.manifest.status.loadBalancer.ingress[0].ip
+        toFieldPath: status.ipv4
+      - type: ToCompositeFieldPath
+        fromFieldPath: status.atProvider.manifest.status.loadBalancer.ingress[1].ip
+        toFieldPath: status.ipv6
+  - name: tf_hosttech_record
+    base:
+      apiVersion: tf.upbound.io/v1beta1
+      kind: Workspace
+      spec:
+        providerConfigRef:
+          name: hosttech
+        forProvider:
+          source: Inline
+          module: |
+            variable "type" {
+              type = string
+            }
+            variable "name" {
+              type = string
+            }
+            variable "ipv4" {
+              type = string
+            }
+            variable "ipv6" {
+              type = string
+            }
+            variable "comment" {
+              type = string
+            }
+
+            locals {
+              hosttech-dns-zone-id = "242898"
+            }
+            module "api-aaaa-record" {
+
+              source = "git::https://github.com/acend/terraform-k8s-cluster-lab.git//modules/training-cluster/modules/hosttech-dns-record"
+
+              hosttech-dns-zone-id = local.hosttech-dns-zone-id 
+
+              type    = var.type
+              name    = var.name
+              ipv6    = var.ipv6
+              comment = var.comment
+              ttl     = 3600
+
+              count = var.type == "AAAA" ? 1 : 0
+            }
+
+            module "api-a-record" {
+
+              source = "git::https://github.com/acend/terraform-k8s-cluster-lab.git//modules/training-cluster/modules/hosttech-dns-record"
+
+              hosttech-dns-zone-id = local.hosttech-dns-zone-id 
+
+              type    = var.type
+              name    = var.name
+              ipv4    = var.ipv4
+              comment = var.comment
+              ttl     = 3600
+
+              count = var.type == "A" ? 1 : 0
+            }
+          vars:
+            - key: type
+            - key: name
+            - key: ipv4
+            - key: ipv6
+            - key: comment
+    patches:
+      - type: CombineFromComposite
+        combine:
+          variables:
+          - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
+          - fromFieldPath: spec.parameters.type
+          strategy: string
+          string:
+            fmt: "hosttech-record-%s-%s"
+        toFieldPath: "metadata.annotations[crossplane.io/external-name]"
+        transforms:
+        - type: string
+          string:
+            type: Convert
+            convert: ToLower
+      - fromFieldPath: spec.parameters.type
+        toFieldPath: spec.forProvider.vars[0].value
+      - fromFieldPath: spec.parameters.name
+        toFieldPath: spec.forProvider.vars[1].value
+      - fromFieldPath: status.ipv4
+        toFieldPath: spec.forProvider.vars[2].value
+      - fromFieldPath: status.ipv6
+        toFieldPath: spec.forProvider.vars[3].value
+      - fromFieldPath: spec.parameters.comment
+        toFieldPath: spec.forProvider.vars[4].value

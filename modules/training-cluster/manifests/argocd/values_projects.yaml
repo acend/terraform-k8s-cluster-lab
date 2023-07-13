@@ -57,6 +57,8 @@ projects:
     clusterResourceBlacklist:
     - group: '*'
       kind: 'XGiteaUser*'
+    - group: '*'
+      kind: 'XIngressDNSRecord*'
     namespaceResourceBlacklist: []
     namespaceResourceWhitelist: []
     orphanedResources: {}

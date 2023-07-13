@@ -79,7 +79,7 @@ resource "kubernetes_manifest" "external-secrets-secretstore" {
     "apiVersion" = "external-secrets.io/v1beta1"
     "kind"       = "ClusterSecretStore"
     "metadata" = {
-      "name"      = "cluster-${var.cluster_name}.${var.cluster_domain}-${each.key}"
+      "name" = "cluster-${var.cluster_name}.${var.cluster_domain}-${each.key}"
     }
     "spec" = {
       "provider" = {

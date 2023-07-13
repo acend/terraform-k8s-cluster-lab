@@ -70,19 +70,18 @@ resource "kubernetes_secret" "secretstore-secret" {
   provider = kubernetes.acend
 
   metadata {
-    name      = "credentials-${var.cluster_name}"
+    name      = "credentials-${var.cluster_name}.${var.cluster_domain}"
     namespace = "external-secrets"
   }
 
   data = {
-    cert = local.kubeconfig.users[0].user.client-certificate-data
-    key  = local.kubeconfig.users[0].user.client-key-data
-    ca   = local.kubeconfig.clusters[0].cluster.certificate-authority-data
+    cert = base64decode(local.kubeconfig.users[0].user.client-certificate-data)
+    key  = base64decode(local.kubeconfig.users[0].user.client-key-data)
+    ca   = base64decode(local.kubeconfig.clusters[0].cluster.certificate-authority-data)
   }
 
   type = "Opaque"
 }
-
 resource "kubernetes_manifest" "external-secrets-secretstore" {
 
   provider = kubernetes.acend
@@ -90,32 +89,31 @@ resource "kubernetes_manifest" "external-secrets-secretstore" {
     "apiVersion" = "external-secrets.io/v1beta1"
     "kind"       = "SecretStore"
     "metadata" = {
-      "name"      = "cluster-${var.cluster_name}"
+      "name"      = "cluster-${var.cluster_name}.${var.cluster_domain}"
       "namespace" = "external-secrets"
     }
-    "provider" = {
-      "kubernetes" = {
-        "server" = {
-          "url" = "https://api.${var.cluster_name}.${var.cluster_domain}:6443"
-          "caProvider" = {
-            "type"      = "Secret"
-            "name"      = "credentials-${var.cluster_name}"
-            "key"       = "ca"
-            "namespace" = "external-secrets"
+    "spec" = {
+      "provider" = {
+        "kubernetes" = {
+          "server" = {
+            "url" = "https://api.${var.cluster_name}.${var.cluster_domain}:6443"
+            "caProvider" = {
+              "type"      = "Secret"
+              "name"      = "credentials-${var.cluster_name}.${var.cluster_domain}"
+              "key"       = "ca"
+            }
           }
-        }
 
-        "auth" = {
-          "cert" = {
-            "clientCert" = {
-              "name"      = "credentials-${var.cluster_name}"
-              "key"       = "cert"
-              "namespace" = "external-secrets"
-            },
-            "clientKey" = {
-              "name"      = "credentials-${var.cluster_name}"
-              "key"       = "key"
-              "namespace" = "external-secrets"
+          "auth" = {
+            "cert" = {
+              "clientCert" = {
+                "name"      = "credentials-${var.cluster_name}.${var.cluster_domain}"
+                "key"       = "cert"
+              },
+              "clientKey" = {
+                "name"      = "credentials-${var.cluster_name}.${var.cluster_domain}"
+                "key"       = "key"
+              }
             }
           }
         }

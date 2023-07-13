@@ -26,17 +26,19 @@ variable "comment" {
 }
 
 variable "ipv4" {
-  type = string
+  type    = string
+  default = ""
 }
 
 variable "ipv6" {
-  type = string
+  type    = string
+  default = ""
 }
 
 
 
 resource "restapi_object" "a-record" {
-  path     = "/api/user/v1/zones/${var.hosttech-dns-zone-id}/records"
+  path = "/api/user/v1/zones/${var.hosttech-dns-zone-id}/records"
 
   data = (jsonencode({
     type    = var.type
@@ -52,7 +54,7 @@ resource "restapi_object" "a-record" {
 }
 
 resource "restapi_object" "aaaa-record" {
-  path     = "/api/user/v1/zones/${var.hosttech-dns-zone-id}/records"
+  path = "/api/user/v1/zones/${var.hosttech-dns-zone-id}/records"
 
   data = jsonencode({
     type    = var.type

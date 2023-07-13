@@ -82,25 +82,35 @@ resource "kubernetes_secret" "secretstore-secret" {
 
   type = "Opaque"
 }
+
+locals {
+  secretStore_namespaces = toset([
+    "kube-system",
+    "cert-manager"
+  ])
+}
 resource "kubernetes_manifest" "external-secrets-secretstore" {
+
+  for_each = local.secretStore_namespaces
 
   provider = kubernetes.acend
   manifest = {
     "apiVersion" = "external-secrets.io/v1beta1"
-    "kind"       = "SecretStore"
+    "kind"       = "ClusterSecretStore"
     "metadata" = {
-      "name"      = "cluster-${var.cluster_name}.${var.cluster_domain}"
-      "namespace" = "external-secrets"
+      "name"      = "cluster-${var.cluster_name}.${var.cluster_domain}-${each.key}"
     }
     "spec" = {
       "provider" = {
         "kubernetes" = {
+          "remoteNamespace" = each.key
           "server" = {
             "url" = "https://api.${var.cluster_name}.${var.cluster_domain}:6443"
             "caProvider" = {
               "type"      = "Secret"
               "name"      = "credentials-${var.cluster_name}.${var.cluster_domain}"
               "key"       = "ca"
+              "namespace" = "external-secrets"
             }
           }
 
@@ -109,10 +119,12 @@ resource "kubernetes_manifest" "external-secrets-secretstore" {
               "clientCert" = {
                 "name"      = "credentials-${var.cluster_name}.${var.cluster_domain}"
                 "key"       = "cert"
+                "namespace" = "external-secrets"
               },
               "clientKey" = {
                 "name"      = "credentials-${var.cluster_name}.${var.cluster_domain}"
                 "key"       = "key"
+                "namespace" = "external-secrets"
               }
             }
           }

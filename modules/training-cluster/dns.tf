@@ -21,6 +21,8 @@ module "ingress-a-record" {
 
   source = "./modules/hosttech-dns-record"
 
+  hosttech-dns-zone-id = var.hosttech-dns-zone-id
+
   type    = "A"
   name    = "*.${var.cluster_name}.${split(".", var.cluster_domain)[0]}"
   ipv4    = data.kubernetes_service.ingress-haproxy.status.0.load_balancer.0.ingress.0.ip
@@ -34,6 +36,8 @@ module "ingress-aaaa-record" {
     restapi = restapi.hosttech_dns
   }
   source = "./modules/hosttech-dns-record"
+
+  hosttech-dns-zone-id = var.hosttech-dns-zone-id
 
   type    = "AAAA"
   name    = "*.${var.cluster_name}.${split(".", var.cluster_domain)[0]}"

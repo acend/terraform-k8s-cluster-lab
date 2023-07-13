@@ -21,7 +21,7 @@ variable "ttl" {
   default = 3600
 }
 
-variable "commment" {
+variable "comment" {
   type = string
 }
 

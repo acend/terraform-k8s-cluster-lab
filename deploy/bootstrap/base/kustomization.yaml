@@ -6,6 +6,7 @@ resources:
   - crossplane.yaml
   - crossplane-provider.yaml
   - crossplane-provider-config.yaml
+  - haproxy-ingress.yaml
   - hetzner-csi.yaml
   - kubernetes-secret-generator.yaml
   - longhorn.yaml

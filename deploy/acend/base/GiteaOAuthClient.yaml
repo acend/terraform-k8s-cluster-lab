@@ -33,12 +33,24 @@ spec:
                     type: string
                   secret_namespace:
                     type: string
+                  secret_labels:
+                    type: object
                 required:
                 - name
                 - redirect_uri
                 - secret_namespace
             required:
               - parameters
+          status:
+            description: A Status represents the observed state
+            properties:
+              ipv4:
+                type: client_id
+                x-kubernetes-preserve-unknown-fields: true
+              ipv6:
+                type: client_secret
+                x-kubernetes-preserve-unknown-fields: true
+            type: object
 ---
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
@@ -56,8 +68,6 @@ spec:
       apiVersion: tf.upbound.io/v1beta1
       kind: Workspace
       spec:
-        writeConnectionSecretToRef:
-          name: gitea-oauthclient
         providerConfigRef:
           name: gitea
         forProvider:
@@ -126,15 +136,49 @@ spec:
         - type: string
           string:
             fmt: "oauthclient-%s"
-      - fromFieldPath: metadata.labels[crossplane.io/claim-name]
-        toFieldPath: spec.writeConnectionSecretToRef.name
+      - fromFieldPath: spec.parameters.name
+        toFieldPath: spec.forProvider.vars[0].value
+      - fromFieldPath: spec.parameters.redirect_uri
+        toFieldPath: spec.forProvider.vars[1].value
+      - type: ToCompositeFieldPath
+        fromFieldPath: status.atProvider.outputs.client_id
+        toFieldPath: status.client_id
+      - type: ToCompositeFieldPath
+        fromFieldPath: status.atProvider.outputs.client_secret
+        toFieldPath: status.client_secret
+  - name: secret
+    base: 
+      apiVersion: kubernetes.crossplane.io/v1alpha1
+      kind: Object
+      spec:
+        forProvider:
+          manifest:
+            apiVersion: v1
+            kind: Secret
+        providerConfigRef:
+          name: default
+    patches:
+      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
+        toFieldPath: "metadata.name"
         transforms:
         - type: string
           string:
             fmt: "gitea-oauthclient-%s"
       - fromFieldPath: spec.parameters.secret_namespace
-        toFieldPath: spec.writeConnectionSecretToRef.namespace
-      - fromFieldPath: spec.parameters.name
-        toFieldPath: spec.forProvider.vars[0].value
-      - fromFieldPath: spec.parameters.redirect_uri
-        toFieldPath: spec.forProvider.vars[1].value
+        toFieldPath: metadata.namespace
+      - fromFieldPath: spec.parameters.secret_labels
+        toFieldPath: metadata.labels
+      - fromFieldPath: status.client_id
+        toFieldPath: data.client_id
+        transforms:
+        - type: string
+          string:
+            type: Convert
+            convert: ToBase64
+      - fromFieldPath: status.client_secret
+        toFieldPath: data.client_secret
+        transforms:
+        - type: string
+          string:
+            type: Convert
+            convert: ToBase64

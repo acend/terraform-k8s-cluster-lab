@@ -177,4 +177,4 @@ spec:
         transforms:
         - type: convert
           convert:
-          toType: string
+            toType: string

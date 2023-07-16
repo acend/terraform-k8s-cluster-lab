@@ -68,22 +68,3 @@ resource "helm_release" "argocd" {
   ]
 
 }
-
-resource "helm_release" "argocd-training-project" {
-
-  depends_on = [
-    helm_release.argocd
-  ]
-
-  name       = "argocd-apps"
-  repository = "https://argoproj.github.io/argo-helm"
-  chart      = "argocd-apps"
-  namespace  = kubernetes_namespace.argocd.metadata.0.name
-  version    = "1.2.0"
-
-
-  values = [
-    templatefile("${path.module}/manifests/argocd/values_projects.yaml", { studentname-prefix = var.studentname-prefix, count-students = var.count-students }),
-  ]
-
-}

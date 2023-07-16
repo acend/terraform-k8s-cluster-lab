@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: crossplane
 
 resources:
+  - traineeproject.yaml
   - giteauser.yaml
   - IngressDNSRecord.yaml
   - roles.yaml

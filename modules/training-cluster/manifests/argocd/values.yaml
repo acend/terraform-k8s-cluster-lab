@@ -12,6 +12,17 @@ controller:
     enabled: true
 
 configs:
+  cm:
+    dex.config: |
+      connectors:
+        - type: gitea
+          id: gitea
+          name: Gitea
+          config:
+            clientID: $gitea-oauthclient-argocd:client_id
+            clientSecret: $gitea-oauthclient-argocd:client_secret
+            redirectURI: https://argocd.${cluster_name}.${cluster_domain}/dex/callback
+            baseURL: https://gitea.${cluster_name}.${cluster_domain}
   params:
     server.insecure: true
 

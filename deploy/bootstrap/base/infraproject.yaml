@@ -4,6 +4,8 @@ kind: AppProject
 metadata:
   name: infra
   namespace: argocd
+    annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   description: All infrastructure apps
   sourceRepos:

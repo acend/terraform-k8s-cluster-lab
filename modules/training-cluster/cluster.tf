@@ -162,33 +162,33 @@ resource "kubernetes_secret" "cloud_init_worker" {
 
 // Other resources
 
-resource "null_resource" "cleanup-node-before-destroy" {
+# resource "null_resource" "cleanup-node-before-destroy" {
 
-  triggers = {
-    kubeconfig = base64encode(local.kubeconfig_raw)
-    node_name  = "${var.cluster_name}-worker-${count.index}"
-  }
-  provisioner "local-exec" {
-    when        = destroy
-    command     = <<EOH
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
-chmod +x ./kubectl
-./kubectl drain $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
-./kubectl delete node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
-EOH
-    interpreter = ["/bin/bash", "-c"]
-    environment = {
-      KUBECONFIG = self.triggers.kubeconfig
-      NODE_NAME  = self.triggers.node_name
-    }
-  }
+#   triggers = {
+#     kubeconfig = base64encode(local.kubeconfig_raw)
+#     node_name  = "${var.cluster_name}-worker-${count.index}"
+#   }
+#   provisioner "local-exec" {
+#     when        = destroy
+#     command     = <<EOH
+# curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+# echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+# chmod +x ./kubectl
+# ./kubectl drain $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
+# ./kubectl delete node $NODE_NAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
+# EOH
+#     interpreter = ["/bin/bash", "-c"]
+#     environment = {
+#       KUBECONFIG = self.triggers.kubeconfig
+#       NODE_NAME  = self.triggers.node_name
+#     }
+#   }
 
-  depends_on = [
-    hcloud_server.worker
-  ]
+#   depends_on = [
+#     hcloud_server.worker
+#   ]
 
-  count = var.worker_count
-}
+#   count = var.worker_count
+# }
 

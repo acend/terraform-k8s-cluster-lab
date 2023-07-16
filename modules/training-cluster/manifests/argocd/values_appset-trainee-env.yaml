@@ -23,7 +23,7 @@ applicationsets:
           values: |
             user: {{traineename}}
             password: {{password}}
-            cluster_name: ${cluster_domain}
+            cluster_name: ${cluster_name}
             cluster_domain: ${cluster_domain}
             cluster_admin: {{cluster_admin}}
       destination:

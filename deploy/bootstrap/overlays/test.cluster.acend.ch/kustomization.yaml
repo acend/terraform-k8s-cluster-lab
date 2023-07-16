@@ -8,21 +8,7 @@ patches:
 - patch: |-
     - op: replace
       path: /spec/source/path
-      value: deploy/gitea/overlays/test.cluster.acend.ch
+      value: deploy/apps/overlays/test.cluster.acend.ch
   target:
     kind: Application
-    name: gitea
-- patch: |-
-    - op: replace
-      path: /spec/source/path
-      value: deploy/cert-manager/overlays/test.cluster.acend.ch
-  target:
-    kind: Application
-    name: cert-manager
-- patch: |-
-    - op: replace
-      path: /spec/source/path
-      value: deploy/haproxy-ingress/overlays/test.cluster.acend.ch
-  target:
-    kind: Application
-    name: haproxy-ingress
+    name: bootstrap

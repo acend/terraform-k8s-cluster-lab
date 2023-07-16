@@ -169,7 +169,7 @@ spec:
       - fromFieldPath: spec.parameters.secret_namespace
         toFieldPath: spec.forProvider.manifest.metadata.namespace
       - fromFieldPath: spec.parameters.secret_labels
-        toFieldPath: metadata.labels
+        toFieldPath: pec.forProvider.manifest.metadata.labels
       - fromFieldPath: status.client_id
         toFieldPath: data.client_id
         transforms:

@@ -36,6 +36,8 @@ spec:
                   secret_labels:
                     type: object
                     default: []
+                    additionalProperties:
+                      type: string
                 required:
                 - name
                 - redirect_uri

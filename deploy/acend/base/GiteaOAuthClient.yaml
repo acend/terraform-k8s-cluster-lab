@@ -167,7 +167,7 @@ spec:
           string:
             fmt: "gitea-oauthclient-%s"
       - fromFieldPath: spec.parameters.secret_namespace
-        toFieldPath: pec.forProvider.manifest.metadata.namespace
+        toFieldPath: spec.forProvider.manifest.metadata.namespace
       - fromFieldPath: spec.parameters.secret_labels
         toFieldPath: metadata.labels
       - fromFieldPath: status.client_id

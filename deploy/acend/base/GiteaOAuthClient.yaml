@@ -161,13 +161,13 @@ spec:
           name: default
     patches:
       - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
-        toFieldPath: "metadata.name"
+        toFieldPath: "spec.forProvider.manifest.metadata.name"
         transforms:
         - type: string
           string:
             fmt: "gitea-oauthclient-%s"
       - fromFieldPath: spec.parameters.secret_namespace
-        toFieldPath: metadata.namespace
+        toFieldPath: pec.forProvider.manifest.metadata.namespace
       - fromFieldPath: spec.parameters.secret_labels
         toFieldPath: metadata.labels
       - fromFieldPath: status.client_id

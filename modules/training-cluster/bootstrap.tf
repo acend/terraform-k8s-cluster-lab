@@ -2,6 +2,10 @@
 resource "kubernetes_secret" "argocd-cluster" {
   provider = kubernetes.acend
 
+  depends_on = [
+    null_resource.wait_for_k8s_api
+  ]
+
   metadata {
     name      = var.cluster_name
     namespace = "argocd"
@@ -32,6 +36,10 @@ resource "kubernetes_secret" "argocd-cluster" {
 resource "kubernetes_secret" "secretstore-secret" {
   provider = kubernetes.acend
 
+  depends_on = [
+    null_resource.wait_for_k8s_api
+  ]
+
   metadata {
     name      = "credentials-${var.cluster_name}.${var.cluster_domain}"
     namespace = "external-secrets"
@@ -55,6 +63,10 @@ locals {
 
 // Deploy a Secret Store for each Namespace the external-secrets operator shall push secrets to
 resource "kubernetes_manifest" "external-secrets-secretstore" {
+
+  depends_on = [
+    kubernetes_secret.secretstore-secret
+  ]
 
   for_each = local.secretStore_namespaces
 

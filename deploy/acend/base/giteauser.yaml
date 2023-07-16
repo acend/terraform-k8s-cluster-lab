@@ -36,7 +36,7 @@ spec:
                   cluster_domain:
                     type: string
                   is_Admin:
-                    type: bool
+                    type: boolean
                     default: false
                 required:
                 - student_name

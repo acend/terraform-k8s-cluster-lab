@@ -169,16 +169,16 @@ spec:
       - fromFieldPath: spec.parameters.secret_namespace
         toFieldPath: spec.forProvider.manifest.metadata.namespace
       - fromFieldPath: spec.parameters.secret_labels
-        toFieldPath: pec.forProvider.manifest.metadata.labels
+        toFieldPath: spec.forProvider.manifest.metadata.labels
       - fromFieldPath: status.client_id
-        toFieldPath: data.client_id
+        toFieldPath: spec.forProvider.manifest.data.client_id
         transforms:
         - type: string
           string:
             type: Convert
             convert: ToBase64
       - fromFieldPath: status.client_secret
-        toFieldPath: data.client_secret
+        toFieldPath: spec.forProvider.manifest.data.client_secret
         transforms:
         - type: string
           string:

@@ -1,0 +1,9 @@
+---
+apiVersion: acend.ch/v1alpha1
+kind: GiteaOauthClient
+metadata:
+  name: argocd
+spec:
+  parameters:
+    name: argocd
+    redirect_uri: https://argocd.training.cluster.acend.ch/api/dex/callback

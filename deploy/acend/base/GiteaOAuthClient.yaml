@@ -1,0 +1,137 @@
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xgiteaoauthclients.acend.ch
+spec:
+  group: acend.ch
+  names:
+    kind: XGiteaOauthClient
+    plural: xgiteaoauthclients
+  claimNames:
+    kind: GiteaOauthClient
+    plural: giteaoauthclients
+  defaultCompositionRef:
+    name: giteaoauthclient
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              parameters:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  redirect_uri:
+                    type: string
+                required:
+                - name
+                - redirect_uri
+            required:
+              - parameters
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: giteaoauthclient
+  labels:
+    crossplane.io/xrd: xgiteaoauthclients.acend.ch
+spec:
+  compositeTypeRef:
+    apiVersion: acend.ch/v1alpha1
+    kind: XGiteaOauthClient
+  resources:
+  - name: tf_gitea_oauthclient
+    base:
+      apiVersion: tf.upbound.io/v1beta1
+      kind: Workspace
+      spec:
+        writeConnectionSecretToRef:
+          name: gitea-oauthclient
+        providerConfigRef:
+          name: gitea
+        forProvider:
+          source: Inline
+          module: |
+            terraform {
+              required_providers {
+                restapi = {
+                  source = "Mastercard/restapi"
+                }
+                static = {
+                  source  = "tiwood/static"
+                }
+              }
+            }
+
+            variable "name" {
+              type = string
+            }
+
+            variable "redirect_uri" {
+              type = string
+            }
+
+            resource "restapi_object" "gitea-oauthclient" {
+
+              path = "/api/v1/user/applications/oauth2"
+
+              data = (jsonencode({
+                name                = var.name
+                redirect_uris       = [var.redirect_uri]
+                confidential_client = true
+
+              }))
+              id_attribute = "id"
+            }
+
+            resource "static_data" "client_secret" {
+              data = {
+                client_secret = restapi_object.gitea-oauthclient.api_data.client_secret
+              }
+
+              lifecycle {
+                ignore_changes = [data]
+              }
+            }
+
+            output "name" {
+              value = restapi_object.gitea-oauthclient.api_data.name
+            }
+
+            output "client_id" {
+              value = restapi_object.gitea-oauthclient.api_data.client_id
+            }
+
+            output "client_secret" {
+              value = static_data.client_secret.output.client_secret
+            }
+          vars:
+            - key: name
+            - key: redirect_uri
+    patches:
+      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
+        toFieldPath: "metadata.annotations[crossplane.io/external-name]"
+        transforms:
+        - type: string
+          string:
+            fmt: "oauthclient-%s"
+      - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+        toFieldPath: spec.writeConnectionSecretToRef.name
+        transforms:
+        - type: string
+          string:
+            fmt: "gitea-oauthclient-%s"
+      - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
+        toFieldPath: spec.writeConnectionSecretToRef.namespace
+      - fromFieldPath: spec.parameters.name
+        toFieldPath: spec.forProvider.vars[0].value
+      - fromFieldPath: spec.parameters.redirect_uri
+        toFieldPath: spec.forProvider.vars[1].value

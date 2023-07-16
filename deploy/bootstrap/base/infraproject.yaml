@@ -19,3 +19,5 @@ spec:
   clusterResourceBlacklist:
   - group: '*'
     kind: 'XIngressDNSRecord*'
+  - group: '*'
+    kind: 'XGiteaOauthClient'

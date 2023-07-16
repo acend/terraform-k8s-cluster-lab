@@ -6,5 +6,6 @@ resources:
   - traineeproject.yaml
   - giteauser.yaml
   - IngressDNSRecord.yaml
+  - GiteaOAuthClient.yaml
   - roles.yaml
 

@@ -9,3 +9,4 @@ spec:
     student_password: {{ .Values.password }}
     cluster_name: {{ .Values.cluster_name }}
     cluster_domain: {{ .Values.cluster_domain }}
+    is_Admin: {{ .Values.cluster_admin }}

@@ -94,7 +94,7 @@ spec:
             }
 
             variable "is_Admin" {
-              type = bool
+              type = string
             }
 
             resource "restapi_object" "gitea-user" {
@@ -112,7 +112,7 @@ spec:
                 source_id            = 0
                 username             = var.student_name
                 visibility           = "public"
-                admin                = var.is_Admin 
+                admin                = tobool(var.is_Admin)
               }))
               id_attribute = "username"
             }
@@ -174,3 +174,7 @@ spec:
         toFieldPath: spec.forProvider.vars[3].value
       - fromFieldPath: spec.parameters.is_Admin
         toFieldPath: spec.forProvider.vars[4].value
+        transforms:
+        - type: convert
+          convert:
+          toType: string

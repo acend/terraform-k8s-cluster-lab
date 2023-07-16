@@ -3,6 +3,7 @@ apiVersion: acend.ch/v1alpha1
 kind: GiteaOauthClient
 metadata:
   name: argocd
+  namespace: gitea
 spec:
   parameters:
     name: argocd

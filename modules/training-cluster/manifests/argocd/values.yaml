@@ -28,9 +28,11 @@ server:
         - "ciliumnodes"
   ingress:
     enabled: true
+    ingressClassName: haproxy
     tls:
     - secretName: acend-wildcard
   ingressGrpc:
     enabled: true
+    ingressClassName: haproxy
     tls:
     - secretName: acend-wildcard

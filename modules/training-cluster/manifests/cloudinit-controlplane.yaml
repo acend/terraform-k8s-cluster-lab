@@ -29,9 +29,9 @@ write_files:
     ---
     apiVersion: v1
      data:
-       token: ${base64encode(api-token)}
+       token: ${base64encode(api_token)}
        network: ${base64decode(network)}
-       hcloudApiToken: ${base64encode(api-token)}
+       hcloudApiToken: ${base64encode(api_token)}
      kind: Secret
      metadata:
        name: hcloud

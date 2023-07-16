@@ -21,7 +21,7 @@ configs:
           config:
             clientID: $gitea-oauthclient-argocd:client_id
             clientSecret: $gitea-oauthclient-argocd:client_secret
-            redirectURI: https://argocd.${cluster_name}.${cluster_domain}/dex/callback
+            redirectURI: https://argocd.${cluster_name}.${cluster_domain}/api/dex/callback
             baseURL: https://gitea.${cluster_name}.${cluster_domain}
   params:
     server.insecure: true

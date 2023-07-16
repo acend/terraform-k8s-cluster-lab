@@ -1,23 +1,4 @@
-resource "kubernetes_secret" "hcloud" {
-  provider = kubernetes.local
-
-  depends_on = [
-    null_resource.wait_for_k8s_api
-  ]
-  metadata {
-    name      = "hcloud"
-    namespace = "kube-system"
-  }
-
-  data = {
-    token          = var.hcloud_api_token
-    network        = hcloud_network.network.id
-    hcloudApiToken = var.hcloud_api_token
-  }
-
-  type = "Opaque"
-}
-
+// Register the Cluster on the bootstraping ArgoCD
 resource "kubernetes_secret" "argocd-cluster" {
   provider = kubernetes.acend
 
@@ -47,6 +28,7 @@ resource "kubernetes_secret" "argocd-cluster" {
   type = "Opaque"
 }
 
+// Create a secret with credentials for external secrets to be used in SecretStore for bootstrapng
 resource "kubernetes_secret" "secretstore-secret" {
   provider = kubernetes.acend
 
@@ -70,6 +52,8 @@ locals {
     "cert-manager"
   ])
 }
+
+// Deploy a Secret Store for each Namespace the external-secrets operator shall push secrets to
 resource "kubernetes_manifest" "external-secrets-secretstore" {
 
   for_each = local.secretStore_namespaces

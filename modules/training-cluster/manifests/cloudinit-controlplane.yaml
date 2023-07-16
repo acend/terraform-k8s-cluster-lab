@@ -22,6 +22,21 @@ runcmd:
 - /opt/rke2/run_rke2.sh
 - rm /opt/rke2/run_rke2.sh
 write_files:
+- path: /var/lib/rancher/rke2/server/manifests/hcloud-secret.yaml
+  permission: "0600"
+  owner: root:root
+  content: |
+    ---
+    apiVersion: v1
+     data:
+       token: ${base64encode(api-token)}
+       network: ${base64decode(network)}
+       hcloudApiToken: ${base64encode(api-token)}
+     kind: Secret
+     metadata:
+       name: hcloud
+       namespace: kube-system
+     type: Opaque
 - path: /var/lib/rancher/rke2/server/manifests/hcloud-cloud-controller-manager.yaml
   permission: "0600"
   owner: root:root

@@ -64,6 +64,8 @@ resource "hcloud_server" "controlplane" {
     lb_external_v4 = hcloud_load_balancer.lb.ipv4,
     lb_external_v6 = hcloud_load_balancer.lb.ipv6,
 
+    network = hcloud_network.network.id
+
     controlplane_index = count.index,
 
     k8s_api_hostnames = ["api.${var.cluster_name}.${var.cluster_domain}"]

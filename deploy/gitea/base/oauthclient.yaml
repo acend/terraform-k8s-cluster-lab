@@ -8,3 +8,4 @@ spec:
   parameters:
     name: argocd
     redirect_uri: https://argocd.training.cluster.acend.ch/api/dex/callback
+    secret_namespace: argocd

@@ -31,9 +31,12 @@ spec:
                     type: string
                   redirect_uri:
                     type: string
+                  secret_namespace:
+                    type: string
                 required:
                 - name
                 - redirect_uri
+                - secret_namespace
             required:
               - parameters
 ---
@@ -129,7 +132,7 @@ spec:
         - type: string
           string:
             fmt: "gitea-oauthclient-%s"
-      - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
+      - fromFieldPath: spec.parameters.secret_namespace
         toFieldPath: spec.writeConnectionSecretToRef.namespace
       - fromFieldPath: spec.parameters.name
         toFieldPath: spec.forProvider.vars[0].value

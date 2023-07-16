@@ -43,6 +43,7 @@ spec:
       write_returns_object = true
       username             = var.username
       password             = file("gitea-admin-credentials")
+      update_method        = "PATCH"
     }
 
 

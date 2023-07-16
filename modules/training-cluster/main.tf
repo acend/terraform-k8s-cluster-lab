@@ -1,33 +1,19 @@
 provider "kubernetes" {
 
   alias = "local"
-  # On initial deploy, use this to get the credentials via ssh from rke2
-  # Afterwards, update variables and change to them
   host                   = local.kubernetes_api
   client_certificate     = local.client_certificate
   client_key             = local.client_key
   cluster_ca_certificate = local.cluster_ca_certificate
 
-  # host                   = var.provider-k8s-api-host
-  # client_certificate     = base64decode(var.provider-client-certificate)
-  # client_key             = base64decode(var.provider-client-key)
-  # cluster_ca_certificate = base64decode(var.provider-cluster_ca_certificate)
 }
 
 provider "helm" {
   kubernetes {
-    # On initial deploy, use this to get the credentials via ssh from rke2
-    # Afterwards, update variables and change to them
     host                   = local.kubernetes_api
     client_certificate     = local.client_certificate
     client_key             = local.client_key
     cluster_ca_certificate = local.cluster_ca_certificate
-
-    # host                   = var.provider-k8s-api-host
-    # client_certificate     = base64decode(var.provider-client-certificate)
-    # client_key             = base64decode(var.provider-client-key)
-    # cluster_ca_certificate = base64decode(var.provider-cluster_ca_certificate)
-
   }
 }
 

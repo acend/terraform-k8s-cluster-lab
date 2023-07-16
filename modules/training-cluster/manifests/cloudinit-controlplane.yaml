@@ -22,6 +22,36 @@ runcmd:
 - /opt/rke2/run_rke2.sh
 - rm /opt/rke2/run_rke2.sh
 write_files:
+- path: /var/lib/rancher/rke2/server/manifests/hcloud-cloud-controller-manager.yaml
+  permission: "0600"
+  owner: root:root
+  content: |
+    ---
+    apiVersion: helm.cattle.io/v1
+    kind: HelmChart
+    metadata:
+      name: hccm
+      namespace: kube-system
+    spec:
+      chart: hcloud-cloud-controller-manager
+      targetNamespace: kube-system
+      repo: https://charts.hetzner.cloud
+      valuesContent: |-
+        env:
+          HCLOUD_LOAD_BALANCERS_NETWORK_ZONE: ${networkzone}
+          HCLOUD_LOAD_BALANCERS_USE_PRIVATE_IP: "true"
+          HCLOUD_TOKEN:
+            valueFrom:
+              secretKeyRef:
+                name: hcloud
+                key: token
+          NODE_NAME:
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+        networking:
+          enabled: true
+          clusterCIDR: ${k8s-cluster-cidr}
 - path: /var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml
   permission: "0600"
   owner: root:root

@@ -7,6 +7,7 @@ applicationsets:
       %{~ for i in range(count-students) ~}
       - traineename: ${studentname-prefix}${i+1}
         password: "${passwords[i].result}"
+        cluster_admin: ${contains(cluster_admin, join("", tolist([studentname-prefix,i+1])))}
       %{~ endfor ~}
   template:
     metadata:
@@ -24,6 +25,7 @@ applicationsets:
             password: {{password}}
             cluster_name: ${cluster_domain}
             cluster_domain: ${cluster_domain}
+            cluster_admin: {{cluster_admin}}
       destination:
         server: https://kubernetes.default.svc
       syncPolicy:

@@ -3,7 +3,7 @@ resource "kubernetes_config_map" "welcome-content" {
   provider = kubernetes.local
 
   depends_on = [
-    time_sleep.wait_for_cluster_ready,
+    null_resource.wait_for_k8s_api
   ]
 
   metadata {

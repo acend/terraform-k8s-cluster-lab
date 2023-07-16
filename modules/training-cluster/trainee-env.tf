@@ -20,6 +20,7 @@ resource "helm_release" "appset-trainee-env" {
       cluster_name       = var.cluster_name,
       cluster_domain     = var.cluster_domain,
       passwords          = random_password.student-passwords,
+      cluster_admin      = var.cluster_admin
     }),
   ]
 

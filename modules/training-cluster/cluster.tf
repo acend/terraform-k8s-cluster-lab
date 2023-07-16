@@ -69,6 +69,7 @@ resource "hcloud_server" "controlplane" {
     k8s_api_hostnames = ["api.${var.cluster_name}.${var.cluster_domain}"]
 
     k8s-cluster-cidr = var.k8s-cluster-cidr
+    networkzone      = var.networkzone
 
     first_install = var.first_install
   })
@@ -131,7 +132,7 @@ resource "kubernetes_secret" "cloud_init_worker" {
   provider = kubernetes.local
 
   depends_on = [
-    time_sleep.wait_for_cluster_ready
+    null_resource.wait_for_k8s_api
   ]
   metadata {
     name      = "cloud-init-worker"

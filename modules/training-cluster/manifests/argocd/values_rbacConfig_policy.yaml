@@ -21,12 +21,10 @@ configs:
       p, role:student, projects, *, infra, deny
       p, role:student, projects, *, trainee-environment, deny
 
+      g, acend:trainees, role:student
+
       %{~ for i in range(count-students) ~}
-      %{~ if contains(cluster_admin, join("", tolist([studentname-prefix,i+1]))) == false ~}
       g, ${studentname-prefix}${i+1}, role:student
-      %{~ endif ~}
       %{~ endfor ~}
 
-      %{~ for admin in cluster_admin ~}
-      g, ${admin}, role:admin
-      %{~ endfor ~}
+      g, acend:admins, role_admin

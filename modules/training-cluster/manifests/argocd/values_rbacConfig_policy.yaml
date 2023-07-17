@@ -27,4 +27,4 @@ configs:
       g, ${studentname-prefix}${i+1}, role:student
       %{~ endfor ~}
 
-      g, acend:admins, role_admin
+      g, acend:admins, role:admin

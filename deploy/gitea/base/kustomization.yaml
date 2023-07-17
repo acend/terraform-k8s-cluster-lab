@@ -6,6 +6,8 @@ resources:
   - namespace.yaml
   - secrets.yaml
   - oauthclient.yaml
+  - orgs.yaml
+  - teams.yaml
 
 helmCharts:
   - name: gitea

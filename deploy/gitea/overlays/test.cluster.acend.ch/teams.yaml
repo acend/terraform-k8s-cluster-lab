@@ -1,0 +1,18 @@
+---
+apiVersion: acend.ch/v1alpha1
+kind: GiteaTeam
+metadata:
+  name: acend-admins
+spec:
+  parameters:
+    name: admins
+    org: acend
+---
+apiVersion: acend.ch/v1alpha1
+kind: GiteaTeam
+metadata:
+  name: acend-trainees
+spec:
+  parameters:
+    name: trainees
+    org: acend

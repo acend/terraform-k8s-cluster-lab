@@ -1,0 +1,93 @@
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xgiteaorgs.acend.ch
+spec:
+  group: acend.ch
+  names:
+    kind: XGiteaOrg
+    plural: xgiteaorgs
+  claimNames:
+    kind: GiteaOrg
+    plural: giteaorgs
+  defaultCompositionRef:
+    name: giteaorg
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              parameters:
+                type: object
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+            required:
+              - parameters
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: giteaorg
+  labels:
+    crossplane.io/xrd: xgiteaorgs.acend.ch
+spec:
+  compositeTypeRef:
+    apiVersion: acend.ch/v1alpha1
+    kind: XGiteaOrg
+  resources:
+  - name: tf_gitea_org
+    base:
+      apiVersion: tf.upbound.io/v1beta1
+      kind: Workspace
+      spec:
+        providerConfigRef:
+          name: gitea
+        forProvider:
+          source: Inline
+          module: |
+            terraform {
+              required_providers {
+                restapi = {
+                  source = "Mastercard/restapi"
+                }
+              }
+            }
+
+            variable "name" {
+              type = string
+            }
+
+            resource "restapi_object" "gitea-org" {
+
+              path = "/api/v1/orgs"
+
+              data = (jsonencode({
+                username                = var.name
+
+              }))
+              id_attribute = "username"
+            }
+
+          vars:
+            - key: name
+    patches:
+      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
+        toFieldPath: "metadata.annotations[crossplane.io/external-name]"
+        transforms:
+        - type: string
+          string:
+            fmt: "giteaorg-%s"
+      - fromFieldPath: spec.parameters.name
+        toFieldPath: spec.forProvider.vars[0].value
+
+ 

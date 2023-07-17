@@ -6,5 +6,7 @@ resources:
   - giteauser.yaml
   - IngressDNSRecord.yaml
   - GiteaOAuthClient.yaml
+  - GiteaOrg.yaml
+  - GiteaTeam.yaml
   - roles.yaml
 

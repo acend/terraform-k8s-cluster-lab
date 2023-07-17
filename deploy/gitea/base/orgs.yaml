@@ -1,0 +1,8 @@
+---
+apiVersion: acend.ch/v1alpha1
+kind: GiteaOrg
+metadata:
+  name: acend
+spec:
+  parameters:
+    name: acend

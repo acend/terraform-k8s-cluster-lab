@@ -21,3 +21,7 @@ spec:
     kind: 'XIngressDNSRecord*'
   - group: '*'
     kind: 'XGiteaOauthClient'
+  - group: '*'
+    kind: 'XGiteaOrg'
+  - group: '*'
+    kind: 'XGiteaTeam'

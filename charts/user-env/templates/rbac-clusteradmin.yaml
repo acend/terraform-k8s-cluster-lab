@@ -11,6 +11,6 @@ roleRef:
   name: cluster-admin
 subjects:
 - kind: ServiceAccount
-  name: webshell
+  name: {{ .Values.user }}-webshell
   namespace: {{ .Values.user }}
 {{ end }}

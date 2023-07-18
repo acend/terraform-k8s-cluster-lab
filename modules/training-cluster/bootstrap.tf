@@ -10,7 +10,9 @@ resource "kubernetes_secret" "argocd-cluster" {
   provider = kubernetes.acend
 
   depends_on = [
-    time_sleep.wait_for_bootstrap_removal
+    time_sleep.wait_for_bootstrap_removal,
+    module.api-a-record,
+    module.api-aaaa-record
   ]
 
   metadata {

@@ -1,9 +1,16 @@
 // Register the Cluster on the bootstraping ArgoCD
+resource "time_sleep" "wait_for_bootstrap_removal" {
+  depends_on = [null_resource.wait_for_k8s_api]
+
+  destroy_duration = "180s"
+}
+
+
 resource "kubernetes_secret" "argocd-cluster" {
   provider = kubernetes.acend
 
   depends_on = [
-    null_resource.wait_for_k8s_api
+    time_sleep.wait_for_bootstrap_removal
   ]
 
   metadata {

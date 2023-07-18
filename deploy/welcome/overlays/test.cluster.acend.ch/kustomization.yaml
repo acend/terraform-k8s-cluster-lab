@@ -8,10 +8,10 @@ patches:
 - patch: |-
     - op: replace
       path: /spec/rules/0/host
-      value: test.cluster.acend.ch
+      value: welcome.test.cluster.acend.ch
     - op: replace
       path: /spec/tls/0/hosts/0
-      value: test.cluster.acend.ch
+      value: welcome.test.cluster.acend.ch
   target:
     kind: Ingress
     name: welcome

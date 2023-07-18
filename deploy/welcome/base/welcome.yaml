@@ -70,10 +70,9 @@ spec:
     - welcome.training.cluster.acend.ch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
   name: welcome
-  namespace: welcome
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

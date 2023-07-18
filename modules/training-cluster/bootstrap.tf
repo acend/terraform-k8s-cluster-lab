@@ -46,7 +46,7 @@ resource "kubernetes_secret" "secretstore-secret" {
   provider = kubernetes.acend
 
   depends_on = [
-    null_resource.wait_for_k8s_api
+    time_sleep.wait_for_bootstrap_removal,
   ]
 
   metadata {

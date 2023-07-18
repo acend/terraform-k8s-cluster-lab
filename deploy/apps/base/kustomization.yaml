@@ -12,3 +12,4 @@ resources:
   - longhorn.yaml
   - gitea.yaml
   - acend.yaml
+  - welcome.yaml

@@ -4,7 +4,7 @@ resource "kubernetes_namespace" "argocd" {
   provider = kubernetes.local
 
   depends_on = [
-    time_sleep.wait_for_bootstrap_removal
+    null_resource.wait_for_k8s_api
   ]
 
   metadata {
@@ -24,6 +24,10 @@ resource "random_password" "argocd-admin-password" {
 }
 
 resource "helm_release" "argocd" {
+
+  depends_on = [
+    time_sleep.wait_for_bootstrap_removal
+  ]
 
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"

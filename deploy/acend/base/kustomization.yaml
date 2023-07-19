@@ -8,5 +8,6 @@ resources:
   - GiteaOAuthClient.yaml
   - GiteaOrg.yaml
   - GiteaTeam.yaml
+  - GiteaTeamMember.yaml
   - roles.yaml
 

@@ -139,7 +139,7 @@ spec:
                 gitea_url = var.gitea_uri
                 gitea_username = var.username
                 gitea_password = file("gitea-admin-credentials")
-                user_id = restapi_gitea-user.api_data.username
+                user_id = restapi_object.gitea-user.api_data.username
                 is_admin = tobool(var.is_Admin)
               }
               provisioner "local-exec" {

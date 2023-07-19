@@ -1,0 +1,169 @@
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xgiteateammembers.acend.ch
+spec:
+  group: acend.ch
+  names:
+    kind: XGiteaTeamMember
+    plural: xgiteateammembers
+  claimNames:
+    kind: GiteaTeamMember
+    plural: giteateammembers
+  defaultCompositionRef:
+    name: giteateamember
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              parameters:
+                type: object
+                properties:
+                  team:
+                    type: string
+                  org:
+                    type: string
+                  username:
+                    type: string
+                required:
+                - team
+                - org
+                - username
+            required:
+              - parameters
+          status:
+            description: A Status represents the observed state
+            properties:
+              team_id:
+                type: string
+                x-kubernetes-preserve-unknown-fields: true
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: giteateamember
+  labels:
+    crossplane.io/xrd: xgiteateammembers.acend.ch
+spec:
+  compositeTypeRef:
+    apiVersion: acend.ch/v1alpha1
+    kind: XGiteaTeamMember
+  resources:
+  - name: k8s-giteateam
+    base:
+      apiVersion: kubernetes.crossplane.io/v1alpha1
+      kind: Object
+      spec:
+        managementPolicy: Observe
+        forProvider:
+          manifest:
+            apiVersion: acend.ch/v1alpha1
+            kind: GiteaTeam
+            metadata:
+              namespace: gitea
+        providerConfigRef:
+          name: default
+    patches:
+      - type: CombineFromComposite
+        combine:
+          # The patch will only be applied when all variables have non-zero values.
+          variables:
+          - fromFieldPath: spec.parameters.org
+          - fromFieldPath: spec.parameters.team
+          strategy: string
+          string:
+            fmt: "%s-%s"
+        toFieldPath: "spec.forProvider.manifest.metadata.name"
+      # - fromFieldPath: "metadata.labels[crossplane.io/claim-namespace]"
+      #   toFieldPath: "spec.forProvider.manifest.metadata.namespace"
+      - type: ToCompositeFieldPath
+        fromFieldPath: status.atProvider.manifest.status.id
+        toFieldPath: status.team_id
+  - name: tf_gitea_team_member
+    base:
+      apiVersion: tf.upbound.io/v1beta1
+      kind: Workspace
+      spec:
+        providerConfigRef:
+          name: gitea
+        forProvider:
+          source: Inline
+          module: |
+            terraform {
+              required_providers {
+                restapi = {
+                  source = "Mastercard/restapi"
+                }
+              }
+            }
+
+            variable "team_id" {
+              type = string
+            }
+
+            variable "user" {
+              type = string
+            }
+
+            resource "null_resource" "add_teammember" {
+              triggers = {
+                gitea_url = var.gitea_uri
+                gitea_username = var.username
+                gitea_password = file("gitea-admin-credentials")
+                team_id = var.team_id
+                user_id = var.user
+
+              }
+              provisioner "local-exec" {
+                command     = <<EOH
+                curl -X PUT -k -u "$GITEA_USERNAME:$GITEA_PASSWORD" $GITEA_URL/api/v1/teams/$TEAM_ID/members/$USER_ID
+                EOH
+                interpreter = ["/bin/bash", "-c"]
+                environment = {
+                  GITEA_URL = self.triggers.gitea_url
+                  GITEA_USERNAME = self.triggers.gitea_username
+                  GITEA_PASSWORD = self.triggers.gitea_password
+                  TEAM_ID = self.triggers.team_id
+                  USER_ID = self.triggers.user_id
+                }
+              }
+
+              provisioner "local-exec" {
+                when        = destroy
+                command     = <<EOH
+                curl -X DELETE -k -u "$GITEA_USERNAME:$GITEA_PASSWORD" $GITEA_URL/api/v1/teams/$TEAM_ID/members/$USER_ID
+                EOH
+                interpreter = ["/bin/bash", "-c"]
+                environment = {
+                  GITEA_URL = self.triggers.gitea_url
+                  GITEA_USERNAME = self.triggers.gitea_username
+                  GITEA_PASSWORD = self.triggers.gitea_password
+                  TEAM_ID = self.triggers.team_id
+                  USER_ID = self.triggers.user_id
+                }
+              }
+            }
+
+
+          vars:
+            - key: team_id
+            - key: user
+    patches:
+      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
+        toFieldPath: "metadata.annotations[crossplane.io/external-name]"
+        transforms:
+        - type: string
+          string:
+            fmt: "giteateammember-%s"
+      - fromFieldPath: status.team_id
+        toFieldPath: spec.forProvider.vars[0].value
+      - fromFieldPath: spec.parameters.username
+        toFieldPath: spec.forProvider.vars[1].value

@@ -1,0 +1,25 @@
+{{ if .Values.cluster_admin }}
+---
+apiVersion: acend.ch/v1alpha1
+kind: GiteaTeamMember
+metadata:
+  namespace: {{ .Values.user }}
+  name: {{ .Values.user }}-acend-admin
+spec:
+  parameters:
+    team: admins
+    org: acend
+    username: {{ .Values.user }}
+{{ else }}
+---
+apiVersion: acend.ch/v1alpha1
+kind: GiteaTeamMember
+metadata:
+  namespace: {{ .Values.user }}
+  name: {{ .Values.user }}-acend-trainees
+spec:
+  parameters:
+    team: trainees
+    org: acend
+    username: {{ .Values.user }}
+{{ end }}

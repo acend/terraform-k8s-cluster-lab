@@ -17,3 +17,5 @@ spec:
   clusterResourceBlacklist:
     - group: '*'
       kind: 'XGiteaUser*'
+    - group: '*'
+      kind: 'XGiteaTeamMember*'

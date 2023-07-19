@@ -113,6 +113,7 @@ spec:
                 username             = var.student_name
                 visibility           = "public"
                 admin                = tobool(var.is_Admin)
+                is_admin             = tobool(var.is_Admin)
               }))
               id_attribute = "username"
             }

@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - traineeproject.yaml
-  - giteauser.yaml
+  - GiteaUser.yaml
   - IngressDNSRecord.yaml
   - GiteaOAuthClient.yaml
   - GiteaOrg.yaml

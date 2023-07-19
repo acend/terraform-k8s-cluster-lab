@@ -134,6 +134,29 @@ spec:
               id_attribute = "full_name"
             }
 
+            resource "null_resource" "make_admin" {
+              triggers = {
+                gitea_url = var.gitea_uri
+                gitea_username = var.username
+                gitea_password = file("gitea-admin-credentials")
+                user_id = restapi_gitea-user.api_data.username
+                is_admin = tobool(var.is_Admin)
+              }
+              provisioner "local-exec" {
+                command     = <<EOH
+                curl -X PATCH -k -u "$GITEA_USERNAME:$GITEA_PASSWORD" $GITEA_URL/api/v1/admin/users/$USER_ID -H 'Content-Type: application/json' -d '{"admin": '"$IS_ADMIN"', "login_name": "'"$USER_ID"'"}'
+                EOH
+                interpreter = ["/bin/bash", "-c"]
+                environment = {
+                  GITEA_URL = self.triggers.gitea_url
+                  GITEA_USERNAME = self.triggers.gitea_username
+                  GITEA_PASSWORD = self.triggers.gitea_password
+                  USER_ID = self.triggers.user_id
+                  IS_ADMIN = self.triggers.is_admin
+                }
+              }
+            }
+
             output "gitea-full-name" {
               value = restapi_object.gitea-user.api_data.full_name
             }

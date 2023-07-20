@@ -3,7 +3,7 @@ global:
 
 strategy:
   type: Recreate
-  
+
 gitea:
   config:
     cache:
@@ -21,7 +21,6 @@ gitea:
       NAME: gitea
       USER: gitea
       PASSWD: gitea
-      SCHEMA: gitea
     server:
       DOMAIN: gitea.test.cluster.acend.ch
   admin:

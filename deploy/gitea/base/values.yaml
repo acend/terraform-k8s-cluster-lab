@@ -21,7 +21,6 @@ gitea:
       NAME: gitea
       USER: gitea
       PASSWD: gitea
-      SCHEMA: gitea
     server:
       DOMAIN: gitea.training.cluster.acend.ch
   admin:

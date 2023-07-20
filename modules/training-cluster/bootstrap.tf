@@ -15,7 +15,8 @@ resource "kubernetes_secret" "argocd-cluster" {
 
   depends_on = [
     module.api-a-record,
-    module.api-aaaa-record
+    module.api-aaaa-record,
+    helm_release.argocd
   ]
 
   metadata {

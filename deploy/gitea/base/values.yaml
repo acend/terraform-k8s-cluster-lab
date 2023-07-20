@@ -25,10 +25,10 @@ ingress:
     - gitea.training.cluster.acend.ch
     secretName: acend-wildcard
 
-postgresql-ha:
-  persistence:
-    size: 1Gi
+# postgresql-ha:
+#   persistence:
+#     size: 1Gi
 
-redis-cluster:
-  persistence:
-    size: 1Gi
+# redis-cluster:
+#   persistence:
+#     size: 1Gi

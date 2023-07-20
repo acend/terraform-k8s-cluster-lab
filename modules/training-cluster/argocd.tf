@@ -104,9 +104,6 @@ EOH
 
 
 resource "time_sleep" "wait_for_argocd-cleanup" {
-  depends_on = [
-    null_resource.cleanup-argo-cr-before-destroy
-  ]
 
   destroy_duration = "180s"
 }

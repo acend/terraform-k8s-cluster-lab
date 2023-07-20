@@ -20,9 +20,7 @@ ingress:
     secretName: acend-wildcard
 
 postgresql-ha:
-  persistence:
-    size: 2Gi
-
+  enabled: false
+  
 redis-cluster:
-  persistence:
-    size: 1Gi
+  enabled: false

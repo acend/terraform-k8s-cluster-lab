@@ -1,8 +1,25 @@
 global:
   storageClass: longhorn
 
+
 gitea:
   config:
+    cache:
+      HOST: memcache://memcache:11211
+      ADAPTED: memcache
+    session:
+      HOST: memcache://memcache:11211
+      ADAPTED: memcache
+    queue:
+      HOST: memcache://memcache:11211
+      ADAPTED: memcache
+    database:
+      DB_TYPE: postgresql
+      HOST: postgresql
+      NAME: gitea
+      USER: gitea
+      PASSWD: gitea
+      SCHEMA: gitea
     server:
       DOMAIN: gitea.training.cluster.acend.ch
   admin:
@@ -23,9 +40,7 @@ ingress:
     secretName: acend-wildcard
 
 postgresql-ha:
-  persistence:
-    size: 2Gi
+  enabled: false
 
 redis-cluster:
-  persistence:
-    size: 1Gi
+  enabled: false

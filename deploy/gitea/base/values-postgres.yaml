@@ -1,0 +1,11 @@
+global:
+  storageClass: longhorn
+  postgresql:
+    auth: 
+      database: gitea
+      password: gitea
+      username: gitea
+
+primary:
+  persistence:
+    size: 1Gi

@@ -4,6 +4,8 @@ kind: Application
 metadata:
   name: gitea
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   destination:
     namespace: kube-system

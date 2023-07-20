@@ -4,6 +4,8 @@ kind: Application
 metadata:
   name: config-syncer
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   destination:
     namespace: kube-system

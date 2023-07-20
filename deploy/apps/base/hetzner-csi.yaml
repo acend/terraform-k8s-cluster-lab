@@ -5,6 +5,8 @@ metadata:
   annotations:
   name: hetzner-csi
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   destination:
     namespace: kube-system

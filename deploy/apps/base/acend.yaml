@@ -4,6 +4,8 @@ kind: Application
 metadata:
   name: acend
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   destination:
     namespace: kube-system

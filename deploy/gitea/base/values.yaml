@@ -6,16 +6,6 @@ strategy:
 
 gitea:
   config:
-    cache:
-      HOST: memcached.gitea.svc.cluster.local:11211
-      ADAPTER: memcache
-    database:
-      DB_TYPE: postgres
-      HOST: postgresql
-      NAME: gitea
-      USER: gitea
-      PASSWD: gitea
-      SCHEMA: public
     server:
       DOMAIN: gitea.training.cluster.acend.ch
   admin:

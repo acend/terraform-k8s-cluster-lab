@@ -15,17 +15,6 @@ helmCharts:
   - name: gitea
     releaseName: gitea
     namespace: gitea
-    version: 9.0.3
+    version: 9.3.0
     repo: https://dl.gitea.io/charts/
     valuesFile: values.yaml
-  - name: memcached
-    releaseName: memcached
-    namespace: gitea
-    version: 6.5.5
-    repo: https://charts.bitnami.com/bitnami
-  - name: postgresql
-    releaseName: postgresql
-    namespace: gitea
-    version: 12.6.7
-    repo: https://charts.bitnami.com/bitnami
-    valuesFile: values-postgres.yaml

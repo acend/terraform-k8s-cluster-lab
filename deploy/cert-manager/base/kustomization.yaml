@@ -48,6 +48,12 @@ helmCharts:
     repo: https://piccobit.github.io/helm-charts
     valuesInLine:
       groupName: acme.acend.ch
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: "true"
+      tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
 
 patches:
 - target:

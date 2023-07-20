@@ -115,6 +115,24 @@ write_files:
           enabled: true
           serviceMonitor:
             enabled: false
+- path: /var/lib/rancher/rke2/server/manifests/rke2-metrics-server.yaml
+  permission: "0600"
+  owner: root:root
+  content: |
+    ---
+    apiVersion: helm.cattle.io/v1
+    kind: HelmChartConfig
+    metadata:
+      name: rke2-metrics-server
+      namespace: kube-system
+    spec:
+      valuesContent: |-
+        nodeSelector:
+          node-role.kubernetes.io/control-plane: "true"
+        tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
 - path: /etc/rancher/rke2/config.yaml
   permissions: "0600"
   owner: root:root

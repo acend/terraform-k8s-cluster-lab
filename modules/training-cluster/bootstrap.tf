@@ -2,8 +2,8 @@
 resource "time_sleep" "wait_for_bootstrap_removal" {
   depends_on = [
     null_resource.wait_for_k8s_api,
-    helm_release.argocd,
-    kubernetes_secret.secretstore-secret
+    kubernetes_secret.secretstore-secret,
+    kubernetes_secret.argocd-cluster
   ]
 
   destroy_duration = "30s"
@@ -14,8 +14,6 @@ resource "kubernetes_secret" "argocd-cluster" {
   provider = kubernetes.acend
 
   depends_on = [
-    module.api-a-record,
-    module.api-aaaa-record,
     helm_release.argocd
   ]
 

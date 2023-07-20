@@ -67,11 +67,13 @@ resource "helm_release" "argocd" {
     templatefile("${path.module}/manifests/argocd/values.yaml", { cluster_name = var.cluster_name, cluster_domain = var.cluster_domain }),
   ]
 
+  depends_on = [ null_resource.cleanup-argo-cr-before-destroy ]
+
 }
 
 resource "null_resource" "cleanup-argo-cr-before-destroy" {
 
-  depends_on = [ helm_release.argocd ]
+  depends_on = [ time_sleep.wait_for_argocd-cleanup ]
 
 
   triggers = {
@@ -96,9 +98,6 @@ EOH
 
 
 resource "time_sleep" "wait_for_argocd-cleanup" {
-
-  depends_on = [ null_resource.cleanup-argo-cr-before-destroy ]
-
 
   destroy_duration = "180s"
 }

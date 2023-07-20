@@ -26,6 +26,11 @@ resource "random_password" "argocd-admin-password" {
 resource "helm_release" "argocd" {
 
 
+  depends_on = [
+    null_resource.cleanup-argo-cr-before-destroy
+  ]
+
+
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
@@ -92,7 +97,7 @@ EOH
   }
 
   depends_on = [
-    helm_release.argocd
+    time_sleep.wait_for_argocd-cleanup
   ]
 
 }

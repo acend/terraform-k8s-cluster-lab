@@ -14,7 +14,7 @@ gitea:
       HOST: memcache://memcache:11211
       ADAPTED: memcache
     database:
-      DB_TYPE: postgresql
+      DB_TYPE: postgres
       HOST: postgresql
       NAME: gitea
       USER: gitea

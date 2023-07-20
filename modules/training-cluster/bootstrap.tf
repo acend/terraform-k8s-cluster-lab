@@ -4,7 +4,7 @@ resource "time_sleep" "wait_for_bootstrap_removal" {
     null_resource.wait_for_k8s_api,
     helm_release.argocd,
     kubernetes_secret.argocd-cluster,
-    kubernetes_secret.kubernetes_secret.secretstore-secret
+    kubernetes_secret.secretstore-secret
   ]
 
   destroy_duration = "180s"

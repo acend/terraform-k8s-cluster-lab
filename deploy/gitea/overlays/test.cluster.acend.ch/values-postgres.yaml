@@ -6,6 +6,9 @@ global:
       password: gitea
       username: gitea
 
+strategy:
+  type: Recreate
+
 primary:
   persistence:
     size: 1Gi

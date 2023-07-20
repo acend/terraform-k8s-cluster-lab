@@ -1,6 +1,8 @@
 global:
   storageClass: longhorn
 
+strategy:
+  type: Recreate
 
 gitea:
   config:

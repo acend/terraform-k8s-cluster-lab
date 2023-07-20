@@ -10,8 +10,11 @@ gitea:
       HOST: memcached:11211
       ADAPTED: memcache
     session:
-      PROVIDER_CONFIG: memcached:11211
+      PROVIDER_CONFIG: memcache://memcached:11211
       PROVIDER: memcache
+    queue:
+      CONN_STR: memcache://memcached:11211
+      TYPE: memcache
     database:
       DB_TYPE: postgres
       HOST: postgresql

@@ -2,6 +2,25 @@ global:
   storageClass: longhorn
 
 gitea:
+  config:
+    cache:
+      HOST: memcache://memcache:11211
+      ADAPTED: memcache
+    session:
+      HOST: memcache://memcache:11211
+      ADAPTED: memcache
+    queue:
+      HOST: memcache://memcache:11211
+      ADAPTED: memcache
+    database:
+      DB_TYPE: postgres
+      HOST: postgresql
+      NAME: gitea
+      USER: gitea
+      PASSWD: gitea
+      SCHEMA: gitea
+    server:
+      DOMAIN: gitea.test.cluster.acend.ch
   admin:
     existingSecret: gitea-admin-credentials
     

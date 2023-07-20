@@ -1,6 +1,11 @@
 // Register the Cluster on the bootstraping ArgoCD
 resource "time_sleep" "wait_for_bootstrap_removal" {
-  depends_on = [null_resource.wait_for_k8s_api]
+  depends_on = [
+    null_resource.wait_for_k8s_api,
+    helm_release.argocd,
+    kubernetes_secret.argocd-cluster,
+    kubernetes_secret.kubernetes_secret.secretstore-secret
+  ]
 
   destroy_duration = "180s"
 }
@@ -10,7 +15,6 @@ resource "kubernetes_secret" "argocd-cluster" {
   provider = kubernetes.acend
 
   depends_on = [
-    time_sleep.wait_for_bootstrap_removal,
     module.api-a-record,
     module.api-aaaa-record
   ]
@@ -44,10 +48,6 @@ resource "kubernetes_secret" "argocd-cluster" {
 // Create a secret with credentials for external secrets to be used in SecretStore for bootstrapng
 resource "kubernetes_secret" "secretstore-secret" {
   provider = kubernetes.acend
-
-  depends_on = [
-    time_sleep.wait_for_bootstrap_removal,
-  ]
 
   metadata {
     name      = "credentials-${var.cluster_name}.${var.cluster_domain}"

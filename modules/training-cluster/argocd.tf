@@ -25,9 +25,6 @@ resource "random_password" "argocd-admin-password" {
 
 resource "helm_release" "argocd" {
 
-  depends_on = [
-    time_sleep.wait_for_bootstrap_removal
-  ]
 
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"

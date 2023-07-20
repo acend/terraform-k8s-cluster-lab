@@ -18,3 +18,9 @@ ingress:
   - hosts:
     - gitea.test.cluster.acend.ch
     secretName: acend-wildcard
+
+postgresql-ha:
+  enabled: false
+
+postgresql:
+  enabled: true

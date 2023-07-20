@@ -29,5 +29,3 @@ postgresql-ha:
 redis-cluster:
   persistence:
     size: 1Gi
-  cluster:
-    nodes: 3

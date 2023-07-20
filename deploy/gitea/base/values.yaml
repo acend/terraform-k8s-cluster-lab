@@ -10,17 +10,18 @@ gitea:
       HOST: memcache://memcache:11211
       ADAPTED: memcache
     session:
-      HOST: memcache://memcache:11211
-      ADAPTED: memcache
+      PROVIDER_CONFIG: memcache://memcache:11211
+      PROVIDER: memcache
     queue:
-      HOST: memcache://memcache:11211
-      ADAPTED: memcache
+      CONN_STR: memcache://memcache:11211
+      TYPE: memcache
     database:
       DB_TYPE: postgres
       HOST: postgresql
       NAME: gitea
       USER: gitea
       PASSWD: gitea
+      SCHEMA: public
     server:
       DOMAIN: gitea.training.cluster.acend.ch
   admin:

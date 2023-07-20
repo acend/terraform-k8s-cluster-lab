@@ -3,7 +3,6 @@ resource "time_sleep" "wait_for_bootstrap_removal" {
   depends_on = [
     null_resource.wait_for_k8s_api,
     helm_release.argocd,
-    kubernetes_secret.argocd-cluster,
     kubernetes_secret.secretstore-secret
   ]
 

@@ -1,5 +1,5 @@
 global:
-  storageClass: hcloud-volumes
+  storageClass: longhorn
 
 gitea:
   config:
@@ -27,3 +27,9 @@ postgresql-ha:
 
 postgresql:
   enabled: true
+
+redis-cluster:
+  persistence:
+    size: 1Gi
+  cluster:
+    nodes: 3

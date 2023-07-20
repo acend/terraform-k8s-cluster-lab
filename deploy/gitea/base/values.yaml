@@ -24,9 +24,3 @@ ingress:
   - hosts:
     - gitea.training.cluster.acend.ch
     secretName: acend-wildcard
-
-postgresql-ha:
-  enabled: false
-
-redis-cluster:
-  enabled: false

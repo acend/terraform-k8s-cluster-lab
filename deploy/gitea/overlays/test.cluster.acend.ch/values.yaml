@@ -21,6 +21,7 @@ gitea:
       NAME: gitea
       USER: gitea
       PASSWD: gitea
+      SCHEMA: public
     server:
       DOMAIN: gitea.test.cluster.acend.ch
   admin:

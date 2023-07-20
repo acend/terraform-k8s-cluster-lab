@@ -31,7 +31,7 @@ resource "kubernetes_secret" "argocd-cluster" {
 
   data = {
     name   = "${var.cluster_name}.${var.cluster_domain}"
-    server = "https://api.${var.cluster_name}.${var.cluster_domain}:6443"
+    server = local.kubernetes_api
     config = jsonencode({
       tlsClientConfig = {
         caData   = local.kubeconfig.clusters[0].cluster.certificate-authority-data
@@ -90,7 +90,7 @@ resource "kubernetes_manifest" "external-secrets-secretstore" {
         "kubernetes" = {
           "remoteNamespace" = each.key
           "server" = {
-            "url" = "https://api.${var.cluster_name}.${var.cluster_domain}:6443"
+            "url" = local.kubernetes_api  
             "caProvider" = {
               "type"      = "Secret"
               "name"      = "credentials-${var.cluster_name}.${var.cluster_domain}"

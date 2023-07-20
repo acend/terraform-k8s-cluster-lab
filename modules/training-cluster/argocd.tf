@@ -25,12 +25,6 @@ resource "random_password" "argocd-admin-password" {
 
 resource "helm_release" "argocd" {
 
-
-  depends_on = [
-    null_resource.cleanup-argo-cr-before-destroy
-  ]
-
-
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
@@ -77,6 +71,9 @@ resource "helm_release" "argocd" {
 
 resource "null_resource" "cleanup-argo-cr-before-destroy" {
 
+  depends_on = [ helm_release.argocd ]
+
+
   triggers = {
     kubeconfig = base64encode(local.kubeconfig_raw)
 
@@ -95,15 +92,13 @@ EOH
       KUBECONFIG = self.triggers.kubeconfig
     }
   }
-
-  depends_on = [
-    time_sleep.wait_for_argocd-cleanup
-  ]
-
 }
 
 
 resource "time_sleep" "wait_for_argocd-cleanup" {
+
+  depends_on = [ null_resource.cleanup-argo-cr-before-destroy ]
+
 
   destroy_duration = "180s"
 }

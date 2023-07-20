@@ -6,7 +6,7 @@ resource "time_sleep" "wait_for_bootstrap_removal" {
     kubernetes_secret.secretstore-secret
   ]
 
-  destroy_duration = "180s"
+  destroy_duration = "30s"
 }
 
 

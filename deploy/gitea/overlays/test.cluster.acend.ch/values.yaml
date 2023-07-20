@@ -7,7 +7,7 @@ strategy:
 gitea:
   config:
     cache:
-      HOST: memcache://memcached.gitea.svc.cluster.local:11211
+      HOST: memcached.gitea.svc.cluster.local:11211
       ADAPTER: memcache
     database:
       DB_TYPE: postgres

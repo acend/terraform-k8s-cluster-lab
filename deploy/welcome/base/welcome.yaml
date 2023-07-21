@@ -54,6 +54,7 @@ metadata:
   name: welcome
   namespace: welcome
 spec:
+  ingressClassName: haproxy
   rules:
   - host: welcome.training.cluster.acend.ch
     http:

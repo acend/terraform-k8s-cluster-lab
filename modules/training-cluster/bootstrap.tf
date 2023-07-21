@@ -4,7 +4,7 @@ resource "time_sleep" "wait_for_bootstrap" {
     null_resource.wait_for_k8s_api,
     // Makes sure the following resources are only destroyed befor this time_sleep and then wait 30s during destruction
     helm_release.argocd,
-    kuberneteskubernetes_secret.secretstore-secret,
+    kubernetes_secret.secretstore-secret,
     kubernetes_manifest.external-secrets-secretstore
   ]
 

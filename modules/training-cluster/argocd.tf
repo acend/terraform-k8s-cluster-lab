@@ -72,7 +72,7 @@ resource "helm_release" "argocd" {
 
 resource "null_resource" "cleanup-argo-cr-before-destroy" {
 
-  depends_on = [ helm_release.argocd ]
+  depends_on = [ time_sleep.wait_for_argocd-cleanup ]
 
 
   triggers = {
@@ -99,7 +99,7 @@ EOH
 resource "time_sleep" "wait_for_argocd-cleanup" {
 
   depends_on = [ 
-    null_resource.cleanup-argo-cr-before-destroy
+    helm_release.argocd
    ]
 
   destroy_duration = "180s"

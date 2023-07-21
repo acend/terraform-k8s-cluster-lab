@@ -14,7 +14,7 @@ resource "kubernetes_secret" "argocd-cluster" {
   provider = kubernetes.acend
 
   depends_on = [
-    time_sleep.wait_for_bootstrap_removal
+    time_sleep.wait_for_bootstrap_removal // With the following, after deletung the Secretstore, we wait a bit for proper cleanup
 
   ]
 
@@ -49,7 +49,7 @@ resource "kubernetes_secret" "secretstore-secret" {
   provider = kubernetes.acend
 
   depends_on = [ 
-    time_sleep.wait_for_bootstrap_removal
+    time_sleep.wait_for_argocd-cleanup // With the following, after deletung the Secretstore, we wait a bit for proper cleanup
   ]
 
   metadata {
@@ -77,7 +77,7 @@ locals {
 resource "kubernetes_manifest" "external-secrets-secretstore" {
 
   depends_on = [ 
-    time_sleep.wait_for_bootstrap_removal
+    time_sleep.wait_for_argocd-cleanup // With the following, after deletung the Secretstore, we wait a bit for proper cleanup
   ]
 
   for_each = local.secretStore_namespaces

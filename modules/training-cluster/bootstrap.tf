@@ -1,12 +1,13 @@
 // Register the Cluster on the bootstraping ArgoCD
-resource "time_sleep" "wait_for_bootstrap_removal" {
+resource "time_sleep" "wait_for_bootstrap" {
   depends_on = [
     null_resource.wait_for_k8s_api,
     // Makes sure the following resources are only destroyed after this time_sleep of 30s during destruction
     helm_release.argocd
   ]
 
-  destroy_duration = "30s"
+  create_duration = "30s" // Give ArgoCD some time to be fully ready
+  destroy_duration = "30s" // And Also give some time to remove the bootstrap resources
 }
 
 
@@ -14,7 +15,7 @@ resource "kubernetes_secret" "argocd-cluster" {
   provider = kubernetes.acend
 
   depends_on = [
-    time_sleep.wait_for_bootstrap_removal // With the following, after deletung the Secretstore, we wait a bit for proper cleanup
+    time_sleep.wait_for_bootstrap // With the following, after deletung the Secretstore, we wait a bit for proper cleanup
 
   ]
 

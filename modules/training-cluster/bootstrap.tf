@@ -2,8 +2,8 @@
 resource "time_sleep" "wait_for_bootstrap_removal" {
   depends_on = [
     null_resource.wait_for_k8s_api,
-    kubernetes_secret.secretstore-secret,
-    kubernetes_secret.argocd-cluster
+    // Makes sure the following resources are only destroyed after this time_sleep of 30s during destruction
+    helm_release.argocd
   ]
 
   destroy_duration = "30s"
@@ -14,7 +14,8 @@ resource "kubernetes_secret" "argocd-cluster" {
   provider = kubernetes.acend
 
   depends_on = [
-    helm_release.argocd
+    time_sleep.wait_for_bootstrap_removal
+
   ]
 
   metadata {
@@ -47,6 +48,10 @@ resource "kubernetes_secret" "argocd-cluster" {
 resource "kubernetes_secret" "secretstore-secret" {
   provider = kubernetes.acend
 
+  depends_on = [ 
+    time_sleep.wait_for_bootstrap_removal
+  ]
+
   metadata {
     name      = "credentials-${var.cluster_name}.${var.cluster_domain}"
     namespace = "external-secrets"
@@ -71,8 +76,8 @@ locals {
 // Deploy a Secret Store for each Namespace the external-secrets operator shall push secrets to
 resource "kubernetes_manifest" "external-secrets-secretstore" {
 
-  depends_on = [
-    kubernetes_secret.secretstore-secret
+  depends_on = [ 
+    time_sleep.wait_for_bootstrap_removal
   ]
 
   for_each = local.secretStore_namespaces

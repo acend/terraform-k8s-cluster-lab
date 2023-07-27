@@ -4,8 +4,6 @@ resource "time_sleep" "wait_for_bootstrap" {
     null_resource.wait_for_k8s_api,
     // Makes sure the following resources are only destroyed befor this time_sleep and then wait 30s during destruction
     helm_release.argocd,
-    kubernetes_secret.secretstore-secret,
-    kubernetes_manifest.external-secrets-secretstore
   ]
 
   create_duration = "30s" // Give ArgoCD some time to be fully ready
@@ -18,7 +16,6 @@ resource "kubernetes_secret" "argocd-cluster" {
 
   depends_on = [
     time_sleep.wait_for_bootstrap // With the following, after deletung the Secretstore, we wait a bit for proper cleanup
-
   ]
 
   metadata {
@@ -51,6 +48,8 @@ resource "kubernetes_secret" "argocd-cluster" {
 resource "kubernetes_secret" "secretstore-secret" {
   provider = kubernetes.acend
 
+  depends_on = [ time_sleep.wait_for_bootstrap ]
+
   metadata {
     name      = "credentials-${var.cluster_name}.${var.cluster_domain}"
     namespace = "external-secrets"
@@ -76,6 +75,8 @@ locals {
 resource "kubernetes_manifest" "external-secrets-secretstore" {
 
   for_each = local.secretStore_namespaces
+
+  depends_on = [ time_sleep.wait_for_bootstrap ]
 
   provider = kubernetes.acend
   manifest = {

@@ -2,7 +2,7 @@
 apiVersion: acend.ch/v1alpha1
 kind: IngressDNSRecord
 metadata:
-  name: ingress-a-record$
+  name: ingress-a-record
   namespace: ingress-haproxy
 spec:
   parameters:

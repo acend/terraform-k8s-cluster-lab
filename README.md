@@ -16,12 +16,15 @@ In order to deploy our acend Kubernetes Cluster the following steps are necessar
    * Loadbalancer for Kubernetes API and RKE2
    * Firewall
    * Hetzner Cloud Controller Manager for the Kubernetes Cluster Networking
+2. Terraform to deploy and then ootstrap ArgoCD using our [training-setup](https://github.com/acend/training-setup)
+3. ArgoCD to deploy resources student/user resources and other components like
    * Storage Provisioner (hcloud csi, longhorn)
    * Ingresscontroller
    * Cert-Manager
    * Gitea
-2. Terraform to deploy and bootstrap ArgoCD
-3. ArgoCD to deploy resources student/user resources
+   * etc
+
+See our [training-setup](https://github.com/acend/training-setup) for details on how the bootstrapping works.
 
 For more details on the cluster design and setup see the [documentation](https://github.com/acend/infrastructure/tree/main/docs#cluster-basic-design--configuration-and-setup-procedure) in our main infrastructure repository.
 
@@ -86,32 +89,4 @@ There is a Welcome page deployed at https://welcome.${cluster_name}.{cluster_dom
 
 ## Usage
 
-This repo can be used standalone or included as module from an other repo.
-
-This repo currently uses terraform cloud as state backend. Login into terraform cloud with your account using:
-
-```bash
-terraform login
-```
-
-Set your credentials (for the cloud provider and Rancher) e.g. in a `terraform.tfvars` File or using environment variables.
-
-```bash
-terraform init -backend-config=backend.hcl # only needed after initial checkout or when you add/change modules
-terraform plan # to verify
-terraform apply
-```
-
-### inluded as module
-
-Everything is contained in the `training-cluster` module and can be included in other repos. See [training-setup](https://github.com/acend/training-setup) for an example
-
-## Variables
-
-Check `main.tf` for an example cluster.
-
-## Admin Access to the cluster
-
-The admin Kubeconfig file is available in the `kubeconfig_raw` output variable of the `training-cluster` module.
-
-e.g. `terraform output -raw admin_kubeconfig > kubeconfig.yaml`
+This repo shall be used as a module from in our [training-setup](https://github.com/acend/training-setup)

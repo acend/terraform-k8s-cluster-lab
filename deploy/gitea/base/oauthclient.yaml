@@ -11,3 +11,20 @@ spec:
     secret_namespace: argocd
     secret_labels:
       app.kubernetes.io/part-of: argocd
+---
+apiVersion: acend.ch/v1alpha1
+kind: GiteaOauthClient
+metadata:
+  name: oauthproxy
+  namespace: gitea
+spec:
+  parameters:
+    name: oauthproxy
+    redirect_uri: https://oauth-proxy.training.cluster.acend.ch/oauth2/callback
+    secret_namespace: oauth2-proxy
+    secret_labels:
+      app.kubernetes.io/part-of: argocd
+    secret_annotations:
+      secret-generator.v1.mittwald.de/autogenerate: cookie-secret
+    client_id_key: client-id
+    client_secret_key: client-secret

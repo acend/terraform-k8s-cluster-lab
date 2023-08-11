@@ -1,5 +1,7 @@
 config:
   existingSecret: gitea-oauthclient-oauthproxy
+  provider: oidc
+  provider-display-name: "Acend Login"
 
 ingress:
  enabled: true

@@ -1,0 +1,10 @@
+config:
+  existingSecret: gitea-oauthclient-oauthproxy
+
+ingress:
+ enabled: true
+ hosts:
+   - oauth-proxy.training.cluster.acend.ch
+ tls:
+ - hosts:
+   - oauth-proxy.training.cluster.acend.ch

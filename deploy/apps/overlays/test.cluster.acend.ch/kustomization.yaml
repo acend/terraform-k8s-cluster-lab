@@ -33,3 +33,10 @@ patches:
   target:
     kind: Application
     name: welcome
+- patch: |-
+    - op: replace
+      path: /spec/source/path
+      value: deploy/oauth-proxy/overlays/test.cluster.acend.ch
+  target:
+    kind: Application
+    name: oauth-proxy

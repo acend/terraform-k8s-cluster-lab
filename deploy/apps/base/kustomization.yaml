@@ -13,3 +13,4 @@ resources:
   - gitea.yaml
   - acend.yaml
   - welcome.yaml
+  - oauth-proxy.yaml

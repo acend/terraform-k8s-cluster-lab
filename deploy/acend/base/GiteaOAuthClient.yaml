@@ -37,6 +37,16 @@ spec:
                     type: object
                     additionalProperties:
                       type: string
+                  secret_annotations:
+                    type: object
+                    additionalProperties:
+                      type: string
+                  client_id_key:
+                    type: string
+                    default: "client_id"
+                  client_secret_key:
+                    type: string
+                    default: "client_secret"
                 required:
                 - name
                 - redirect_uri
@@ -170,15 +180,17 @@ spec:
         toFieldPath: spec.forProvider.manifest.metadata.namespace
       - fromFieldPath: spec.parameters.secret_labels
         toFieldPath: spec.forProvider.manifest.metadata.labels
+      - fromFieldPath: spec.parameters.secret_annotations
+        toFieldPath: spec.forProvider.manifest.metadata.annotations
       - fromFieldPath: status.client_id
-        toFieldPath: spec.forProvider.manifest.data.client_id
+        toFieldPath: spec.forProvider.manifest.data[spec.parameters.client_id_key]
         transforms:
         - type: string
           string:
             type: Convert
             convert: ToBase64
       - fromFieldPath: status.client_secret
-        toFieldPath: spec.forProvider.manifest.data.client_secret
+        toFieldPath: spec.forProvider.manifest.data.[spec.parameters.client_secret_key]
         transforms:
         - type: string
           string:

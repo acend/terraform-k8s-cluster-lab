@@ -5,6 +5,7 @@ extraArgs:
   provider: oidc
   provider-display-name: Acend Login
   oidc-issuer-url: https://gitea.training.cluster.acend.ch/
+  custom-sign-in-logo: https://raw.githubusercontent.com/acend/.github/main/profile/images/AC-logo-claim-rgb-red.svg
 
 ingress:
  enabled: true

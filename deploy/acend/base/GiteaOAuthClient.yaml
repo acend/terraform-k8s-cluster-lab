@@ -190,7 +190,7 @@ spec:
             type: Convert
             convert: ToBase64
       - fromFieldPath: status.client_secret
-        toFieldPath: spec.forProvider.manifest.data.[spec.parameters.client_secret_key]
+        toFieldPath: spec.forProvider.manifest.data[spec.parameters.client_secret_key]
         transforms:
         - type: string
           string:

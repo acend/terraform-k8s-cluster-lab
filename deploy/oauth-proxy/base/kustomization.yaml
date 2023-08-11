@@ -11,3 +11,17 @@ helmCharts:
     version: 6.16.1
     repo: https://oauth2-proxy.github.io/manifests
     valuesFile: values.yaml
+
+
+patches:
+- patch: |-
+    - op: replace
+      path: /spec/template.spec.containers/0/env/0/valueFrom/secretKeyRef/key
+      value: client_id
+    - op: replace
+      path: /spec/template.spec.containers/0/env/2/valueFrom/secretKeyRef/key
+      value: client_secret
+  target:
+    kind: Deployment
+    name: oauth2-proxy
+

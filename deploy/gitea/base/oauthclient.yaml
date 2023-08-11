@@ -26,6 +26,6 @@ spec:
       app.kubernetes.io/part-of: argocd
     secret_annotations:
       secret-generator.v1.mittwald.de/autogenerate: cookie-secret
-      secret-generator.v1.mittwald.de/length: 32b
+      secret-generator.v1.mittwald.de/length: 32
     client_id_key: client-id
     client_secret_key: client-secret

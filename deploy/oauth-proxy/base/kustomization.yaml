@@ -16,10 +16,10 @@ helmCharts:
 patches:
 - patch: |-
     - op: replace
-      path: /spec/template.spec.containers/0/env/0/valueFrom/secretKeyRef/key
+      path: /spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef/key
       value: client_id
     - op: replace
-      path: /spec/template.spec.containers/0/env/1/valueFrom/secretKeyRef/key
+      path: /spec/template/spec/containers/0/env/1/valueFrom/secretKeyRef/key
       value: client_secret
   target:
     kind: Deployment

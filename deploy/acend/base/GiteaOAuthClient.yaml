@@ -183,14 +183,14 @@ spec:
       - fromFieldPath: spec.parameters.secret_annotations
         toFieldPath: spec.forProvider.manifest.metadata.annotations
       - fromFieldPath: status.client_id
-        toFieldPath: spec.forProvider.manifest.data[spec.parameters.client_id_key]
+        toFieldPath: spec.forProvider.manifest.data[{{ .spec.parameters.client_id_key }}]
         transforms:
         - type: string
           string:
             type: Convert
             convert: ToBase64
       - fromFieldPath: status.client_secret
-        toFieldPath: spec.forProvider.manifest.data[spec.parameters.client_secret_key]
+        toFieldPath: spec.forProvider.manifest.data[{{ .spec.parameters.client_secret_key }}]
         transforms:
         - type: string
           string:

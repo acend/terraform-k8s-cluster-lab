@@ -183,7 +183,7 @@ spec:
       - fromFieldPath: spec.parameters.secret_annotations
         toFieldPath: spec.forProvider.manifest.metadata.annotations
       - fromFieldPath: status.client_id
-        toFieldPath: spec.forProvider.manifest.data[client_id}]
+        toFieldPath: spec.forProvider.manifest.data[client_id]
         transforms:
         - type: string
           string:

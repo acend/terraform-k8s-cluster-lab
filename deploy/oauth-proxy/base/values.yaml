@@ -4,7 +4,7 @@ config:
 extraArgs:
   provider: oidc
   provider-display-name: Acend Login
-  oidc-issuer-url: https://gitea.training.cluster.acend.ch
+  oidc-issuer-url: https://gitea.training.cluster.acend.ch/
 
 ingress:
  enabled: true

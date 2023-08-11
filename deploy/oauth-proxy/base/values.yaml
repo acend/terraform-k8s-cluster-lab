@@ -1,10 +1,9 @@
 config:
   existingSecret: gitea-oauthclient-oauthproxy
-  configFile: |-
-    email_domains = [ "*" ]
-    upstreams = [ "file:///dev/null" ]
-    provider = oidc
-    provider-display-name = "Acend Login"
+
+extraArgs:
+- -provider oidc
+- -provider-display-name "Acend Login"
 
 ingress:
  enabled: true

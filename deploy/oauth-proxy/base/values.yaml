@@ -2,8 +2,8 @@ config:
   existingSecret: gitea-oauthclient-oauthproxy
 
 extraArgs:
-- -provider oidc
-- -provider-display-name "Acend Login"
+- --provider oidc
+- --provider-display-name "Acend Login"
 
 ingress:
  enabled: true

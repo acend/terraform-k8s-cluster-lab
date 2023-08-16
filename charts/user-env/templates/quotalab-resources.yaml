@@ -37,10 +37,3 @@ spec:
   hard:
     requests.cpu: 100m
     requests.memory: 100Mi
-status:
-  hard:
-    requests.cpu: 100m
-    requests.memory: 100Mi
-  used:
-    requests.cpu: "0"
-    requests.memory: "0"

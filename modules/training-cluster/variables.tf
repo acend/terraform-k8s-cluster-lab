@@ -143,7 +143,7 @@ variable "webshell-rbac-enabled" {
 
 
 variable "webshell-settings" {
-  type        = map
+  type        = object
   default     = {
     version = "0.4.0"
     

@@ -47,13 +47,13 @@ applicationsets:
               persistence:
                 enabled: ${tostring(theia-persistence-enabled)}
                 storageclass: longhorn
-              resources: ${yamlencode(theia_resources)}
+              resources: ${jsonencode(theia_resources)}
             dind:
               persistence:
                 enabled: ${tostring(dind-persistence-enabled)}
                 storageclass: longhorn
                 pvcsize: 10Gi
-              resources: ${yamlencode(dind_resources)}
+              resources: ${jsonencode(dind_resources)}
             podSecurityContext:
               fsGroup: 1001
             updateStrategy:

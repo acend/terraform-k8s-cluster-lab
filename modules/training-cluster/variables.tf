@@ -141,16 +141,33 @@ variable "webshell-rbac-enabled" {
   default     = true
 }
 
-variable "dind-persistence-enabled" {
-  description = "Enable persistence for DinD container"
-  type        = bool
-  default     = true
-}
 
-variable "theia-persistence-enabled" {
-  description = "Enable persistence for theia container"
-  type        = bool
-  default     = true
+variable "webshell-settings" {
+  type        = map
+  default     = {
+    version = "0.4.0"
+    
+    theia-persistence-enabled = true
+    dind-persistence-enabled  = true
+    webshell-rbac-enabled     = true
+
+    dind_resources = {
+      limits = {
+        memory = "1Gi"
+      }
+      
+      requests = {
+        cpu    = "50m"
+        memory = "100Mi"
+      }
+    }
+    theia_resources = {
+      requests = {
+        cpu    = "750m"
+        memory =  "1Gi"
+      }
+    }
+  }
 }
 
 variable "cluster_admin" {

@@ -22,7 +22,7 @@ applicationsets:
       source:
         chart: webshell
         repoURL: https://acend.github.io/webshell-env/
-        targetRevision: 0.3.3
+        targetRevision: ${version}
         helm:
           releaseName: '{{traineename}}-webshell'
           values: |
@@ -47,21 +47,13 @@ applicationsets:
               persistence:
                 enabled: ${tostring(theia-persistence-enabled)}
                 storageclass: longhorn
-              resources: 
-                limits:
-                  memory: 1Gi
-                requests:
-                  cpu: 50m
-                  memory: 100Mi
+              resources: ${yamlencode(theia_resources)}
             dind:
               persistence:
                 enabled: ${tostring(dind-persistence-enabled)}
                 storageclass: longhorn
                 pvcsize: 10Gi
-              resources: 
-                requests:
-                  cpu: 1000m
-                  memory: 1Gi
+              resources: ${yamlencode(dind_resources)}
             podSecurityContext:
               fsGroup: 1001
             updateStrategy:

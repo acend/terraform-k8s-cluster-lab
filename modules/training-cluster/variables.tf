@@ -143,7 +143,14 @@ variable "webshell-rbac-enabled" {
 
 
 variable "webshell-settings" {
-  type        = object
+  type        = object({
+    version = string
+    theia-persistence-enabled = bool
+    dind-persistence-enabled = bool
+    webshell-rbac-enabled = bool
+    dind_resources = object(any)
+    theia_resources = object(any)
+  })
   default     = {
     version = "0.4.0"
     

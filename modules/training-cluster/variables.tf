@@ -143,17 +143,36 @@ variable "webshell-rbac-enabled" {
 
 
 variable "webshell-settings" {
-  type        = object({
-    version = string
+  type = object({
+    version                   = string
     theia-persistence-enabled = bool
-    dind-persistence-enabled = bool
-    webshell-rbac-enabled = bool
-    dind_resources = object(any)
-    theia_resources = object(any)
+    dind-persistence-enabled  = bool
+    webshell-rbac-enabled     = bool
+    dind_resources = object({
+      limit = object({
+        memory = string
+        cpu    = string
+      })
+      request = object({
+        memory = string
+        cpu    = string
+      })
+    })
+    theia_resources = object({
+      limit = object({
+        memory = string
+        cpu    = string
+      })
+      request = object({
+        memory = string
+        cpu    = string
+      })
+    })
   })
-  default     = {
+
+  default = {
     version = "0.4.0"
-    
+
     theia-persistence-enabled = true
     dind-persistence-enabled  = true
     webshell-rbac-enabled     = true
@@ -162,7 +181,7 @@ variable "webshell-settings" {
       limits = {
         memory = "1Gi"
       }
-      
+
       requests = {
         cpu    = "50m"
         memory = "100Mi"
@@ -171,7 +190,7 @@ variable "webshell-settings" {
     theia_resources = {
       requests = {
         cpu    = "750m"
-        memory =  "1Gi"
+        memory = "1Gi"
       }
     }
   }

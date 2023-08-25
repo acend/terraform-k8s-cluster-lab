@@ -89,9 +89,9 @@ resource "hcloud_firewall" "firewall" {
 
   // Allow Nde Ports from everywhere
   rule {
-    direction  = "in"
-    protocol   = "tcp"
-    port       = "30000-32767"
+    direction = "in"
+    protocol  = "tcp"
+    port      = "30000-32767"
     source_ips = [
       "0.0.0.0/0",
       "::/0"

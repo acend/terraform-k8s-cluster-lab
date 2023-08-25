@@ -6,7 +6,7 @@ resource "time_sleep" "wait_for_bootstrap" {
     helm_release.argocd,
   ]
 
-  create_duration = "30s" // Give ArgoCD some time to be fully ready
+  create_duration  = "30s" // Give ArgoCD some time to be fully ready
   destroy_duration = "30s" // And Also give some time to remove the bootstrap resources
 }
 
@@ -48,7 +48,7 @@ resource "kubernetes_secret" "argocd-cluster" {
 resource "kubernetes_secret" "secretstore-secret" {
   provider = kubernetes.acend
 
-  depends_on = [ time_sleep.wait_for_bootstrap ]
+  depends_on = [time_sleep.wait_for_bootstrap]
 
   metadata {
     name      = "credentials-${var.cluster_name}.${var.cluster_domain}"
@@ -76,7 +76,7 @@ resource "kubernetes_manifest" "external-secrets-secretstore" {
 
   for_each = local.secretStore_namespaces
 
-  depends_on = [ time_sleep.wait_for_bootstrap ]
+  depends_on = [time_sleep.wait_for_bootstrap]
 
   provider = kubernetes.acend
   manifest = {
@@ -90,7 +90,7 @@ resource "kubernetes_manifest" "external-secrets-secretstore" {
         "kubernetes" = {
           "remoteNamespace" = each.key
           "server" = {
-            "url" = local.kubernetes_api  
+            "url" = local.kubernetes_api
             "caProvider" = {
               "type"      = "Secret"
               "name"      = "credentials-${var.cluster_name}.${var.cluster_domain}"

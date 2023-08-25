@@ -57,9 +57,9 @@ resource "helm_release" "appset-trainee-webshell" {
         ipv6-address              = var.user-vms-enabled ? module.student-vms[0].ipv6-address : ""
         ssh-keys                  = var.user-vms-enabled ? module.student-vms[0].user-ssh-keys : ""
 
-        dind_resources            = var.webshell-settings.dind_resources
-        theia_resources           = var.webshell-settings.theia_resources
-        version                   = var.webshell-settings.version
+        dind_resources  = var.webshell-settings.dind_resources
+        theia_resources = var.webshell-settings.theia_resources
+        version         = var.webshell-settings.version
     }),
   ]
 

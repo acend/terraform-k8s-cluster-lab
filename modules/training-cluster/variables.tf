@@ -163,7 +163,7 @@ variable "webshell-settings" {
         memory = optional(string)
         cpu    = optional(string)
       }))
-      request = optional)object({
+      request = optional(object({
         memory = optional(string)
         cpu    = optional(string)
       }))

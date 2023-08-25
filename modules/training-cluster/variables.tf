@@ -150,22 +150,22 @@ variable "webshell-settings" {
     webshell-rbac-enabled     = bool
     dind_resources = object({
       limits = optional(object({
-        memory = optional(string)
-        cpu    = optional(string)
+        memory = optional(string,null)
+        cpu    = optional(string,null)
       }))
       requests = optional(object({
-        memory = optional(string)
-        cpu    = optional(string)
+        memory = optional(string, null)
+        cpu    = optional(string, null)
       }))
     })
     theia_resources = object({
       limits = optional(object({
-        memory = optional(string)
-        cpu    = optional(string)
+        memory = optional(string, null)
+        cpu    = optional(string, null)
       }))
       requests = optional(object({
-        memory = optional(string)
-        cpu    = optional(string)
+        memory = optional(string, null)
+        cpu    = optional(string, null)
       }))
     })
   })

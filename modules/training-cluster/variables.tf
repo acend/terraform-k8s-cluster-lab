@@ -149,24 +149,24 @@ variable "webshell-settings" {
     dind-persistence-enabled  = bool
     webshell-rbac-enabled     = bool
     dind_resources = object({
-      limit = object({
-        memory = string
-        cpu    = string
-      })
-      request = object({
-        memory = string
-        cpu    = string
-      })
+      limit = optional(object({
+        memory = optional(string)
+        cpu    = optional(string)
+      }))
+      request = optional(object({
+        memory = optional(string)
+        cpu    = optional(string)
+      }))
     })
     theia_resources = object({
-      limit = object({
-        memory = string
-        cpu    = string
-      })
-      request = object({
-        memory = string
-        cpu    = string
-      })
+      limit = optional(object({
+        memory = optional(string)
+        cpu    = optional(string)
+      }))
+      request = optional)object({
+        memory = optional(string)
+        cpu    = optional(string)
+      }))
     })
   })
 

@@ -39,11 +39,17 @@ applicationsets:
                 paths:
                 - path: /
                   pathType: ImplementationSpecific
+              - host: {{traineename}}-webview.${cluster_name}.${cluster_domain}
+                paths:
+                - path: /
+                  pathType: ImplementationSpecific
               tls:
               - hosts:
                 - {{traineename}}.${cluster_name}.${cluster_domain}
+                - {{traineename}}-webview.${cluster_name}.${cluster_domain}
                 secretName: acend-wildcard
             theia:
+              webview_url: {{traineename}}-webview.${cluster_name}.${cluster_domain}
               persistence:
                 enabled: ${tostring(theia-persistence-enabled)}
                 storageclass: longhorn

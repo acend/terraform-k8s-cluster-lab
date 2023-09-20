@@ -10,7 +10,7 @@ roleRef:
   name: argocd
 subjects:
 - kind: ServiceAccount
-  name: webshell
+  name: {{ .Values.user }}-webshell
   namespace: {{ .Values.user }}
 
 ---
@@ -25,7 +25,7 @@ roleRef:
   name: argocd
 subjects:
 - kind: ServiceAccount
-  name: webshell
+  name: {{ .Values.user }}-webshell
   namespace: {{ .Values.user }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -39,7 +39,7 @@ roleRef:
   name: argocd
 subjects:
 - kind: ServiceAccount
-  name: webshell
+  name: {{ .Values.user }}-webshell
   namespace: {{ .Values.user }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1

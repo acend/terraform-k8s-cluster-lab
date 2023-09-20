@@ -41,3 +41,17 @@ subjects:
 - kind: ServiceAccount
   name: webshell
   namespace: {{ .Values.user }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argocd-rb-{{ .Values.user }}
+  namespace: argocd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: argocd
+subjects:
+- kind: ServiceAccount
+  name: webshell
+  namespace: {{ .Values.user }}

@@ -1,9 +1,7 @@
 controller:
   kind: Deployment
   replicaCount: 3
-
-  nodeSelector:
-    node-role.kubernetes.io/control-plane: "true"
+  
   tolerations:
   - key: node-role.kubernetes.io/control-plane
     operator: Equal

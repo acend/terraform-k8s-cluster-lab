@@ -32,8 +32,9 @@ applicationsets:
               enabled: true
               className: haproxy
               annotations:
-                ingress.kubernetes.io/auth-signin: https://oauth-proxy.${cluster_name}.${cluster_domain}/oauth2/start?rd=https%%3A%%2F%%2F{{traineename}}.${cluster_name}.${cluster_domain}
-                ingress.kubernetes.io/auth-url: https://oauth-proxy.${cluster_name}.${cluster_domain}/oauth2/auth
+                ingress.kubernetes.io/auth-realm: acend Webshell
+                ingress.kubernetes.io/auth-secret: webshell-basic-auth
+                ingress.kubernetes.io/auth-type: basic
               hosts:
               - host: {{traineename}}.${cluster_name}.${cluster_domain}
                 paths:

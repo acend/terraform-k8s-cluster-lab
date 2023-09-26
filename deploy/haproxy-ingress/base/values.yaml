@@ -1,5 +1,9 @@
 controller:
+  kind: Deployment
   replicaCount: 3
+
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: "true"
   tolerations:
   - key: node-role.kubernetes.io/control-plane
     operator: Equal
@@ -8,10 +12,16 @@ controller:
 
   ingressClassResource:
     default: true
+    enabled: true
 
-  defaultTLSSecret:
-    secret: acend-wildcard
-    secretNamespace: cert-manager
+  extraArgs:
+    default-ssl-certificate: cert-manager/acend-wildcard
+
+  metrics:
+    enabled: true
+
+  serviceMonitor:
+    enabled: true
 
   service:
     type: LoadBalancer

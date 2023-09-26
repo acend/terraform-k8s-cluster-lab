@@ -5,7 +5,7 @@ resources:
   - namespace.yaml
 
 helmCharts:
-  - name: kubernetes-ingress
+  - name: haproxy-ingress
     releaseName: ingress-haproxy
     namespace: ingress-haproxy
     version: 0.14.5

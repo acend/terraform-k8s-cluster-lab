@@ -54,7 +54,7 @@ metadata:
   name: welcome
   namespace: welcome
   annotations:
-    ingress.kubernetes.io/auth-signin: https://github-oauth-proxy.acend.ch//oauth2/start?rd=%[path]
+    ingress.kubernetes.io/auth-signin: https://github-oauth-proxy.acend.ch/oauth2/start?rd=https%3A%2F%2Fwelcome.training.cluster.acend.ch%2F
     ingress.kubernetes.io/auth-url: https://github-oauth-proxy.acend.ch/oauth2/auth
 spec:
   ingressClassName: haproxy

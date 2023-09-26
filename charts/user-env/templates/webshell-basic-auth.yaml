@@ -6,4 +6,4 @@ metadata:
   namespace: {{ .Values.user }}
 type: Opaque
 data:
-  auth: {{ printf "%s:%s" .Values.user .Values.password | b64enc | quote }}
+  auth: {{ printf "%s:%s" .Values.user .Values.password_bcrypt | b64enc | quote }}

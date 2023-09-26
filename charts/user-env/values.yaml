@@ -1,5 +1,6 @@
 user: user1
 password: supersecret
+password_bcrypt: ""
 cluster_admin: false
 
 cluster_name: training

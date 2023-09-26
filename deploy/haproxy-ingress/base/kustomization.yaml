@@ -8,8 +8,8 @@ helmCharts:
   - name: kubernetes-ingress
     releaseName: ingress-haproxy
     namespace: ingress-haproxy
-    version: 1.32.1
-    repo: https://haproxytech.github.io/helm-charts
+    version: 0.14.5
+    repo: https://haproxy-ingress.github.io/charts
     valuesFile: values.yaml
     apiVersions:
       - networking.k8s.io/v1/IngressClass

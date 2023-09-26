@@ -32,8 +32,7 @@ applicationsets:
               enabled: true
               className: haproxy
               annotations:
-                nginx.ingress.kubernetes.io/auth-type: basic-auth
-                nginx.ingress.kubernetes.io/auth-secret: basic-auth
+                haproxy-ingress.github.io/auth-secret: webshell-basic-auth
               hosts:
               - host: {{traineename}}.${cluster_name}.${cluster_domain}
                 paths:

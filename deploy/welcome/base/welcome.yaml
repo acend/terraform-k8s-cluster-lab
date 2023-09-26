@@ -37,7 +37,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: token
-              value: token
+              key: token
         image: quay.io/acend/welcome-training-app:latest
         imagePullPolicy: Always
         name: welcome

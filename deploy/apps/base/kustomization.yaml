@@ -10,6 +10,7 @@ resources:
   - hetzner-csi.yaml
   - kubernetes-secret-generator.yaml
   - longhorn.yaml
+  - monitoring.yaml
   - gitea.yaml
   - acend.yaml
   - welcome.yaml

@@ -134,7 +134,7 @@ spec:
               id_attribute = "full_name"
             }
 
-            resource "restapi_object" "gitea-repo" {
+            resource "restapi_object" "prometheus-training-repo" {
 
               path        = "/api/v1/repos"
               create_path = "/api/v1/repos/migrate"

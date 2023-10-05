@@ -134,6 +134,21 @@ spec:
               id_attribute = "full_name"
             }
 
+            resource "restapi_object" "gitea-repo" {
+
+              path        = "/api/v1/repos"
+              create_path = "/api/v1/repos/migrate"
+
+              data = (jsonencode({
+                clone_addr = "https://github.com/acend/prometheus-training-lab-setup.git"
+                private    = false
+                repo_name  = "prometheus-training-lab-setup"
+                repo_owner = restapi_object.gitea-user.api_data.username
+
+              }))
+              id_attribute = "full_name"
+            }
+
             resource "null_resource" "make_admin" {
               triggers = {
                 gitea_url = var.gitea_uri

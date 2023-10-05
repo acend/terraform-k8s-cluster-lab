@@ -14,3 +14,11 @@ metadata:
     certificate-wildcard: "true"
     kubernetes.io/metadata.name: {{ .Values.user }}-quota
   name: {{ .Values.user }}-quota
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    certificate-wildcard: "true"
+    kubernetes.io/metadata.name: {{ .Values.user }}-monitoring
+  name: {{ .Values.user }}-monitoring

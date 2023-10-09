@@ -2,7 +2,7 @@ global:
   rbac:
     createAggregateClusterRoles: true
 kubeProxy:
-  enabled: false # kube-proxy less installation
+  enabled: true # kube-proxy less installation
 kubeScheduler:
   enabled: false # scraping via pushprox as binded to localhost
 kubeControllerManager:
@@ -10,7 +10,7 @@ kubeControllerManager:
 kubeEtcd:
   enabled: false # scraping via pushprox as binded to localhost
 grafana:
-  enabled: false
+  enabled: true
 prometheus:
   prometheusSpec:
     resources:

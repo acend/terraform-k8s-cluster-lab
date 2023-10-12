@@ -59,3 +59,10 @@ prometheus-node-exporter:
     requests:
       cpu: 10m
       memory: 20Mi
+
+thanosRuler:
+  enabled: true
+  ingress:
+    enabled: true
+    hosts:
+    - thanos.training.cluster.acend.ch

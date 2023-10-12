@@ -28,12 +28,18 @@ prometheus:
           resources:
             requests:
               storage: 50Gi
+  thanosService:
+    enabled: true
 
 
 prometheusOperator:
   admissionWebhooks:
     certManager:
       enabled: true
+  thanosImage:
+    registry: quay.io
+    repository: thanos/thanos
+    version: v0.32.3
 
 alertmanager:
   config:
@@ -71,4 +77,10 @@ thanosRuler:
   ingress:
     enabled: true
     hosts:
-    - thanos.training.cluster.acend.ch
+    - thanos.training.cluster.acend.ch  
+    tls:
+    - hosts:
+      - thanos.training.cluster.acend.ch
+      secretName: acend-wildcard
+  thanosRulerSpec:
+    queryEndpoints: dnssrv+_grpc._tcp.kube-prometheus-stack-thanos-discovery.monitoring.svc.cluster.local

@@ -40,6 +40,8 @@ prometheus:
           resources:
             requests:
               storage: 50Gi
+    thanos:
+      image: quay.io/thanos/thanos:v0.32.3
   thanosService:
     enabled: true
 

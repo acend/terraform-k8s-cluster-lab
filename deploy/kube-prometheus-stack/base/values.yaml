@@ -77,7 +77,10 @@ thanosRuler:
   ingress:
     enabled: true
     hosts:
-    - thanos.training.cluster.acend.ch  
+    - thanos.training.cluster.acend.ch
+    paths:
+    - /
+    pathType: ImplementationSpecific
     tls:
     - hosts:
       - thanos.training.cluster.acend.ch

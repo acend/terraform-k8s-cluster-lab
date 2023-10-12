@@ -78,6 +78,7 @@ thanosRuler:
     enabled: true
     hosts:
     - thanos.training.cluster.acend.ch
+    ingressClassName: haproxy
     paths:
     - /
     pathType: ImplementationSpecific

@@ -83,4 +83,5 @@ thanosRuler:
       - thanos.training.cluster.acend.ch
       secretName: acend-wildcard
   thanosRulerSpec:
-    queryEndpoints: dnssrv+_grpc._tcp.kube-prometheus-stack-thanos-discovery.monitoring.svc.cluster.local
+    queryEndpoints: 
+    - dnssrv+_grpc._tcp.kube-prometheus-stack-thanos-discovery.monitoring.svc.cluster.local

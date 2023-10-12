@@ -29,6 +29,12 @@ prometheus:
             requests:
               storage: 50Gi
 
+
+prometheusOperator:
+  admissionWebhooks:
+    certManager:
+      enabled: true
+
 alertmanager:
   config:
     route:

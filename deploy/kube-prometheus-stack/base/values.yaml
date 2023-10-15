@@ -88,6 +88,18 @@ prometheus-node-exporter:
 
 thanosRuler:
   enabled: true
+  ingress:
+    enabled: true
+    hosts:
+    - thanos.training.cluster.acend.ch
+    ingressClassName: haproxy
+    paths:
+    - /
+    pathType: ImplementationSpecific
+    tls:
+    - hosts:
+      - thanos.training.cluster.acend.ch
+      secretName: acend-wildcard
   thanosRulerSpec:
     queryEndpoints: 
     - dnssrv+_grpc._tcp.kube-prometheus-stack-thanos-discovery.monitoring.svc.cluster.local

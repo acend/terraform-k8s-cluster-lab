@@ -123,6 +123,8 @@ spec:
         - type: string
           string:
             fmt: "gitearepo-%s"
+      - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
+        toFieldPath: spec.writeConnectionSecretToRef.namespace
       - fromFieldPath: spec.parameters.username
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.reponame

@@ -1,14 +1,14 @@
 ---
-apiVersion: acend.ch/v1alpha1
-kind: GiteaRepo
-metadata:
-  namespace: {{ .Values.user }}
-  name: argocd-training-example
-spec:
-  parameters:
-    username: {{ .Values.user }}
-    reponame: argocd-training-examples
-    repourl: https://github.com/acend/argocd-training-examples.git
+# apiVersion: acend.ch/v1alpha1
+# kind: GiteaRepo
+# metadata:
+#   namespace: {{ .Values.user }}
+#   name: argocd-training-example
+# spec:
+#   parameters:
+#     username: {{ .Values.user }}
+#     reponame: argocd-training-examples
+#     repourl: https://github.com/acend/argocd-training-examples.git
 
 # ---
 # apiVersion: acend.ch/v1alpha1

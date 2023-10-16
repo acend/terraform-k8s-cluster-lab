@@ -111,7 +111,7 @@ spec:
             }
 
           vars:
-            - key: username
+            - key: repoowner
             - key: reponame
             - key: repourl
     patches:

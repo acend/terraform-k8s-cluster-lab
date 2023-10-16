@@ -62,8 +62,6 @@ spec:
       apiVersion: tf.upbound.io/v1beta1
       kind: Workspace
       spec:
-        writeConnectionSecretToRef:
-          name: gitea-info
         providerConfigRef:
           name: gitea
         forProvider:
@@ -158,8 +156,6 @@ spec:
         - type: string
           string:
             fmt: "giteauser-%s"
-      - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
-        toFieldPath: spec.writeConnectionSecretToRef.namespace
       - fromFieldPath: spec.parameters.student_name
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.student_password

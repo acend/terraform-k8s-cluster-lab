@@ -57,6 +57,8 @@ spec:
       apiVersion: tf.upbound.io/v1beta1
       kind: Workspace
       spec:
+        writeConnectionSecretToRef:
+          name: gitea-repo
         providerConfigRef:
           name: gitea
         forProvider:

@@ -30,9 +30,24 @@ prometheus:
         cpu: 200m
         memory: 2600Mi
     ruleSelectorNilUsesHelmValues: false
-    serviceMonitorSelectorNilUsesHelmValues: false
-    podMonitorSelectorNilUsesHelmValues: false
-    probeSelectorNilUsesHelmValues: false
+    serviceMonitorSelector:
+      matchLabels:
+        argocd.argoproj.io/instance: monitoring
+    serviceMonitorNamespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: monitoring
+    podMonitorSelector:
+      matchLabels:
+        argocd.argoproj.io/instance: monitoring
+    podMonitorNamespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: monitoring
+    probeSelector:
+      matchLabels:
+        argocd.argoproj.io/instance: monitoring
+    probeNamespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: monitoring
     storageSpec:
       volumeClaimTemplate:
         spec:

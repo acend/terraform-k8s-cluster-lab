@@ -1,0 +1,129 @@
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xgitearepo.acend.ch
+spec:
+  group: acend.ch
+  names:
+    kind: XGiteaRepo
+    plural: xgitearepos
+  claimNames:
+    kind: GiteaRepo
+    plural: gitearepos
+  defaultCompositionRef:
+    name: gitearepo
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              parameters:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  reponame:
+                    type: string
+                  repourl:
+                    type: string
+ 
+                required:
+                - username
+                - reponame
+                - repourl
+            required:
+              - parameters
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: gitearepo
+  labels:
+    crossplane.io/xrd: xgitearepos.acend.ch
+spec:
+  compositeTypeRef:
+    apiVersion: acend.ch/v1alpha1
+    kind: XGiteaRepo
+  resources:
+  - name: tf_gitearepo
+    base:
+      apiVersion: tf.upbound.io/v1beta1
+      kind: Workspace
+      spec:
+        providerConfigRef:
+          name: gitea
+        forProvider:
+          source: Inline
+          module: |
+            terraform {
+              required_providers {
+                restapi = {
+                  source = "Mastercard/restapi"
+                }
+              }
+            }
+
+            variable "username" {
+              type = string
+            }
+
+            variable "reponame" {
+              type = string
+            }
+
+            variable "repourl" {
+              type = string
+            }
+
+
+            resource "restapi_object" "gitea-repo" {
+
+              path        = "/api/v1/repos"
+              create_path = "/api/v1/repos/migrate"
+
+              data = (jsonencode({
+                clone_addr = var.repourl
+                private    = false
+                repo_name  = var.reponame
+                repo_owner = var.username
+
+              }))
+              id_attribute = "full_name"
+            }
+
+            output "repo-original-url" {
+              value = restapi_object.gitea-repo.api_data.original_url
+            }
+
+            output "repo-html_url" {
+              value = restapi_object.gitea-repo.api_data.html_url
+            }
+
+            output "repo-clone_url" {
+              value = restapi_object.gitea-repo.api_data.clone_url
+            }
+
+          vars:
+            - key: username
+            - key: reponame
+            - key: repourl
+    patches:
+      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
+        toFieldPath: "metadata.annotations[crossplane.io/external-name]"
+        transforms:
+        - type: string
+          string:
+            fmt: "gitearepo-%s"
+      - fromFieldPath: spec.parameters.username
+        toFieldPath: spec.forProvider.vars[0].value
+      - fromFieldPath: spec.parameters.reponame
+        toFieldPath: spec.forProvider.vars[1].value
+      - fromFieldPath: spec.parameters.repourl
+        toFieldPath: spec.forProvider.vars[2].value

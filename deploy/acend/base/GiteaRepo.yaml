@@ -27,8 +27,8 @@ spec:
               parameters:
                 type: object
                 properties:
-                  username:
-                    type: owner
+                  owner:
+                    type: string
                   reponame:
                     type: string
                   repourl:

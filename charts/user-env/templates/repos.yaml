@@ -10,14 +10,14 @@ spec:
     reponame: argocd-training-examples
     repourl: https://github.com/acend/argocd-training-examples.git
 
-# ---
-# apiVersion: acend.ch/v1alpha1
-# kind: GiteaRepo
-# metadata:
-#   namespace: {{ .Values.user }}
-#   name: prometheus-training-lab-setup
-# spec:
-#   parameters:
-#     owner: {{ .Values.user }}
-#     reponame: prometheus-training-lab-setup
-#     repourl: https://github.com/acend/prometheus-training-lab-setup.git
+---
+apiVersion: acend.ch/v1alpha1
+kind: GiteaRepo
+metadata:
+  namespace: {{ .Values.user }}
+  name: prometheus-training-lab-setup
+spec:
+  parameters:
+    owner: {{ .Values.user }}
+    reponame: prometheus-training-lab-setup
+    repourl: https://github.com/acend/prometheus-training-lab-setup.git

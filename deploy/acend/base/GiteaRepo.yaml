@@ -115,7 +115,7 @@ spec:
             - key: reponame
             - key: repourl
     patches:
-      - type: CombineFromComposite
+      - type: CombineToComposite
         combine:
           variables:
             - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]

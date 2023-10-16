@@ -115,7 +115,7 @@ spec:
             - key: reponame
             - key: repourl
     patches:
-      - type: CombineToComposite
+      - type: CombineFromComposite
         combine:
           variables:
             - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
@@ -123,7 +123,7 @@ spec:
           strategy: string
           string:
             fmt: "gitearepo-%s-%s"
-          toFieldPath: metadata.annotations[crossplane.io/external-name]
+        toFieldPath: metadata.annotations[crossplane.io/external-name]
       - fromFieldPath: spec.parameters.owner
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.reponame

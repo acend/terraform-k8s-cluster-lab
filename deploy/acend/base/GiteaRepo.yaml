@@ -115,12 +115,15 @@ spec:
             - key: reponame
             - key: repourl
     patches:
-      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
-        toFieldPath: "metadata.annotations[crossplane.io/external-name]"
-        transforms:
-        - type: string
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
+            - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+          strategy: string
           string:
-            fmt: "gitearepo-%s"
+            fmt: "gitearepo-%s-%s"
+          toFieldPath: metadata.annotations[crossplane.io/external-name]
       - fromFieldPath: spec.parameters.owner
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.reponame

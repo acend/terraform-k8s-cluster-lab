@@ -94,13 +94,18 @@ variable "controlplane_count" {
 
   validation {
     condition     = var.controlplane_count == 3
-    error_message = "You must have 3 master nodes."
+    error_message = "You must have 3 control-plane nodes."
   }
 }
 
 variable "worker_count" {
-  default     = 2
+  default     = 3
   description = "Count of rke2 workers"
+
+  validation {
+    condition     = var.worker_count >= 3
+    error_message = "You must have at least 3 worker nodes."
+  }
 }
 
 variable "letsencrypt_email" {

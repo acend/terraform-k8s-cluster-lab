@@ -70,7 +70,7 @@ spec:
               }
             }
 
-            variable "username" {
+            variable "repoowner" {
               type = string
             }
 
@@ -92,7 +92,7 @@ spec:
                 clone_addr = var.repourl
                 private    = false
                 repo_name  = var.reponame
-                repo_owner = var.username
+                repo_owner = var.repoowner
 
               }))
               id_attribute = "full_name"

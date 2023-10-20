@@ -44,7 +44,6 @@ spec:
             properties:
               team_id:
                 type: string
-                x-kubernetes-preserve-unknown-fields: true
 ---
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
@@ -74,7 +73,6 @@ spec:
     patches:
       - type: CombineFromComposite
         combine:
-          # The patch will only be applied when all variables have non-zero values.
           variables:
           - fromFieldPath: spec.parameters.org
           - fromFieldPath: spec.parameters.team
@@ -82,8 +80,6 @@ spec:
           string:
             fmt: "%s-%s"
         toFieldPath: "spec.forProvider.manifest.metadata.name"
-      # - fromFieldPath: "metadata.labels[crossplane.io/claim-namespace]"
-      #   toFieldPath: "spec.forProvider.manifest.metadata.namespace"
       - type: ToCompositeFieldPath
         fromFieldPath: status.atProvider.manifest.status.id
         toFieldPath: status.team_id

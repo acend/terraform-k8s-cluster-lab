@@ -80,7 +80,7 @@ spec:
           - fromFieldPath: spec.parameters.team
           strategy: string
           string:
-            fmt: "teammember-%s-%s"
+            fmt: "%s-%s"
         toFieldPath: "spec.forProvider.manifest.metadata.name"
       # - fromFieldPath: "metadata.labels[crossplane.io/claim-namespace]"
       #   toFieldPath: "spec.forProvider.manifest.metadata.namespace"
@@ -159,6 +159,12 @@ spec:
     patches:
       - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
         toFieldPath: "metadata.annotations[crossplane.io/external-name]"
+        transforms:
+        - type: string
+          string:
+            fmt: "giteateammember-%s"
+      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
+        toFieldPath: "spec.forProvider.manifest.metadata.name"
         transforms:
         - type: string
           string:

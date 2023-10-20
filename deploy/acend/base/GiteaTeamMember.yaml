@@ -168,5 +168,7 @@ spec:
             fmt: "giteateammember-%s"
       - fromFieldPath: status.team_id
         toFieldPath: spec.forProvider.vars[0].value
+        policy:
+            fromFieldPath: Required
       - fromFieldPath: spec.parameters.username
         toFieldPath: spec.forProvider.vars[1].value

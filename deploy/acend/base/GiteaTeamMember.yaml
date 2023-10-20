@@ -164,7 +164,7 @@ spec:
           string:
             fmt: "giteateammember-%s"
       - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
-        toFieldPath: "spec.forProvider.manifest.metadata.name"
+        toFieldPath: "metadata.name"
         transforms:
         - type: string
           string:

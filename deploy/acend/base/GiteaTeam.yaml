@@ -139,6 +139,12 @@ spec:
         - type: string
           string:
             fmt: "giteateam-%s"
+      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
+        toFieldPath: "metadata.name"
+        transforms:
+        - type: string
+          string:
+            fmt: "giteateam-%s"
       - fromFieldPath: spec.parameters.name
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.org

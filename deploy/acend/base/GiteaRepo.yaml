@@ -129,7 +129,7 @@ spec:
           strategy: string
           string:
             fmt: "gitearepo-%s-%s"
-        toFieldPath: "spec.forProvider.manifest.metadata.name"
+        toFieldPath: "metadata.name"
       - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.reponame

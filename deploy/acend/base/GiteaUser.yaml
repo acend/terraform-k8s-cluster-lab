@@ -165,7 +165,7 @@ spec:
           strategy: string
           string:
             fmt: "giteauser-%s"
-        toFieldPath: "spec.forProvider.manifest.metadata.name"
+        toFieldPath: "metadata.name"
       - fromFieldPath: spec.parameters.student_name
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.student_password

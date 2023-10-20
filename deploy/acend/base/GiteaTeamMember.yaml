@@ -44,6 +44,7 @@ spec:
             properties:
               team_id:
                 type: string
+                x-kubernetes-preserve-unknown-fields: true
 ---
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition

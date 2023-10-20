@@ -148,6 +148,12 @@ spec:
         - type: string
           string:
             fmt: "oauthclient-%s"
+      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
+        toFieldPath: "metadata.name"
+        transforms:
+        - type: string
+          string:
+            fmt: "oauthclient-%s"
       - fromFieldPath: spec.parameters.name
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.redirect_uri

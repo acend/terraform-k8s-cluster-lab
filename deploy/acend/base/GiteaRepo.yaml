@@ -121,6 +121,15 @@ spec:
           string:
             fmt: "gitearepo-%s-%s"
         toFieldPath: metadata.annotations[crossplane.io/external-name]
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
+            - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+          strategy: string
+          string:
+            fmt: "gitearepo-%s-%s"
+        toFieldPath: "spec.forProvider.manifest.metadata.name"
       - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.reponame

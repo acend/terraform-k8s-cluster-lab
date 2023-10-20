@@ -153,12 +153,19 @@ spec:
       - type: CombineFromComposite
         combine:
           variables:
-            - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
             - fromFieldPath: metadata.labels[crossplane.io/claim-name]
           strategy: string
           string:
-            fmt: "giteauser-%s-%s"
+            fmt: "giteauser-%s"
         toFieldPath: metadata.annotations[crossplane.io/external-name]
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+          strategy: string
+          string:
+            fmt: "giteauser-%s"
+        toFieldPath: "spec.forProvider.manifest.metadata.name"
       - fromFieldPath: spec.parameters.student_name
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.student_password

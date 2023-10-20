@@ -86,7 +86,7 @@ spec:
       #   toFieldPath: "spec.forProvider.manifest.metadata.namespace"
       - type: ToCompositeFieldPath
         fromFieldPath: status.atProvider.manifest.status.id
-        toFieldPath: status.team_id
+        toFieldPath: team_id
   - name: tf_gitea_team_member
     base:
       apiVersion: tf.upbound.io/v1beta1
@@ -169,7 +169,7 @@ spec:
         - type: string
           string:
             fmt: "giteateammember-%s"
-      - fromFieldPath: status.team_id
+      - fromFieldPath: team_id
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.username
         toFieldPath: spec.forProvider.vars[1].value

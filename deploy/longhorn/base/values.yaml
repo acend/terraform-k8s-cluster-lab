@@ -1,6 +1,7 @@
 
 defaultSettings:
   deletingConfirmationFlag: "true"
+  taintToleration: cattle.io/os=linux:NoSchedule;node-role.kubernetes.io/control-plane=true:NoSchedule
 
 longhornManager:
   tolerations: 

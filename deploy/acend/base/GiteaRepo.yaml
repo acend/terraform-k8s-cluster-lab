@@ -27,15 +27,12 @@ spec:
               parameters:
                 type: object
                 properties:
-                  owner:
-                    type: string
                   reponame:
                     type: string
                   repourl:
                     type: string
  
                 required:
-                - owner
                 - reponame
                 - repourl
             required:
@@ -124,7 +121,7 @@ spec:
           string:
             fmt: "gitearepo-%s-%s"
         toFieldPath: metadata.annotations[crossplane.io/external-name]
-      - fromFieldPath: spec.parameters.owner
+      - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.reponame
         toFieldPath: spec.forProvider.vars[1].value

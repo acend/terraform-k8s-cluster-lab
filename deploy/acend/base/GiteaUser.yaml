@@ -150,12 +150,15 @@ spec:
             - key: cluster_domain
             - key: is_Admin
     patches:
-      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
-        toFieldPath: "metadata.annotations[crossplane.io/external-name]"
-        transforms:
-        - type: string
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: metadata.labels[crossplane.io/claim-namespace]
+            - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+          strategy: string
           string:
-            fmt: "giteauser-%s"
+            fmt: "giteauser-%s-%s"
+        toFieldPath: metadata.annotations[crossplane.io/external-name]
       - fromFieldPath: spec.parameters.student_name
         toFieldPath: spec.forProvider.vars[0].value
       - fromFieldPath: spec.parameters.student_password

@@ -6,7 +6,6 @@ metadata:
   name: argocd-training-example
 spec:
   parameters:
-    owner: {{ .Values.user }}
     reponame: argocd-training-examples
     repourl: https://github.com/acend/argocd-training-examples.git
 
@@ -18,6 +17,5 @@ metadata:
   name: prometheus-training-lab-setup
 spec:
   parameters:
-    owner: {{ .Values.user }}
     reponame: prometheus-training-lab-setup
     repourl: https://github.com/acend/prometheus-training-lab-setup.git

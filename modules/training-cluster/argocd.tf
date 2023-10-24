@@ -25,12 +25,13 @@ resource "random_password" "argocd-admin-password" {
 
 resource "helm_release" "argocd" {
 
-  name       = "argocd"
-  repository = "https://argoproj.github.io/argo-helm"
-  chart      = "argo-cd"
-  namespace  = kubernetes_namespace.argocd.metadata.0.name
-  version    = "5.46.8"
-  wait       = true
+  name        = "argocd"
+  repository  = "https://argoproj.github.io/argo-helm"
+  chart       = "argo-cd"
+  namespace   = kubernetes_namespace.argocd.metadata.0.name
+  version     = "5.46.8"
+  wait        = true
+  max_history = 2
 
   set {
     name  = "configs.cm.url"

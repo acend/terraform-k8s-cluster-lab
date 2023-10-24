@@ -6,11 +6,12 @@ resource "helm_release" "appset-trainee-env" {
     helm_release.argocd
   ]
 
-  name       = "trainee-env"
-  repository = "https://argoproj.github.io/argo-helm"
-  chart      = "argocd-apps"
-  namespace  = kubernetes_namespace.argocd.metadata.0.name
-  version    = "1.4.1"
+  name        = "trainee-env"
+  repository  = "https://argoproj.github.io/argo-helm"
+  chart       = "argocd-apps"
+  namespace   = kubernetes_namespace.argocd.metadata.0.name
+  version     = "1.4.1"
+  max_history = 2
 
 
   values = [
@@ -34,11 +35,12 @@ resource "helm_release" "appset-trainee-webshell" {
     helm_release.argocd
   ]
 
-  name       = "trainee-webshell"
-  repository = "https://argoproj.github.io/argo-helm"
-  chart      = "argocd-apps"
-  namespace  = kubernetes_namespace.argocd.metadata.0.name
-  version    = "1.4.1"
+  name        = "trainee-webshell"
+  repository  = "https://argoproj.github.io/argo-helm"
+  chart       = "argocd-apps"
+  namespace   = kubernetes_namespace.argocd.metadata.0.name
+  version     = "1.4.1"
+  max_history = 2
 
 
   values = [

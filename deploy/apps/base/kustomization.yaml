@@ -15,3 +15,4 @@ resources:
   - acend.yaml
   - welcome.yaml
   - oauth-proxy.yaml
+  - external-secrets.yaml

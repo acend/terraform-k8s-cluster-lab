@@ -176,7 +176,7 @@ variable "webshell-settings" {
   })
 
   default = {
-    version = "0.4.8"
+    version = "0.5.3"
 
     theia-persistence-enabled = true
     dind-persistence-enabled  = true

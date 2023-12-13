@@ -5,7 +5,7 @@ defaultSettings:
 
 
 helmPreUpgradeCheckerJob:
-  enabled: true
+  enabled: false
 
 longhornManager:
   tolerations: 

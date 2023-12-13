@@ -166,7 +166,11 @@ spec:
         toFieldPath: spec.forProvider.vars[1].value
       - fromFieldPath: status.ipv4
         toFieldPath: spec.forProvider.vars[2].value
+        policy:
+            fromFieldPath: Required
       - fromFieldPath: status.ipv6
         toFieldPath: spec.forProvider.vars[3].value
+        policy:
+            fromFieldPath: Required
       - fromFieldPath: spec.parameters.comment
         toFieldPath: spec.forProvider.vars[4].value

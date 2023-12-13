@@ -55,8 +55,6 @@ prometheus:
           resources:
             requests:
               storage: 50Gi
-    thanos:
-      image: quay.io/thanos/thanos:v0.32.5
   thanosIngress:
     enabled: true
     hosts:

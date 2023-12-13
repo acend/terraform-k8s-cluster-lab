@@ -3,6 +3,10 @@ defaultSettings:
   deletingConfirmationFlag: "true"
   taintToleration: cattle.io/os=linux:NoSchedule;node-role.kubernetes.io/control-plane=true:NoSchedule
 
+
+helmPreUpgradeCheckerJob:
+  enabled: true
+
 longhornManager:
   tolerations: 
   - key: "node-role.kubernetes.io/control-plane"

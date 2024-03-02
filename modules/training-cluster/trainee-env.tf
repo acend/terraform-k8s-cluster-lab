@@ -10,7 +10,7 @@ resource "helm_release" "appset-trainee-env" {
   repository  = "https://argoproj.github.io/argo-helm"
   chart       = "argocd-apps"
   namespace   = kubernetes_namespace.argocd.metadata.0.name
-  version     = "1.6.1"
+  version     = "1.6.2"
   max_history = 2
 
 
@@ -39,7 +39,7 @@ resource "helm_release" "appset-trainee-webshell" {
   repository  = "https://argoproj.github.io/argo-helm"
   chart       = "argocd-apps"
   namespace   = kubernetes_namespace.argocd.metadata.0.name
-  version     = "1.6.1"
+  version     = "1.6.2"
   max_history = 2
 
 

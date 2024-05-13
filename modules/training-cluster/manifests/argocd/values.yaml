@@ -13,6 +13,16 @@ controller:
 
 configs:
   cm:
+    create: true
+    kustomize.buildOptions: "--enable-helm"
+    resource.exclusions: |
+      - kinds:
+        - "CiliumIdentity"
+        - "ciliumidentities"
+        - "CiliumEndpoint"
+        - "ciliumendpoints"
+        - "CiliumNode"
+        - "ciliumnodes"
     dex.config: |
       connectors:
         - type: gitea
@@ -29,16 +39,6 @@ configs:
     application.namespaces: user*
 
 server:
-  config:
-    kustomize.buildOptions: "--enable-helm"
-    resource.exclusions: |
-      - kinds:
-        - "CiliumIdentity"
-        - "ciliumidentities"
-        - "CiliumEndpoint"
-        - "ciliumendpoints"
-        - "CiliumNode"
-        - "ciliumnodes"
   ingress:
     enabled: true
     ingressClassName: haproxy

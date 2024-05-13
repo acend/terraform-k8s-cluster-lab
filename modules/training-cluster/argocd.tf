@@ -34,8 +34,8 @@ resource "helm_release" "argocd" {
   max_history = 2
 
   set {
-    name  = "configs.cm.url"
-    value = "https://argocd.${var.cluster_name}.${var.cluster_domain}"
+    name  = "global.domain"
+    value = "argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
@@ -44,22 +44,22 @@ resource "helm_release" "argocd" {
   }
 
   set {
-    name  = "server.ingress.hosts[0]"
+    name  = "server.ingress.hostname"
     value = "argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
-    name  = "server.ingress.tls[0].hosts[0]"
+    name  = "server.ingress.extraTls[0].hosts[0]"
     value = "argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
-    name  = "server.ingressGrpc.hosts[0]"
+    name  = "server.ingressGrpc.hostname"
     value = "argocd-grpc.${var.cluster_name}.${var.cluster_domain}"
   }
 
   set {
-    name  = "server.ingressGrpc.tls[0].hosts[0]"
+    name  = "server.ingressGrpc.extraTls[0].hosts[0]"
     value = "argocd-grpc.${var.cluster_name}.${var.cluster_domain}"
   }
 

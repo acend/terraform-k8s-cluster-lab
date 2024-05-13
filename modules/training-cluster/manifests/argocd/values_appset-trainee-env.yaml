@@ -1,36 +1,36 @@
 applicationsets:
-- name: trainee-env
-  namespace: argocd
-  generators:
-  - list:
-      elements:
-      %{~ for i in range(count-students) ~}
-      - traineename: ${studentname-prefix}${i+1}
-        password: "${passwords[i].result}"
-        password_bcrypt: "${passwords[i].bcrypt_hash}"
-        cluster_admin: "${tostring(contains(cluster_admin, join("", tolist([studentname-prefix,i+1]))))}"
-      %{~ endfor ~}
-  template:
-    metadata:
-      name: '{{traineename}}-env'
-    spec:
-      project: trainee-environment
-      source:
-        repoURL: https://github.com/acend/terraform-k8s-cluster-lab
-        targetRevision: HEAD
-        path: 'charts/user-env'
-        helm:
-          releaseName: '{{traineename}}-env'
-          values: |
-            user: {{traineename}}
-            password: {{password}}
-            password_bcrypt: {{password_bcrypt}}
-            cluster_name: ${cluster_name}
-            cluster_domain: ${cluster_domain}
-            cluster_admin: {{cluster_admin}}
-      destination:
-        server: https://kubernetes.default.svc
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+  trainee-env:
+    namespace: argocd
+    generators:
+    - list:
+        elements:
+        %{~ for i in range(count-students) ~}
+        - traineename: ${studentname-prefix}${i+1}
+          password: "${passwords[i].result}"
+          password_bcrypt: "${passwords[i].bcrypt_hash}"
+          cluster_admin: "${tostring(contains(cluster_admin, join("", tolist([studentname-prefix,i+1]))))}"
+        %{~ endfor ~}
+    template:
+      metadata:
+        name: '{{traineename}}-env'
+      spec:
+        project: trainee-environment
+        source:
+          repoURL: https://github.com/acend/terraform-k8s-cluster-lab
+          targetRevision: HEAD
+          path: 'charts/user-env'
+          helm:
+            releaseName: '{{traineename}}-env'
+            values: |
+              user: {{traineename}}
+              password: {{password}}
+              password_bcrypt: {{password_bcrypt}}
+              cluster_name: ${cluster_name}
+              cluster_domain: ${cluster_domain}
+              cluster_admin: {{cluster_admin}}
+        destination:
+          server: https://kubernetes.default.svc
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true

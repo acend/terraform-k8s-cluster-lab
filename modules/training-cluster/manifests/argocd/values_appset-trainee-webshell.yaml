@@ -1,89 +1,89 @@
 applicationsets:
-- name: trainee-webshell
-  namespace: argocd
-  generators:
-  - list:
-      elements:
-      %{~ for i in range(count-students) ~}
-      - traineename: "${studentname-prefix}${i+1}"
-        password: "${passwords[i].bcrypt_hash}"
-        %{~ if user-vm-enabled ~}
-        ipv4address: "${ipv4-address[i]}"
-        ipv6address: "${ipv6-address[i]}"
-        sshpublickey: "${chomp(ssh-keys[i].public_key_openssh)}"
-        sshprivatekey: "${base64encode(ssh-keys[i].private_key_pem)}"
-        %{~ endif ~}
-      %{~ endfor ~}
-  template:
-    metadata:
-      name: '{{traineename}}-webshell'
-    spec:
-      project: trainee-environment
-      source:
-        chart: webshell
-        repoURL: https://acend.github.io/webshell-env/
-        targetRevision: ${version}
-        helm:
-          releaseName: '{{traineename}}-webshell'
-          values: |
-            user: {{traineename}}
-            password: {{password}}
-            ingress:
-              enabled: true
-              className: haproxy
-              annotations:
-                ingress.kubernetes.io/auth-realm: acend Webshell
-                ingress.kubernetes.io/auth-secret: webshell-basic-auth
-                ingress.kubernetes.io/auth-type: basic
-              hosts:
-              - host: {{traineename}}.${cluster_name}.${cluster_domain}
-                paths:
-                - path: /
-                  pathType: ImplementationSpecific
-              - host: {{traineename}}-webview.${cluster_name}.${cluster_domain}
-                paths:
-                - path: /
-                  pathType: ImplementationSpecific
-              tls:
-              - hosts:
-                - {{traineename}}.${cluster_name}.${cluster_domain}
-                - {{traineename}}-webview.${cluster_name}.${cluster_domain}
-                secretName: acend-wildcard
-            theia:
-              webview_url: {{traineename}}-webview.${cluster_name}.${cluster_domain}
-              persistence:
-                enabled: ${tostring(theia-persistence-enabled)}
-                storageclass: longhorn
-              resources: ${jsonencode(theia_resources)}
-            dind:
-              persistence:
-                enabled: ${tostring(dind-persistence-enabled)}
-                storageclass: longhorn
-                pvcsize: 10Gi
-              resources: ${jsonencode(dind_resources)}
-            podSecurityContext:
-              fsGroup: 1001
-            updateStrategy:
-              type: Recreate
-            rbac:
-              create: ${tostring(rbac-enabled)}   
-            %{~ if user-vm-enabled ~}
-            init:
-              command:
-              - sh
-              - -c
-              - echo Welcome to the acend theia ide > /home/project/welcome && echo Your VM IP is {{ipv4address}} / {{ipv6address}} >> /home/project/welcome && echo You can login to your training VM using ssh -i id_ecdsa {{traineename}}@{{ipv4address}} or ssh -i id_ecdsa {{traineename}}@{{ipv6address}}>> /home/project/welcome && echo {{ssh-private-key}} | base64 -d > /home/project/id_ecdsa && chown 1001:1001 /home/project/id_ecdsa && chmod 600 /home/project/id_ecdsa
-            %{~ else ~}
-            init:
-              command:
-              - sh
-              - -c
-              - echo Welcome to the acend theia ide > /home/project/welcome
-            %{~ endif ~}    
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: '{{traineename}}'
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+  trainee-webshell:
+    namespace: argocd
+    generators:
+    - list:
+        elements:
+        %{~ for i in range(count-students) ~}
+        - traineename: "${studentname-prefix}${i+1}"
+          password: "${passwords[i].bcrypt_hash}"
+          %{~ if user-vm-enabled ~}
+          ipv4address: "${ipv4-address[i]}"
+          ipv6address: "${ipv6-address[i]}"
+          sshpublickey: "${chomp(ssh-keys[i].public_key_openssh)}"
+          sshprivatekey: "${base64encode(ssh-keys[i].private_key_pem)}"
+          %{~ endif ~}
+        %{~ endfor ~}
+    template:
+      metadata:
+        name: '{{traineename}}-webshell'
+      spec:
+        project: trainee-environment
+        source:
+          chart: webshell
+          repoURL: https://acend.github.io/webshell-env/
+          targetRevision: ${version}
+          helm:
+            releaseName: '{{traineename}}-webshell'
+            values: |
+              user: {{traineename}}
+              password: {{password}}
+              ingress:
+                enabled: true
+                className: haproxy
+                annotations:
+                  ingress.kubernetes.io/auth-realm: acend Webshell
+                  ingress.kubernetes.io/auth-secret: webshell-basic-auth
+                  ingress.kubernetes.io/auth-type: basic
+                hosts:
+                - host: {{traineename}}.${cluster_name}.${cluster_domain}
+                  paths:
+                  - path: /
+                    pathType: ImplementationSpecific
+                - host: {{traineename}}-webview.${cluster_name}.${cluster_domain}
+                  paths:
+                  - path: /
+                    pathType: ImplementationSpecific
+                tls:
+                - hosts:
+                  - {{traineename}}.${cluster_name}.${cluster_domain}
+                  - {{traineename}}-webview.${cluster_name}.${cluster_domain}
+                  secretName: acend-wildcard
+              theia:
+                webview_url: {{traineename}}-webview.${cluster_name}.${cluster_domain}
+                persistence:
+                  enabled: ${tostring(theia-persistence-enabled)}
+                  storageclass: longhorn
+                resources: ${jsonencode(theia_resources)}
+              dind:
+                persistence:
+                  enabled: ${tostring(dind-persistence-enabled)}
+                  storageclass: longhorn
+                  pvcsize: 10Gi
+                resources: ${jsonencode(dind_resources)}
+              podSecurityContext:
+                fsGroup: 1001
+              updateStrategy:
+                type: Recreate
+              rbac:
+                create: ${tostring(rbac-enabled)}   
+              %{~ if user-vm-enabled ~}
+              init:
+                command:
+                - sh
+                - -c
+                - echo Welcome to the acend theia ide > /home/project/welcome && echo Your VM IP is {{ipv4address}} / {{ipv6address}} >> /home/project/welcome && echo You can login to your training VM using ssh -i id_ecdsa {{traineename}}@{{ipv4address}} or ssh -i id_ecdsa {{traineename}}@{{ipv6address}}>> /home/project/welcome && echo {{ssh-private-key}} | base64 -d > /home/project/id_ecdsa && chown 1001:1001 /home/project/id_ecdsa && chmod 600 /home/project/id_ecdsa
+              %{~ else ~}
+              init:
+                command:
+                - sh
+                - -c
+                - echo Welcome to the acend theia ide > /home/project/welcome
+              %{~ endif ~}    
+        destination:
+          server: https://kubernetes.default.svc
+          namespace: '{{traineename}}'
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true

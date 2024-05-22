@@ -11,6 +11,7 @@ extraArgs:
 
 ingress:
  enabled: true
+ className: haproxy
  hosts:
    - oauth-proxy.training.cluster.acend.ch
  tls:

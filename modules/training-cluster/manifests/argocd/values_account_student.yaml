@@ -3,8 +3,6 @@ configs:
     %{~ for i in range(count-students) ~}
     accounts.${studentname-prefix}${i+1}: "apiKey, login"
     %{~ endfor ~}
-
-configs:
   secret:
     extra:
       %{~ for i in range(count-students) ~}

@@ -4,7 +4,7 @@ defaultSettings:
   taintToleration: cattle.io/os=linux:NoSchedule;node-role.kubernetes.io/control-plane=true:NoSchedule
 
 
-helmPreUpgradeCheckerJob:
+preUpgradeChecker:
   jobEnabled: false
 
 longhornManager:

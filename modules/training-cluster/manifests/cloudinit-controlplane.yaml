@@ -55,8 +55,8 @@ write_files:
       version: v1.16.0
       valuesContent: |-
         env:
-          HCLOUD_LOAD_BALANCERS_NETWORK_ZONE: 
-            value: ${networkzone}
+          HCLOUD_LOAD_BALANCERS_LOCATION: 
+            value: ${location}
           HCLOUD_LOAD_BALANCERS_USE_PRIVATE_IP:
             value: "true"
           HCLOUD_TOKEN:

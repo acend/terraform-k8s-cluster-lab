@@ -88,6 +88,8 @@ curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/b
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 chmod +x ./kubectl
 ./kubectl -n argocd delete application bootstrap --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
+./kubectl -n argocd delete application --all --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
+./kubectl -n argocd delete applicationsets --all --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {

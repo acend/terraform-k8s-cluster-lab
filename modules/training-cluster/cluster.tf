@@ -72,6 +72,7 @@ resource "hcloud_server" "controlplane" {
 
     k8s-cluster-cidr = var.k8s-cluster-cidr
     networkzone      = var.networkzone
+    location         = var.location
 
     first_install = var.first_install
   })

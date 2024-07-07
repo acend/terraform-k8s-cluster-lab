@@ -71,9 +71,12 @@ resource "helm_release" "argocd" {
 
 }
 
-resource "null_resource" "cleanup-argo-cr-before-destroy" {
+resource "null_resource" "cleanup-before-destroy" {
 
-  depends_on = [time_sleep.wait_for_argocd-cleanup]
+  depends_on = [
+    time_sleep.wait_for_argocd-cleanup,
+    kubernetes_secret.argocd-cluster
+    ]
 
 
   triggers = {
@@ -90,6 +93,7 @@ chmod +x ./kubectl
 ./kubectl -n argocd delete application bootstrap --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
 ./kubectl -n argocd delete application --all --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
 ./kubectl -n argocd delete applicationsets --all --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
+./kubectl delete ns ingress-haproxy --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
 EOH
     interpreter = ["/bin/bash", "-c"]
     environment = {

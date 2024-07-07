@@ -88,10 +88,6 @@ resource "hcloud_server_network" "controlplane" {
 resource "hcloud_server" "worker" {
   count = var.worker_count
 
-  depends_on = [ 
-    ssh_resource.getkubeconfig
-   ]
-
   lifecycle {
     ignore_changes = [
       # Ignore user_data for existing nodes as this requires a replacement

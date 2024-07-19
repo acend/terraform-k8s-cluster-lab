@@ -1,10 +1,31 @@
 ---
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: terraform-provider-config
+spec:
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          containers: {}
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: "true"
+          tolerations:
+          - key: node-role.kubernetes.io/control-plane
+            operator: Equal
+            value: "true"
+            effect: "NoSchedule"
+---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-terraform
 spec:
   package: xpkg.upbound.io/upbound/provider-terraform:v0.16.0
+  runtimeConfigRef:
+    name: terraform-provider-config
 ---
 apiVersion: pkg.crossplane.io/v1beta1
 kind: DeploymentRuntimeConfig
@@ -17,6 +38,7 @@ spec:
       template:
         spec:
           serviceAccountName: provider-kubernetes
+          containers: {}
           nodeSelector:
             node-role.kubernetes.io/control-plane: "true"
           tolerations:
@@ -44,6 +66,7 @@ spec:
       selector: {}
       template:
         spec:
+          containers: {}
           serviceAccountName: provider-helm
           nodeSelector:
             node-role.kubernetes.io/control-plane: "true"

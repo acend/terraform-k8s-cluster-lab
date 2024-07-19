@@ -7,3 +7,4 @@ helmCharts:
     namespace: kube-system
     version: v0.14.0-rc.0
     repo: https://charts.appscode.com/stable/
+    valuesFile: values.yaml

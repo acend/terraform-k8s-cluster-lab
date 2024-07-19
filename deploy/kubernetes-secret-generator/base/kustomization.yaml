@@ -12,3 +12,4 @@ helmCharts:
     version: 3.4.0
     repo: https://helm.mittwald.de
     includeCRDs: true
+    valuesFile: values.yaml

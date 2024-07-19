@@ -1,3 +1,12 @@
+nodeSelector:
+  node-role.kubernetes.io/control-plane: "true"
+
+tolerations:
+- key: node-role.kubernetes.io/control-plane
+  operator: Equal
+  value: "true"
+  effect: "NoSchedule"
+
 config:
   existingSecret: gitea-oauthclient-oauthproxy
 

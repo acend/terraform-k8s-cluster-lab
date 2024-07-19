@@ -1,3 +1,13 @@
+global:
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: "true"
+
+  tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Equal
+    value: "true"
+    effect: "NoSchedule"
+
 resources:
   requests:
     cpu: 10m

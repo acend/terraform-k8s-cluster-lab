@@ -32,6 +32,9 @@ kind: DeploymentRuntimeConfig
 metadata:
   name: kubernetes-provider-config
 spec:
+  serviceAccountTemplate:
+    metadata:
+      name: provider-kubernetes
   deploymentTemplate:
     spec:
       selector: {}
@@ -60,6 +63,9 @@ kind: DeploymentRuntimeConfig
 metadata:
   name: helm-provider-config
 spec:
+  serviceAccountTemplate:
+    metadata:
+      name: provider-helm
   deploymentTemplate:
     spec:
       selector: {}

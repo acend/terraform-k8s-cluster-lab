@@ -21,3 +21,7 @@ spec:
       selfHeal: true
     syncOptions:
     - ServerSideApply=true
+  ignoreDifferences:
+    - kind: Service
+      jqPathExpressions:
+        - '.status.loadBalancer.ingress[].ipMode'

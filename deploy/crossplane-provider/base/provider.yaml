@@ -6,12 +6,24 @@ metadata:
 spec:
   package: xpkg.upbound.io/upbound/provider-terraform:v0.16.0
 ---
-apiVersion: pkg.crossplane.io/v1alpha1
-kind: ControllerConfig
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
 metadata:
   name: kubernetes-provider-config
 spec:
-  serviceAccountName: provider-kubernetes
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          serviceAccountName: provider-kubernetes
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: "true"
+          tolerations:
+          - key: node-role.kubernetes.io/control-plane
+            operator: Equal
+            value: "true"
+            effect: "NoSchedule"
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
@@ -19,15 +31,28 @@ metadata:
   name: provider-kubernetes
 spec:
   package: "xpkg.upbound.io/crossplane-contrib/provider-kubernetes:v0.14.0"
-  controllerConfigRef:
+  runtimeConfigRef:
     name: kubernetes-provider-config
 ---
-apiVersion: pkg.crossplane.io/v1alpha1
-kind: ControllerConfig
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
 metadata:
   name: helm-provider-config
 spec:
-  serviceAccountName: provider-helm
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          serviceAccountName: provider-helm
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: "true"
+          tolerations:
+          - key: node-role.kubernetes.io/control-plane
+            operator: Equal
+            value: "true"
+            effect: "NoSchedule"
+
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
@@ -35,5 +60,5 @@ metadata:
   name: provider-helm
 spec:
   package: "xpkg.upbound.io/crossplane-contrib/provider-helm:v0.19.0"
-  controllerConfigRef: 
+  runtimeConfigRef: 
     name: helm-provider-config

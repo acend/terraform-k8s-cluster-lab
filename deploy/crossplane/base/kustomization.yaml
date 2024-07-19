@@ -12,3 +12,4 @@ helmCharts:
     namespace: crossplane
     version: 1.16.0
     repo: https://charts.crossplane.io/stable
+    valuesFile: values.yaml

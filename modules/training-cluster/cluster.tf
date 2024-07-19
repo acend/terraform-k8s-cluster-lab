@@ -84,6 +84,35 @@ resource "hcloud_server_network" "controlplane" {
   network_id = hcloud_network.network.id
 }
 
+
+resource "null_resource" "cleanup-node-before-destroy" {
+
+  count = var.worker_count
+
+  triggers = {
+    kubeconfig = base64encode(local.kubeconfig_raw)
+    nodename   = "${var.cluster_name}-worker-${count.index}"
+
+  }
+  provisioner "local-exec" {
+    when        = destroy
+    command     = <<EOH
+# curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+# echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+# chmod +x ./kubectl
+./kubectl cordon $NODENAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
+#./kubectl drain $NODENAME --ignore-daemonsets --delete-emptydir-data --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
+./kubectl delete node $NODENAME --kubeconfig <(echo $KUBECONFIG | base64 --decode) || true
+EOH
+    interpreter = ["/bin/bash", "-c"]
+    environment = {
+      KUBECONFIG = self.triggers.kubeconfig
+      NODENAME   = self.triggers.nodename
+    }
+  }
+}
+
 // Worker Node
 resource "hcloud_server" "worker" {
   count = var.worker_count

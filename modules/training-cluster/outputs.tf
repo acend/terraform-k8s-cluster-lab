@@ -16,7 +16,7 @@ output "argocd-url" {
 }
 
 output "student-passwords" {
-  value = random_password.student-passwords
+  value     = random_password.student-passwords
   sensitive = true
 }
 

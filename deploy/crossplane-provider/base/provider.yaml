@@ -37,7 +37,6 @@ spec:
       selector: {}
       template:
         spec:
-          serviceAccountName: provider-kubernetes
           containers: []
           nodeSelector:
             node-role.kubernetes.io/control-plane: "true"
@@ -67,7 +66,6 @@ spec:
       template:
         spec:
           containers: []
-          serviceAccountName: provider-helm
           nodeSelector:
             node-role.kubernetes.io/control-plane: "true"
           tolerations:

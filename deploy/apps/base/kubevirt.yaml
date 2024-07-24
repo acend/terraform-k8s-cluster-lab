@@ -12,7 +12,7 @@ spec:
     server: https://kubernetes.default.svc
   project: infra
   source:
-    path: deploy/kubevirt/base/training.cluster.acend.ch
+    path: deploy/kubevirt/base
     repoURL: https://github.com/acend/terraform-k8s-cluster-lab
     targetRevision: HEAD
   syncPolicy:

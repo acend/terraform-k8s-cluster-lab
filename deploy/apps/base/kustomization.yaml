@@ -16,3 +16,4 @@ resources:
   - welcome.yaml
   - oauth-proxy.yaml
   - external-secrets.yaml
+  - kubevirt.yaml

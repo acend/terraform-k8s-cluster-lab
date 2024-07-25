@@ -74,14 +74,12 @@ applicationsets:
                 - sh
                 - -c
                 - echo Welcome to the acend theia ide > /home/project/welcome && echo Your VM IP is {{ipv4address}} / {{ipv6address}} >> /home/project/welcome && echo You can login to your training VM using ssh -i id_ecdsa {{traineename}}@{{ipv4address}} or ssh -i id_ecdsa {{traineename}}@{{ipv6address}}>> /home/project/welcome && echo {{ssh-private-key}} | base64 -d > /home/project/id_ecdsa && chown 1001:1001 /home/project/id_ecdsa && chmod 600 /home/project/id_ecdsa
-                - /home/theia/create_kubeconfig.sh
               %{~ else ~}
               init:
                 command:
                 - sh
                 - -c
                 - echo Welcome to the acend theia ide > /home/project/welcome
-                - /home/theia/create_kubeconfig.sh
               %{~ endif ~}    
         destination:
           server: https://kubernetes.default.svc

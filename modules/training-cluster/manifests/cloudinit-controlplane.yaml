@@ -90,6 +90,8 @@ write_files:
         k8sServicePort: 6443
         ipam:
           mode: kubernetes
+        socketLB:
+          hostNamespaceOnly: true
         hubble:
           enabled: true
           metrics:

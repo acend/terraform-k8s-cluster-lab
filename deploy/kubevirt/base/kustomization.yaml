@@ -17,3 +17,21 @@ patches:
   target:
     kind: KubeVirt
     name: kubevirt
+- patch: |-
+    - op: add
+      path: /spec/configuration/developerConfiguration/featureGates/-
+      value: CPUManager
+  target:
+    kind: KubeVirt
+    name: kubevirt
+- patch: |-
+    - op: add
+      path: /spec/configuration/developerConfiguration/featureGates/-
+      value: Sidecar
+  target:
+    kind: KubeVirt
+    name: kubevirt
+                       
+                   
+               
+           

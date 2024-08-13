@@ -20,14 +20,14 @@ patches:
 - patch: |-
     - op: add
       path: /spec/configuration/developerConfiguration/featureGates/-
-      value: CPUManager
+      value: Sidecar
   target:
     kind: KubeVirt
     name: kubevirt
 - patch: |-
     - op: add
       path: /spec/configuration/developerConfiguration/featureGates/-
-      value: Sidecar
+      value: CommonInstancetypesDeploymentGate
   target:
     kind: KubeVirt
     name: kubevirt

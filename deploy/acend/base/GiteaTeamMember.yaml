@@ -115,6 +115,7 @@ spec:
               path          = "/api/v1/teams/${var.team_id}/members/${var.user}"
               object_id     = "${var.team_id}-${var.user}"
               update_method = "PUT"
+              data          = "{}"
             }
 
 

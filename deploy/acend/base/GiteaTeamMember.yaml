@@ -110,43 +110,11 @@ spec:
               type = string
             }
 
-            resource "null_resource" "add_teammember" {
-              triggers = {
-                gitea_url = var.gitea_uri
-                gitea_username = var.username
-                gitea_password = file("gitea-admin-credentials")
-                team_id = var.team_id
-                user_id = var.user
+            resource "restapi_object" "teamMember" {
 
-              }
-              provisioner "local-exec" {
-                command     = <<EOH
-                curl -X PUT -k -u "$GITEA_USERNAME:$GITEA_PASSWORD" $GITEA_URL/api/v1/teams/$TEAM_ID/members/$USER_ID
-                EOH
-                interpreter = ["/bin/bash", "-c"]
-                environment = {
-                  GITEA_URL = self.triggers.gitea_url
-                  GITEA_USERNAME = self.triggers.gitea_username
-                  GITEA_PASSWORD = self.triggers.gitea_password
-                  TEAM_ID = self.triggers.team_id
-                  USER_ID = self.triggers.user_id
-                }
-              }
-
-              provisioner "local-exec" {
-                when        = destroy
-                command     = <<EOH
-                curl -X DELETE -k -u "$GITEA_USERNAME:$GITEA_PASSWORD" $GITEA_URL/api/v1/teams/$TEAM_ID/members/$USER_ID
-                EOH
-                interpreter = ["/bin/bash", "-c"]
-                environment = {
-                  GITEA_URL = self.triggers.gitea_url
-                  GITEA_USERNAME = self.triggers.gitea_username
-                  GITEA_PASSWORD = self.triggers.gitea_password
-                  TEAM_ID = self.triggers.team_id
-                  USER_ID = self.triggers.user_id
-                }
-              }
+              path          = "/api/v1/teams/${var.team_id)/members/${var.user}"
+              object_id     = "${var.team_id}-${var.user}"
+              update_method = "PUT"
             }
 
 

@@ -31,6 +31,13 @@ patches:
   target:
     kind: KubeVirt
     name: kubevirt
+- patch: |-
+    - op: add
+      path: /spec/configuration/developerConfiguration/featureGates/-
+      value: ExperimentalIgnitionSupport
+  target:
+    kind: KubeVirt
+    name: kubevirt
                        
                    
                

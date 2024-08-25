@@ -17,3 +17,4 @@ resources:
   - oauth-proxy.yaml
   - external-secrets.yaml
   - kubevirt.yaml
+  - goldpinger.yaml

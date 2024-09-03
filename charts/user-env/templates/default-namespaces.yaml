@@ -13,6 +13,15 @@ kind: Namespace
 metadata:
   labels:
     certificate-wildcard: "true"
+    kubernetes.io/metadata.name: {{ .Values.user }}-vm-images
+    user: {{ .Values.user }}
+  name: {{ .Values.user }}-vm-images
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    certificate-wildcard: "true"
     kubernetes.io/metadata.name: {{ .Values.user }}-quota
     user: {{ .Values.user }}
   name: {{ .Values.user }}-quota

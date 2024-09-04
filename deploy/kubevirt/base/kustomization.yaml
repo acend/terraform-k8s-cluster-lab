@@ -52,7 +52,20 @@ patches:
   target:
     kind: KubeVirt
     name: kubevirt
-
+- patch: |-
+    - op: add
+      path: /spec/configuration/developerConfiguration/featureGates/-
+      value: Snapshot
+  target:
+    kind: KubeVirt
+    name: kubevirt
+- patch: |-
+    - op: add
+      path: /spec/configuration/developerConfiguration/featureGates/-
+      value: VMExport
+  target:
+    kind: KubeVirt
+    name: kubevirt
                    
                
            

@@ -18,4 +18,4 @@ resources:
   - external-secrets.yaml
   - kubevirt.yaml
   - goldpinger.yaml
-  - node-feature-discovery
+  - node-feature-discovery.yaml

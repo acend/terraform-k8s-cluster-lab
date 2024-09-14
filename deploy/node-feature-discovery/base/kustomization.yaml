@@ -11,3 +11,4 @@ helmCharts:
     namespace: nfd
     version: 0.16.4
     repo: https://kubernetes-sigs.github.io/node-feature-discovery/charts
+    valuesFile: values.yaml

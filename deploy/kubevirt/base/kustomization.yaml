@@ -13,7 +13,7 @@ patches:
 - patch: |-
     - op: add
       path: /spec/configuration/developerConfiguration/useEmulation
-      value: true
+      value: false
   target:
     kind: KubeVirt
     name: kubevirt
@@ -73,5 +73,18 @@ patches:
   target:
     kind: KubeVirt
     name: kubevirt
-               
+- patch: |-
+    - op: add
+      path: /spec/workloads
+      value:
+        nodePlacement:
+          tolerations:
+            - key: "baremetal"
+              operator: "Equal"
+              value: "true"
+              effect: "NoSchedule"
+  target:
+    kind: KubeVirt
+    name: kubevirt
+
            

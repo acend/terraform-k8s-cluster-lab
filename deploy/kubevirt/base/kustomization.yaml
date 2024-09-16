@@ -13,7 +13,7 @@ patches:
 - patch: |-
     - op: add
       path: /spec/configuration/developerConfiguration/useEmulation
-      value: false
+      value: true
   target:
     kind: KubeVirt
     name: kubevirt

@@ -12,7 +12,7 @@ packages:
 - open-iscsi
 - unattended-upgrades
 write_files:
-- path: /var/lib/rancher/rke2/agent/etc/containerd/config.toml.tpl
+- path: /var/lib/rancher/rke2/agent/etc/containerd/config.toml.tmpl
   permissions: "0644"
   owner: root:root
   content: |

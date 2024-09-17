@@ -85,7 +85,7 @@ resource "hcloud_firewall" "firewall" {
     direction  = "in"
     protocol   = "tcp"
     port       = "9345"
-    source_ips = [for server in hcloud_server.controlplane : "${server.ipv4_address}/32"] + ["138.201.129.99/32"]
+    source_ips = [for server in hcloud_server.controlplane : "${server.ipv4_address}/32" + "138.201.129.99/32"]
   }
 
   // Allow Nde Ports from everywhere

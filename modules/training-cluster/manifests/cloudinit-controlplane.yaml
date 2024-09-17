@@ -10,6 +10,8 @@ packages:
 - jq
 - curl
 - unattended-upgrades
+- open-iscsi
+- nfs-common
 package_update: true
 package_upgrade: true
 runcmd:

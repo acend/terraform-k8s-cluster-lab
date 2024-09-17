@@ -1,6 +1,7 @@
 resource "hcloud_network" "network" {
   name     = var.cluster_name
   ip_range = var.network
+  expose_routes_to_vswitch = true
 
   labels = {
     cluster : var.cluster_name,
@@ -84,10 +85,11 @@ resource "hcloud_firewall" "firewall" {
     direction  = "in"
     protocol   = "tcp"
     port       = "9345"
-    source_ips = [for server in hcloud_server.controlplane : "${server.ipv4_address}/32"]
+    source_ips = [for server in hcloud_server.controlplane : "${server.ipv4_address}/32"] + ["138.201.129.99/32"]
   }
 
   // Allow Nde Ports from everywhere
+
   rule {
     direction = "in"
     protocol  = "tcp"
@@ -95,6 +97,32 @@ resource "hcloud_firewall" "firewall" {
     source_ips = [
       "0.0.0.0/0",
       "::/0"
+    ]
+  }
+
+  rule {
+    direction = "in"
+    protocol  = "tcp"
+    port      = "any"
+    source_ips = [
+      "10.0.0.0/8"
+    ]
+  }
+
+  rule {
+    direction = "in"
+    protocol  = "udp"
+    port      = "any"
+    source_ips = [
+      "10.0.0.0/8"
+    ]
+  }
+
+  rule {
+    direction = "in"
+    protocol  = "icmp"
+    source_ips = [
+      "10.0.0.0/8"
     ]
   }
 

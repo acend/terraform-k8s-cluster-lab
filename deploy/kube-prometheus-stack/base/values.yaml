@@ -42,6 +42,18 @@ prometheus:
     podMonitorNamespaceSelector:
       matchLabels:
         kubernetes.io/metadata.name: monitoring
+    serviceMonitorSelector:
+      matchLabels:
+        argocd.argoproj.io/instance: kubevirt
+    serviceMonitorNamespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: kubevirt
+    podMonitorSelector:
+      matchLabels:
+        argocd.argoproj.io/instance: kubevirt
+    podMonitorNamespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: kubevirt
     probeSelector:
       matchLabels:
         argocd.argoproj.io/instance: monitoring

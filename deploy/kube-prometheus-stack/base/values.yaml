@@ -33,11 +33,9 @@ prometheus:
     serviceMonitorSelector:
       matchLabels:
         argocd.argoproj.io/instance: monitoring
-        prometheus: monitoring
     serviceMonitorNamespaceSelector:
       matchLabels:
         kubernetes.io/metadata.name: monitoring
-        prometheus: monitoring
     podMonitorSelector:
       matchLabels:
         argocd.argoproj.io/instance: monitoring

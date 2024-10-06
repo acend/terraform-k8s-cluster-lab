@@ -1,0 +1,22 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kubevirt-servicemonitor
+  namespace: monitoring
+  prometheus.kubevirt.io: "true"
+spec:
+  endpoints:
+  - honorLabels: true
+    port: metrics
+    scheme: https
+    tlsConfig:
+      ca: {}
+      cert: {}
+      insecureSkipVerify: true
+  namespaceSelector:
+    matchNames:
+    - kubevirt
+  selector:
+    matchLabels:
+      prometheus.kubevirt.io: "true"

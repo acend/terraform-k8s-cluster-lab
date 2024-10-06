@@ -5,6 +5,7 @@ resources:
 - pushprox_etcd.yaml
 - pushprox_kube-controller-manager.yaml
 - pushprox_kube-scheduler.yaml
+- kubevirt-sm.yaml
 
 helmCharts:
   - name: kube-prometheus-stack

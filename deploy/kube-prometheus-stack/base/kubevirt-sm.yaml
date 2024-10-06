@@ -4,7 +4,6 @@ kind: ServiceMonitor
 metadata:
   name: kubevirt-servicemonitor
   namespace: monitoring
-  prometheus.kubevirt.io: "true"
 spec:
   endpoints:
   - honorLabels: true

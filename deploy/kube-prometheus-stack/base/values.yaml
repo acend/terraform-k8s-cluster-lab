@@ -30,9 +30,9 @@ prometheus:
         cpu: 200m
         memory: 2600Mi
     ruleSelectorNilUsesHelmValues: false
-    serviceMonitorSelector:
-      matchLabels:
-        argocd.argoproj.io/instance: monitoring
+    # serviceMonitorSelector:
+    #  matchLabels:
+    #    argocd.argoproj.io/instance: monitoring
     serviceMonitorNamespaceSelector:
       matchLabels:
         kubernetes.io/metadata.name: monitoring

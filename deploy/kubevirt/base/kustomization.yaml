@@ -86,5 +86,19 @@ patches:
   target:
     kind: KubeVirt
     name: kubevirt
+- patch: |-
+    - op: add
+      path: /spec/monitorAccount
+      value: "kube-prometheus-stack-prometheus"
+  target:
+    kind: KubeVirt
+    name: kubevirt
+- patch: |-
+    - op: add
+      path: /spec/monitorNamespace
+      value: "monitoring"
+  target:
+    kind: KubeVirt
+    name: kubevirt
 
            

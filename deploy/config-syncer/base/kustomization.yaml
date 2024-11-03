@@ -5,6 +5,6 @@ helmCharts:
   - name: config-syncer
     releaseName: config-syncer
     namespace: kube-system
-    version: v0.14.0-rc.0
+    version: v0.15.2
     repo: https://charts.appscode.com/stable/
     valuesFile: values.yaml

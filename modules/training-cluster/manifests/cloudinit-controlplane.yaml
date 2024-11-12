@@ -71,10 +71,14 @@ write_files:
               secretKeyRef:
                 name: hcloud
                 key: network
+          HCLOUD_NETWORK_ROUTES_ENABLED:
+            value: 'false'
           NODE_NAME:
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
+        networking:
+          
 - path: /var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml
   permission: "0600"
   owner: root:root

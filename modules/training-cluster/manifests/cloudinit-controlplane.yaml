@@ -42,7 +42,7 @@ write_files:
 - path: /var/lib/rancher/rke2/server/manifests/hcloud-cloud-controller-manager.yaml
   permission: "0600"
   owner: root:root
-  content: |
+  content: |    cluster-cidr: ${k8s-cluster-cidr}
     ---
     apiVersion: helm.cattle.io/v1
     kind: HelmChart
@@ -70,9 +70,6 @@ write_files:
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
-        networking:
-          enabled: true
-          clusterCIDR: ${k8s-cluster-cidr}
 - path: /var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml
   permission: "0600"
   owner: root:root
@@ -85,9 +82,7 @@ write_files:
       namespace: kube-system
     spec:
       valuesContent: |-
-        tunnel: disabled
-        ipv4NativeRoutingCIDR: ${k8s-cluster-cidr}
-        kubeProxyReplacement: strict
+        kubeProxyReplacement: true
         k8sServiceHost: ${lb_address}
         k8sServicePort: 6443
         ipam:
@@ -159,7 +154,6 @@ write_files:
     server: https://${lb_address}:9345
     %{ endif }
     cni: cilium
-    cluster-cidr: ${k8s-cluster-cidr}
     disable:
     - rke2-ingress-nginx
     disable-cloud-controller: true

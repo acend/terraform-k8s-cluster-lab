@@ -66,6 +66,11 @@ write_files:
               secretKeyRef:
                 name: hcloud
                 key: token
+          HCLOUD_NETWORK
+            valueFrom:
+              secretKeyRef:
+                name: hcloud
+                key: network
           NODE_NAME:
             valueFrom:
               fieldRef:

@@ -42,7 +42,7 @@ write_files:
 - path: /var/lib/rancher/rke2/server/manifests/hcloud-cloud-controller-manager.yaml
   permission: "0600"
   owner: root:root
-  content: |    cluster-cidr: ${k8s-cluster-cidr}
+  content: |
     ---
     apiVersion: helm.cattle.io/v1
     kind: HelmChart

@@ -67,138 +67,159 @@ spec:
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: giteaoauthclient
   labels:
     crossplane.io/xrd: xgiteaoauthclients.acend.ch
+  name: giteaoauthclient
 spec:
   compositeTypeRef:
     apiVersion: acend.ch/v1alpha1
     kind: XGiteaOauthClient
-  resources:
-  - name: tf_gitea_oauthclient
-    base:
-      apiVersion: tf.upbound.io/v1beta1
-      kind: Workspace
-      spec:
-        providerConfigRef:
-          name: gitea
-        forProvider:
-          source: Inline
-          module: |
-            terraform {
-              required_providers {
-                restapi = {
-                  source = "Mastercard/restapi"
+  mode: Pipeline
+  pipeline:
+  - functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+      - base:
+          apiVersion: tf.upbound.io/v1beta1
+          kind: Workspace
+          spec:
+            forProvider:
+              module: |
+                terraform {
+                  required_providers {
+                    restapi = {
+                      source = "Mastercard/restapi"
+                    }
+                    static = {
+                      source  = "tiwood/static"
+                    }
+                  }
                 }
-                static = {
-                  source  = "tiwood/static"
+
+                variable "name" {
+                  type = string
                 }
-              }
-            }
 
-            variable "name" {
-              type = string
-            }
+                variable "redirect_uri" {
+                  type = string
+                }
 
-            variable "redirect_uri" {
-              type = string
-            }
+                resource "restapi_object" "gitea-oauthclient" {
 
-            resource "restapi_object" "gitea-oauthclient" {
+                  path = "/api/v1/user/applications/oauth2"
 
-              path = "/api/v1/user/applications/oauth2"
+                  data = (jsonencode({
+                    name                = var.name
+                    redirect_uris       = [var.redirect_uri]
+                    confidential_client = true
 
-              data = (jsonencode({
-                name                = var.name
-                redirect_uris       = [var.redirect_uri]
-                confidential_client = true
+                  }))
+                  id_attribute = "id"
+                }
 
-              }))
-              id_attribute = "id"
-            }
+                resource "static_data" "client_secret" {
+                  data = {
+                    client_secret = restapi_object.gitea-oauthclient.api_data.client_secret
+                  }
 
-            resource "static_data" "client_secret" {
-              data = {
-                client_secret = restapi_object.gitea-oauthclient.api_data.client_secret
-              }
+                  lifecycle {
+                    ignore_changes = [data]
+                  }
+                }
 
-              lifecycle {
-                ignore_changes = [data]
-              }
-            }
+                output "name" {
+                  value = restapi_object.gitea-oauthclient.api_data.name
+                }
 
-            output "name" {
-              value = restapi_object.gitea-oauthclient.api_data.name
-            }
+                output "client_id" {
+                  value = restapi_object.gitea-oauthclient.api_data.client_id
+                }
 
-            output "client_id" {
-              value = restapi_object.gitea-oauthclient.api_data.client_id
-            }
-
-            output "client_secret" {
-              value = static_data.client_secret.output.client_secret
-            }
-          vars:
-            - key: name
-            - key: redirect_uri
-    patches:
-      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
-        toFieldPath: "metadata.annotations[crossplane.io/external-name]"
-        transforms:
-        - type: string
-          string:
-            fmt: "oauthclient-%s"
-      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
-        toFieldPath: "metadata.name"
-        transforms:
-        - type: string
-          string:
-            fmt: "oauthclient-%s"
-      - fromFieldPath: spec.parameters.name
-        toFieldPath: spec.forProvider.vars[0].value
-      - fromFieldPath: spec.parameters.redirect_uri
-        toFieldPath: spec.forProvider.vars[1].value
-      - type: ToCompositeFieldPath
-        fromFieldPath: status.atProvider.outputs.client_id
-        toFieldPath: status.client_id
-      - type: ToCompositeFieldPath
-        fromFieldPath: status.atProvider.outputs.client_secret
-        toFieldPath: status.client_secret
-  - name: secret
-    base: 
-      apiVersion: kubernetes.crossplane.io/v1alpha1
-      kind: Object
-      spec:
-        forProvider:
-          manifest:
-            apiVersion: v1
-            kind: Secret
-        providerConfigRef:
-          name: default
-    patches:
-      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
-        toFieldPath: "spec.forProvider.manifest.metadata.name"
-        transforms:
-        - type: string
-          string:
-            fmt: "gitea-oauthclient-%s"
-      - fromFieldPath: spec.parameters.secret_namespace
-        toFieldPath: spec.forProvider.manifest.metadata.namespace
-      - fromFieldPath: spec.parameters.secret_labels
-        toFieldPath: spec.forProvider.manifest.metadata.labels
-      - fromFieldPath: spec.parameters.secret_annotations
-        toFieldPath: spec.forProvider.manifest.metadata.annotations
-      - fromFieldPath: status.client_id
-        toFieldPath: spec.forProvider.manifest.data[client_id]
-        transforms:
-        - type: string
-          string:
-            type: Convert
-            convert: ToBase64
-      - fromFieldPath: status.client_secret
-        toFieldPath: spec.forProvider.manifest.data[client_secret]
-        transforms:
-        - type: string
-          string:
-            type: Convert
-            convert: ToBase64
+                output "client_secret" {
+                  value = static_data.client_secret.output.client_secret
+                }
+              source: Inline
+              vars:
+              - key: name
+              - key: redirect_uri
+            providerConfigRef:
+              name: gitea
+        name: tf_gitea_oauthclient
+        patches:
+        - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+          toFieldPath: metadata.annotations[crossplane.io/external-name]
+          transforms:
+          - string:
+              fmt: oauthclient-%s
+              type: Format
+            type: string
+          type: FromCompositeFieldPath
+        - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+          toFieldPath: metadata.name
+          transforms:
+          - string:
+              fmt: oauthclient-%s
+              type: Format
+            type: string
+          type: FromCompositeFieldPath
+        - fromFieldPath: spec.parameters.name
+          toFieldPath: spec.forProvider.vars[0].value
+          type: FromCompositeFieldPath
+        - fromFieldPath: spec.parameters.redirect_uri
+          toFieldPath: spec.forProvider.vars[1].value
+          type: FromCompositeFieldPath
+        - fromFieldPath: status.atProvider.outputs.client_id
+          toFieldPath: status.client_id
+          type: ToCompositeFieldPath
+        - fromFieldPath: status.atProvider.outputs.client_secret
+          toFieldPath: status.client_secret
+          type: ToCompositeFieldPath
+      - base:
+          apiVersion: kubernetes.crossplane.io/v1alpha1
+          kind: Object
+          spec:
+            forProvider:
+              manifest:
+                apiVersion: v1
+                kind: Secret
+            providerConfigRef:
+              name: default
+        name: secret
+        patches:
+        - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+          toFieldPath: spec.forProvider.manifest.metadata.name
+          transforms:
+          - string:
+              fmt: gitea-oauthclient-%s
+              type: Format
+            type: string
+          type: FromCompositeFieldPath
+        - fromFieldPath: spec.parameters.secret_namespace
+          toFieldPath: spec.forProvider.manifest.metadata.namespace
+          type: FromCompositeFieldPath
+        - fromFieldPath: spec.parameters.secret_labels
+          toFieldPath: spec.forProvider.manifest.metadata.labels
+          type: FromCompositeFieldPath
+        - fromFieldPath: spec.parameters.secret_annotations
+          toFieldPath: spec.forProvider.manifest.metadata.annotations
+          type: FromCompositeFieldPath
+        - fromFieldPath: status.client_id
+          toFieldPath: spec.forProvider.manifest.data[client_id]
+          transforms:
+          - string:
+              convert: ToBase64
+              type: Convert
+            type: string
+          type: FromCompositeFieldPath
+        - fromFieldPath: status.client_secret
+          toFieldPath: spec.forProvider.manifest.data[client_secret]
+          transforms:
+          - string:
+              convert: ToBase64
+              type: Convert
+            type: string
+          type: FromCompositeFieldPath
+    step: patch-and-transform

@@ -49,108 +49,122 @@ spec:
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: giteateam
   labels:
     crossplane.io/xrd: xgiteateams.acend.ch
+  name: giteateam
 spec:
   compositeTypeRef:
     apiVersion: acend.ch/v1alpha1
     kind: XGiteaTeam
-  resources:
-  - name: tf_gitea_team
-    base:
-      apiVersion: tf.upbound.io/v1beta1
-      kind: Workspace
-      spec:
-        providerConfigRef:
-          name: gitea
-        forProvider:
-          source: Inline
-          module: |
-            terraform {
-              required_providers {
-                restapi = {
-                  source = "Mastercard/restapi"
-                }
-              }
-            }
-
-            variable "name" {
-              type = string
-            }
-
-            variable "org" {
-              type = string
-            }
-
-            variable "permission" {
-              type = string
-            }
-
-            resource "restapi_object" "gitea-team" {
-
-              path        = "/api/v1/teams"
-              create_path = "/api/v1/orgs/${var.org}/teams"
-
-              data = (jsonencode({
-                name                = var.name
-                can_create_org_repo = false
-                permission          = var.permission
-                units = [
-                  "repo.issues",
-                  "repo.ext_issues",
-                  "repo.releases",
-                  "repo.projects",
-                  "repo.packages",
-                  "repo.actions",
-                  "repo.code",
-                  "repo.pulls",
-                  "repo.wiki",
-                  "repo.ext_wiki"
-                ]
-                "units_map" = {
-                  "repo.actions": var.permission
-                  "repo.code": var.permission,
-                  "repo.ext_issues": var.permission,
-                  "repo.ext_wiki": var.permission,
-                  "repo.issues": var.permission,
-                  "repo.packages": var.permission,
-                  "repo.projects": var.permission,
-                  "repo.pulls": var.permission,
-                  "repo.releases": var.permission,
-                  "repo.wiki": var.permission
+  mode: Pipeline
+  pipeline:
+  - functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+      - base:
+          apiVersion: tf.upbound.io/v1beta1
+          kind: Workspace
+          spec:
+            forProvider:
+              module: |
+                terraform {
+                  required_providers {
+                    restapi = {
+                      source = "Mastercard/restapi"
+                    }
+                  }
                 }
 
-              }))
-              id_attribute = "id"
-            }
-            output "id" {
-              value = restapi_object.gitea-team.api_data.id
-            }
+                variable "name" {
+                  type = string
+                }
 
-          vars:
-            - key: name
-            - key: org
-            - key: permission
-    patches:
-      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
-        toFieldPath: "metadata.annotations[crossplane.io/external-name]"
-        transforms:
-        - type: string
-          string:
-            fmt: "giteateam-%s"
-      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
-        toFieldPath: "metadata.name"
-        transforms:
-        - type: string
-          string:
-            fmt: "giteateam-%s"
-      - fromFieldPath: spec.parameters.name
-        toFieldPath: spec.forProvider.vars[0].value
-      - fromFieldPath: spec.parameters.org
-        toFieldPath: spec.forProvider.vars[1].value
-      - fromFieldPath: spec.parameters.permission
-        toFieldPath: spec.forProvider.vars[2].value
-      - type: ToCompositeFieldPath
-        fromFieldPath: status.atProvider.outputs.id
-        toFieldPath: status.id
+                variable "org" {
+                  type = string
+                }
+
+                variable "permission" {
+                  type = string
+                }
+
+                resource "restapi_object" "gitea-team" {
+
+                  path        = "/api/v1/teams"
+                  create_path = "/api/v1/orgs/${var.org}/teams"
+
+                  data = (jsonencode({
+                    name                = var.name
+                    can_create_org_repo = false
+                    permission          = var.permission
+                    units = [
+                      "repo.issues",
+                      "repo.ext_issues",
+                      "repo.releases",
+                      "repo.projects",
+                      "repo.packages",
+                      "repo.actions",
+                      "repo.code",
+                      "repo.pulls",
+                      "repo.wiki",
+                      "repo.ext_wiki"
+                    ]
+                    "units_map" = {
+                      "repo.actions": var.permission
+                      "repo.code": var.permission,
+                      "repo.ext_issues": var.permission,
+                      "repo.ext_wiki": var.permission,
+                      "repo.issues": var.permission,
+                      "repo.packages": var.permission,
+                      "repo.projects": var.permission,
+                      "repo.pulls": var.permission,
+                      "repo.releases": var.permission,
+                      "repo.wiki": var.permission
+                    }
+
+                  }))
+                  id_attribute = "id"
+                }
+                output "id" {
+                  value = restapi_object.gitea-team.api_data.id
+                }
+              source: Inline
+              vars:
+              - key: name
+              - key: org
+              - key: permission
+            providerConfigRef:
+              name: gitea
+        name: tf_gitea_team
+        patches:
+        - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+          toFieldPath: metadata.annotations[crossplane.io/external-name]
+          transforms:
+          - string:
+              fmt: giteateam-%s
+              type: Format
+            type: string
+          type: FromCompositeFieldPath
+        - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+          toFieldPath: metadata.name
+          transforms:
+          - string:
+              fmt: giteateam-%s
+              type: Format
+            type: string
+          type: FromCompositeFieldPath
+        - fromFieldPath: spec.parameters.name
+          toFieldPath: spec.forProvider.vars[0].value
+          type: FromCompositeFieldPath
+        - fromFieldPath: spec.parameters.org
+          toFieldPath: spec.forProvider.vars[1].value
+          type: FromCompositeFieldPath
+        - fromFieldPath: spec.parameters.permission
+          toFieldPath: spec.forProvider.vars[2].value
+          type: FromCompositeFieldPath
+        - fromFieldPath: status.atProvider.outputs.id
+          toFieldPath: status.id
+          type: ToCompositeFieldPath
+    step: patch-and-transform

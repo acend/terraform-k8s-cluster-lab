@@ -49,97 +49,109 @@ spec:
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: giteateamember
   labels:
     crossplane.io/xrd: xgiteateammembers.acend.ch
+  name: giteateamember
 spec:
   compositeTypeRef:
     apiVersion: acend.ch/v1alpha1
     kind: XGiteaTeamMember
-  resources:
-  - name: k8s-giteateam
-    base:
-      apiVersion: kubernetes.crossplane.io/v1alpha1
-      kind: Object
-      spec:
-        managementPolicy: Observe
-        forProvider:
-          manifest:
-            apiVersion: acend.ch/v1alpha1
-            kind: GiteaTeam
-            metadata:
-              namespace: gitea
-        providerConfigRef:
-          name: default
-    patches:
-      - type: CombineFromComposite
-        combine:
-          variables:
-          - fromFieldPath: spec.parameters.org
-          - fromFieldPath: spec.parameters.team
-          strategy: string
-          string:
-            fmt: "%s-%s"
-        toFieldPath: "spec.forProvider.manifest.metadata.name"
-      - type: ToCompositeFieldPath
-        fromFieldPath: status.atProvider.manifest.status.id
-        toFieldPath: status.team_id
-  - name: tf_gitea_team_member
-    base:
-      apiVersion: tf.upbound.io/v1beta1
-      kind: Workspace
-      spec:
-        providerConfigRef:
-          name: gitea
-        forProvider:
-          source: Inline
-          module: |
-            terraform {
-              required_providers {
-                restapi = {
-                  source = "Mastercard/restapi"
+  mode: Pipeline
+  pipeline:
+  - functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+      - base:
+          apiVersion: kubernetes.crossplane.io/v1alpha1
+          kind: Object
+          spec:
+            forProvider:
+              manifest:
+                apiVersion: acend.ch/v1alpha1
+                kind: GiteaTeam
+                metadata:
+                  namespace: gitea
+            managementPolicy: Observe
+            providerConfigRef:
+              name: default
+        name: k8s-giteateam
+        patches:
+        - combine:
+            strategy: string
+            string:
+              fmt: '%s-%s'
+            variables:
+            - fromFieldPath: spec.parameters.org
+            - fromFieldPath: spec.parameters.team
+          toFieldPath: spec.forProvider.manifest.metadata.name
+          type: CombineFromComposite
+        - fromFieldPath: status.atProvider.manifest.status.id
+          toFieldPath: status.team_id
+          type: ToCompositeFieldPath
+      - base:
+          apiVersion: tf.upbound.io/v1beta1
+          kind: Workspace
+          spec:
+            forProvider:
+              module: |
+                terraform {
+                  required_providers {
+                    restapi = {
+                      source = "Mastercard/restapi"
+                    }
+                  }
                 }
-              }
-            }
 
-            variable "team_id" {
-              type = string
-            }
+                variable "team_id" {
+                  type = string
+                }
 
-            variable "user" {
-              type = string
-            }
+                variable "user" {
+                  type = string
+                }
 
-            resource "restapi_object" "teamMember" {
+                resource "restapi_object" "teamMember" {
 
-              path           = "/api/v1/teams/${var.team_id}/members/${var.user}"
-              object_id      = "${var.team_id}-${var.user}"
-              update_method  = "PUT"
-              create_method  = "PUT"
-              destroy_method = "DELETE"
-              data           = "{}"
-            }
-
-
-          vars:
-            - key: team_id
-            - key: user
-    patches:
-      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
-        toFieldPath: "metadata.annotations[crossplane.io/external-name]"
-        transforms:
-        - type: string
-          string:
-            fmt: "giteateammember-%s"
-      - fromFieldPath: "metadata.labels[crossplane.io/claim-name]"
-        toFieldPath: "metadata.name"
-        transforms:
-        - type: string
-          string:
-            fmt: "giteateammember-%s"
-      - fromFieldPath: status.team_id
-        toFieldPath: spec.forProvider.vars[0].value
-        policy:
+                  path           = "/api/v1/teams/${var.team_id}/members/${var.user}"
+                  object_id      = "${var.team_id}-${var.user}"
+                  update_method  = "PUT"
+                  create_method  = "PUT"
+                  destroy_method = "DELETE"
+                  data           = "{}"
+                }
+              source: Inline
+              vars:
+              - key: team_id
+              - key: user
+            providerConfigRef:
+              name: gitea
+        name: tf_gitea_team_member
+        patches:
+        - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+          toFieldPath: metadata.annotations[crossplane.io/external-name]
+          transforms:
+          - string:
+              fmt: giteateammember-%s
+              type: Format
+            type: string
+          type: FromCompositeFieldPath
+        - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+          toFieldPath: metadata.name
+          transforms:
+          - string:
+              fmt: giteateammember-%s
+              type: Format
+            type: string
+          type: FromCompositeFieldPath
+        - fromFieldPath: status.team_id
+          policy:
             fromFieldPath: Required
-      - fromFieldPath: spec.parameters.username
-        toFieldPath: spec.forProvider.vars[1].value
+          toFieldPath: spec.forProvider.vars[0].value
+          type: FromCompositeFieldPath
+        - fromFieldPath: spec.parameters.username
+          toFieldPath: spec.forProvider.vars[1].value
+          type: FromCompositeFieldPath
+    step: patch-and-transform

@@ -4,4 +4,4 @@ namespace: crossplane
 
 resources:
   - provider.yaml
- 
+  - function.yaml

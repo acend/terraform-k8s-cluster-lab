@@ -1,5 +1,19 @@
 # Baremetal Node setup for Training Cluster
 
+## Node installation
+
+https://docs.hetzner.com/de/robot/dedicated-server/operating-systems/installimage
+
+Ubuntu 22.04
+
+Software Raid 1 and LVM with one volume group (vg0), one physical volume for /dev/md1 and  3 logical volumes:
+* /dev/vg0/root -> mounted at /
+* /dev/vg0/varlib ->  mounted at /var/lib/
+* /dev/vg0/mnt -> mounted at /mnt (for e.g. longhorn)
+* /boot is a ext3 /this cant be a lv. this is /dev/md0
+
+check examples in installimage config on how to do this (I don't remember the exact config anymore...)
+
 ## Network
 
 Create vSwitch and connect to Cloud in https://robot.hetzner.com/ and https://console.hetzner.cloud/

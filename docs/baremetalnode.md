@@ -17,6 +17,7 @@ check examples in installimage config on how to do this (I don't remember the ex
 ## Network
 
 Create vSwitch and connect to Cloud in https://robot.hetzner.com/ and https://console.hetzner.cloud/
+See also https://docs.hetzner.com/de/cloud/networks/connect-dedi-vswitch/
 
 Example, make sure to not use the same IP twice
 
@@ -34,6 +35,8 @@ Example, make sure to not use the same IP twice
 ```
 
 Verify connectivy e.g. `curl -k  https://10.0.0.x:6443` (ip of k8s lb)
+
+Make sure cloud firewall has the ip's of the baremetal node listed in the firewall rule for rke2 api (tcp/9345) (check network.tf)
 
 ## Node preparation
 

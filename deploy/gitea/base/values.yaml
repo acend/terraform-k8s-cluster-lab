@@ -8,22 +8,24 @@ gitea:
   config:
     server:
       DOMAIN: gitea.training.cluster.acend.ch
+    service:
+      DISABLE_REGISTRATION: true
   admin:
     existingSecret: gitea-admin-credentials
-    
+
 ingress:
   apiVersion: networking.k8s.io/v1
   enabled: true
   className: haproxy
   hosts:
-  - host: gitea.training.cluster.acend.ch
-    paths:
-    - path: /
-      pathType: Prefix
+    - host: gitea.training.cluster.acend.ch
+      paths:
+        - path: /
+          pathType: Prefix
   tls:
-  - hosts:
-    - gitea.training.cluster.acend.ch
-    secretName: acend-wildcard
+    - hosts:
+        - gitea.training.cluster.acend.ch
+      secretName: acend-wildcard
 
 postgresql-ha:
   persistence:

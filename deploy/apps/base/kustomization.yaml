@@ -19,3 +19,4 @@ resources:
   - kubevirt.yaml
   - goldpinger.yaml
   - node-feature-discovery.yaml
+  - komoplane.yaml

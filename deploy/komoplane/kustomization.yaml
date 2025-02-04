@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: komoplane
+resources:
+  - namespace.yaml
+
+helmCharts:
+  - name: komoplane
+    releaseName: komoplane
+    namespace: komoplane
+    version: 0.1.6
+    repo: https://helm-charts.komodor.io

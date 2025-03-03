@@ -10,25 +10,31 @@ gitea:
       DOMAIN: gitea.test.cluster.acend.ch
   admin:
     existingSecret: gitea-admin-credentials
-    
+
 ingress:
   apiVersion: networking.k8s.io/v1
   enabled: true
   className: haproxy
   hosts:
-  - host: gitea.test.cluster.acend.ch
-    paths:
-    - path: /
-      pathType: Prefix
+    - host: gitea.test.cluster.acend.ch
+      paths:
+        - path: /
+          pathType: Prefix
   tls:
-  - hosts:
-    - gitea.test.cluster.acend.ch
-    secretName: acend-wildcard
+    - hosts:
+        - gitea.test.cluster.acend.ch
+      secretName: acend-wildcard
 
-# postgresql-ha:
-#   persistence:
-#     size: 1Gi
+postgresql-ha:
+  enabled: false
 
-# redis-cluster:
-#   persistence:
-#     size: 1Gi
+redis-cluster:
+  enabled: false
+
+postgresql:
+  enabled: true
+
+redis:
+  enabled: true
+  persistence:
+    size: 1Gi

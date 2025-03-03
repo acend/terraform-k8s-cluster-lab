@@ -60,7 +60,7 @@ applicationsets:
                 persistence:
                   enabled: ${tostring(dind-persistence-enabled)}
                   storageclass: longhorn
-                  pvcsize: 10Gi
+                  pvcsize: 5Gi
                 resources: ${jsonencode(dind_resources)}
               podSecurityContext:
                 fsGroup: 1001

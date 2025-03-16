@@ -3,6 +3,9 @@ password: supersecret
 password_bcrypt: ""
 cluster_admin: false
 
+credentials:
+  usePasswordGenerator: false # use mittwalds password generator
+
 cluster_name: training
 cluster_domain: cluster.acend.ch
 

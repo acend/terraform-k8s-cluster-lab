@@ -9,7 +9,7 @@ metadata:
     user: {{ .Values.user }}
   name: {{ .Values.user }}
 {{ end }}
-{{ if .Values.createNamespaces.vm-images }}
+{{ if .Values.createNamespaces.vmimages }}
 ---
 apiVersion: v1
 kind: Namespace

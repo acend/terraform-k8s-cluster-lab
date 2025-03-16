@@ -8,7 +8,7 @@ cluster_domain: cluster.acend.ch
 
 createNamespaces:
   default: true
-  vm-images: true
+  vmimages: true
   quota: true
   monitoring: true
   argoCD: true

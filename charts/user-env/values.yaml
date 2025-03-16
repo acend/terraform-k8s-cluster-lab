@@ -5,3 +5,10 @@ cluster_admin: false
 
 cluster_name: training
 cluster_domain: cluster.acend.ch
+
+createNamespaces:
+  default: true
+  vm-images: true
+  quota: true
+  monitoring: true
+  argoCD: true

@@ -1,3 +1,4 @@
+{{ if .Values.createNamespaces.default }}
 ---
 apiVersion: v1
 kind: Namespace
@@ -7,6 +8,8 @@ metadata:
     kubernetes.io/metadata.name: {{ .Values.user }}
     user: {{ .Values.user }}
   name: {{ .Values.user }}
+{{ end }}
+{{ if .Values.createNamespaces.vm-images }}
 ---
 apiVersion: v1
 kind: Namespace
@@ -16,6 +19,8 @@ metadata:
     kubernetes.io/metadata.name: {{ .Values.user }}-vm-images
     user: {{ .Values.user }}
   name: {{ .Values.user }}-vm-images
+{{ end }}
+{{ if .Values.createNamespaces.quota }}
 ---
 apiVersion: v1
 kind: Namespace
@@ -25,6 +30,8 @@ metadata:
     kubernetes.io/metadata.name: {{ .Values.user }}-quota
     user: {{ .Values.user }}
   name: {{ .Values.user }}-quota
+{{ end }}
+{{ if .Values.createNamespaces.monitoring }}
 ---
 apiVersion: v1
 kind: Namespace
@@ -34,3 +41,4 @@ metadata:
     kubernetes.io/metadata.name: {{ .Values.user }}-monitoring
     user: {{ .Values.user }}
   name: {{ .Values.user }}-monitoring
+{{ end }}

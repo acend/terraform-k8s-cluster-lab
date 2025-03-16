@@ -12,3 +12,7 @@ createNamespaces:
   quota: true
   monitoring: true
   argoCD: true
+
+createSecrets:
+  userConfig: true
+  basicAuth: true

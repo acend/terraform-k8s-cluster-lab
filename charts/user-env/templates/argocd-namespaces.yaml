@@ -1,3 +1,4 @@
+{{ if .Values.createNamespaces.argoCD }}
 ---
 apiVersion: v1
 kind: Namespace
@@ -14,3 +15,4 @@ metadata:
     certificate-wildcard: "true"
     kubernetes.io/metadata.name: {{ .Values.user }}-prod
   name: {{ .Values.user }}-prod
+{{ end }}

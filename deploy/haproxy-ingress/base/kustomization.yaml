@@ -8,7 +8,7 @@ helmCharts:
   - name: haproxy-ingress
     releaseName: ingress-haproxy
     namespace: ingress-haproxy
-    version: 0.14.7
+    version: 0.14.8
     repo: https://haproxy-ingress.github.io/charts
     valuesFile: values.yaml
     apiVersions:

@@ -81,7 +81,7 @@ resource "kubernetes_manifest" "external-secrets-secretstore" {
 
   provider = kubernetes.acend
   manifest = {
-    "apiVersion" = "external-secrets.io/v1beta1"
+    "apiVersion" = "external-secrets.io/v1"
     "kind"       = "ClusterSecretStore"
     "metadata" = {
       "name" = "cluster-${var.cluster_name}.${var.cluster_domain}-${each.key}"

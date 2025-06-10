@@ -28,7 +28,7 @@ spec:
         namespace: gitea
         key: password
   configuration: |
-    variable "username" {
+    variable "gitea_admin_username" {
       type    = string
       default = "gitea_admin"
     }
@@ -41,7 +41,7 @@ spec:
     provider "restapi" {
       uri                  = var.gitea_uri
       write_returns_object = true
-      username             = var.username
+      username             = var.gitea_admin_username
       password             = file("gitea-admin-credentials")
     }
 

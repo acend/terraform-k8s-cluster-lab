@@ -122,7 +122,7 @@ spec:
                 resource "null_resource" "make_admin" {
                   triggers = {
                     gitea_url = var.gitea_uri
-                    gitea_username = var.username
+                    gitea_username = var.gitea_admin_username
                     gitea_password = file("gitea-admin-credentials")
                     user_id = restapi_object.gitea-user.api_data.username
                     is_admin = tobool(var.is_Admin)

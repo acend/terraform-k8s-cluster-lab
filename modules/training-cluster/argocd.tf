@@ -33,32 +33,32 @@ resource "helm_release" "argocd" {
   wait        = true
   max_history = 2
 
-  set = {
+  set {
     name  = "global.domain"
     value = "argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
-  set = {
+  set {
     name  = "configs.secret.argocdServerAdminPassword"
     value = random_password.argocd-admin-password.bcrypt_hash
   }
 
-  set = {
+  set {
     name  = "server.ingress.hostname"
     value = "argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
-  set = {
+  set {
     name  = "server.ingress.extraTls[0].hosts[0]"
     value = "argocd.${var.cluster_name}.${var.cluster_domain}"
   }
 
-  set = {
+  set {
     name  = "server.ingressGrpc.hostname"
     value = "argocd-grpc.${var.cluster_name}.${var.cluster_domain}"
   }
 
-  set = {
+  set {
     name  = "server.ingressGrpc.extraTls[0].hosts[0]"
     value = "argocd-grpc.${var.cluster_name}.${var.cluster_domain}"
   }

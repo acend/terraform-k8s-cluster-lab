@@ -1,5 +1,4 @@
 provider "kubernetes" {
-
   alias                  = "local"
   host                   = local.kubernetes_api
   client_certificate     = local.client_certificate
@@ -9,7 +8,7 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     host                   = local.kubernetes_api
     client_certificate     = local.client_certificate
     client_key             = local.client_key

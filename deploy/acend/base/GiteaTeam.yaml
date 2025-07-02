@@ -67,6 +67,9 @@ spec:
       - base:
           apiVersion: tf.upbound.io/v1beta1
           kind: Workspace
+          metadata:
+            labels:
+              crossplane.io/claim-kind: GiteaTeam
           spec:
             forProvider:
               module: |

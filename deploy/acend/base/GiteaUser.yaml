@@ -58,51 +58,54 @@ spec:
     kind: XGiteaUser
   mode: Pipeline
   pipeline:
-    - functionRef:
-        name: function-patch-and-transform
-      input:
-        apiVersion: pt.fn.crossplane.io/v1beta1
-        kind: Resources
-        resources:
-          - base:
-              apiVersion: tf.upbound.io/v1beta1
-              kind: Workspace
-              spec:
-                forProvider:
-                  module: |
-                    terraform {
-                      required_providers {
-                        restapi = {
-                          source = "Mastercard/restapi"
-                        }
-                      }
+  - functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+      - base:
+          apiVersion: tf.upbound.io/v1beta1
+          kind: Workspace
+          metadata:
+            labels:
+              crossplane.io/claim-kind: GiteaUser
+          spec:
+            forProvider:
+              module: |
+                terraform {
+                  required_providers {
+                    restapi = {
+                      source = "Mastercard/restapi"
                     }
+                  }
+                }
 
-                    variable "student_name" {
-                      type = string
-                    }
+                  variable "student_name" {
+                    type = string
+                  }
 
-                    variable "student_password" {
-                      type = string
-                    }
+                  variable "student_password" {
+                    type = string
+                  }
 
-                    variable "cluster_name" {
-                      type = string
-                    }
+                  variable "cluster_name" {
+                    type = string
+                  }
 
-                    variable "cluster_domain" {
-                      type = string
-                    }
+                  variable "cluster_domain" {
+                    type = string
+                  }
 
-                    variable "is_Admin" {
-                      type = string
-                    }
+                  variable "is_Admin" {
+                    type = string
+                  }
 
-                    resource "restapi_object" "gitea-user" {
+                  resource "restapi_object" "gitea-user" {
 
-                      path      = "/api/v1/admin/users"
-                      read_path = "/api/v1/users/{id}"
-                      destroy_path = "/api/v1/admin/users/{id}?purge=true"
+                  path      = "/api/v1/admin/users"
+                  read_path = "/api/v1/users/{id}"
+                  destroy_path = "/api/v1/admin/users/{id}?purge=true"
 
                       data = (jsonencode({
                         email                = "${var.student_name}@gitea.${var.cluster_name}.${var.cluster_domain}"

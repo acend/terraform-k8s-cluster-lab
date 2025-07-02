@@ -58,7 +58,8 @@ spec:
     kind: XGiteaUser
   mode: Pipeline
   pipeline:
-  - functionRef:
+  - step: patch-and-transform
+    functionRef:
       name: function-patch-and-transform
     input:
       apiVersion: pt.fn.crossplane.io/v1beta1
@@ -81,118 +82,117 @@ spec:
                   }
                 }
 
-                  variable "student_name" {
-                    type = string
+                variable "student_name" {
+                  type = string
+                }
+
+                variable "student_password" {
+                  type = string
+                }
+
+                variable "cluster_name" {
+                  type = string
+                }
+
+                variable "cluster_domain" {
+                  type = string
+                }
+
+                variable "is_Admin" {
+                  type = string
+                }
+
+                resource "restapi_object" "gitea-user" {
+
+                path      = "/api/v1/admin/users"
+                read_path = "/api/v1/users/{id}"
+                destroy_path = "/api/v1/admin/users/{id}?purge=true"
+
+                    data = (jsonencode({
+                      email                = "${var.student_name}@gitea.${var.cluster_name}.${var.cluster_domain}"
+                      full_name            = var.student_name
+                      login_name           = var.student_name
+                      must_change_password = false
+                      password             = var.student_password
+                      send_notify          = false
+                      source_id            = 0
+                      username             = var.student_name
+                      visibility           = "public"
+                      admin                = tobool(var.is_Admin)
+                      is_admin             = tobool(var.is_Admin)
+                    }))
+                    id_attribute = "username"
                   }
 
-                  variable "student_password" {
-                    type = string
-                  }
-
-                  variable "cluster_name" {
-                    type = string
-                  }
-
-                  variable "cluster_domain" {
-                    type = string
-                  }
-
-                  variable "is_Admin" {
-                    type = string
-                  }
-
-                  resource "restapi_object" "gitea-user" {
-
-                  path      = "/api/v1/admin/users"
-                  read_path = "/api/v1/users/{id}"
-                  destroy_path = "/api/v1/admin/users/{id}?purge=true"
-
-                      data = (jsonencode({
-                        email                = "${var.student_name}@gitea.${var.cluster_name}.${var.cluster_domain}"
-                        full_name            = var.student_name
-                        login_name           = var.student_name
-                        must_change_password = false
-                        password             = var.student_password
-                        send_notify          = false
-                        source_id            = 0
-                        username             = var.student_name
-                        visibility           = "public"
-                        admin                = tobool(var.is_Admin)
-                        is_admin             = tobool(var.is_Admin)
-                      }))
-                      id_attribute = "username"
+                  resource "null_resource" "make_admin" {
+                    triggers = {
+                      gitea_url = var.gitea_uri
+                      gitea_username = var.gitea_admin_username
+                      gitea_password = file("gitea-admin-credentials")
+                      user_id = restapi_object.gitea-user.api_data.username
+                      is_admin = tobool(var.is_Admin)
                     }
-
-                    resource "null_resource" "make_admin" {
-                      triggers = {
-                        gitea_url = var.gitea_uri
-                        gitea_username = var.gitea_admin_username
-                        gitea_password = file("gitea-admin-credentials")
-                        user_id = restapi_object.gitea-user.api_data.username
-                        is_admin = tobool(var.is_Admin)
+                    provisioner "local-exec" {
+                      command     = <<EOH
+                      curl -X PATCH -k -u "$GITEA_USERNAME:$GITEA_PASSWORD" $GITEA_URL/api/v1/admin/users/$USER_ID -H 'Content-Type: application/json' -d '{"admin": '"$IS_ADMIN"', "login_name": "'"$USER_ID"'"}'
+                      EOH
+                      interpreter = ["/bin/bash", "-c"]
+                      environment = {
+                        GITEA_URL = self.triggers.gitea_url
+                        GITEA_USERNAME = self.triggers.gitea_username
+                        GITEA_PASSWORD = self.triggers.gitea_password
+                        USER_ID = self.triggers.user_id
+                        IS_ADMIN = self.triggers.is_admin
                       }
-                      provisioner "local-exec" {
-                        command     = <<EOH
-                        curl -X PATCH -k -u "$GITEA_USERNAME:$GITEA_PASSWORD" $GITEA_URL/api/v1/admin/users/$USER_ID -H 'Content-Type: application/json' -d '{"admin": '"$IS_ADMIN"', "login_name": "'"$USER_ID"'"}'
-                        EOH
-                        interpreter = ["/bin/bash", "-c"]
-                        environment = {
-                          GITEA_URL = self.triggers.gitea_url
-                          GITEA_USERNAME = self.triggers.gitea_username
-                          GITEA_PASSWORD = self.triggers.gitea_password
-                          USER_ID = self.triggers.user_id
-                          IS_ADMIN = self.triggers.is_admin
-                        }
-                      }
                     }
+                  }
 
-                    output "gitea-full-name" {
-                      value = restapi_object.gitea-user.api_data.full_name
-                    }
-                  source: Inline
-                  vars:
-                    - key: student_name
-                    - key: student_password
-                    - key: cluster_name
-                    - key: cluster_domain
-                    - key: is_Admin
-                providerConfigRef:
-                  name: gitea
-            name: tf_giteauser
-            patches:
-              - combine:
-                  strategy: string
-                  string:
-                    fmt: giteauser-%s
-                  variables:
-                    - fromFieldPath: metadata.labels[crossplane.io/claim-name]
-                toFieldPath: metadata.annotations[crossplane.io/external-name]
-                type: CombineFromComposite
-              - combine:
-                  strategy: string
-                  string:
-                    fmt: giteauser-%s
-                  variables:
-                    - fromFieldPath: metadata.labels[crossplane.io/claim-name]
-                toFieldPath: metadata.name
-                type: CombineFromComposite
-              - fromFieldPath: spec.parameters.student_name
-                toFieldPath: spec.forProvider.vars[0].value
-                type: FromCompositeFieldPath
-              - fromFieldPath: spec.parameters.student_password
-                toFieldPath: spec.forProvider.vars[1].value
-                type: FromCompositeFieldPath
-              - fromFieldPath: spec.parameters.cluster_name
-                toFieldPath: spec.forProvider.vars[2].value
-                type: FromCompositeFieldPath
-              - fromFieldPath: spec.parameters.cluster_domain
-                toFieldPath: spec.forProvider.vars[3].value
-                type: FromCompositeFieldPath
-              - fromFieldPath: spec.parameters.is_Admin
-                toFieldPath: spec.forProvider.vars[4].value
-                transforms:
-                  - convert:
-                      toType: string
-                    type: convert
-                type: FromCompositeFieldPath
-      step: patch-and-transform
+                  output "gitea-full-name" {
+                    value = restapi_object.gitea-user.api_data.full_name
+                  }
+              source: Inline
+              vars:
+              - key: student_name
+              - key: student_password
+              - key: cluster_name
+              - key: cluster_domain
+              - key: is_Admin
+            providerConfigRef:
+              name: gitea
+        name: tf_giteauser
+        patches:
+          - combine:
+              strategy: string
+              string:
+                fmt: giteauser-%s
+              variables:
+                - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+            toFieldPath: metadata.annotations[crossplane.io/external-name]
+            type: CombineFromComposite
+          - combine:
+              strategy: string
+              string:
+                fmt: giteauser-%s
+              variables:
+                - fromFieldPath: metadata.labels[crossplane.io/claim-name]
+            toFieldPath: metadata.name
+            type: CombineFromComposite
+          - fromFieldPath: spec.parameters.student_name
+            toFieldPath: spec.forProvider.vars[0].value
+            type: FromCompositeFieldPath
+          - fromFieldPath: spec.parameters.student_password
+            toFieldPath: spec.forProvider.vars[1].value
+            type: FromCompositeFieldPath
+          - fromFieldPath: spec.parameters.cluster_name
+            toFieldPath: spec.forProvider.vars[2].value
+            type: FromCompositeFieldPath
+          - fromFieldPath: spec.parameters.cluster_domain
+            toFieldPath: spec.forProvider.vars[3].value
+            type: FromCompositeFieldPath
+          - fromFieldPath: spec.parameters.is_Admin
+            toFieldPath: spec.forProvider.vars[4].value
+            transforms:
+              - convert:
+                  toType: string
+                type: convert
+            type: FromCompositeFieldPath

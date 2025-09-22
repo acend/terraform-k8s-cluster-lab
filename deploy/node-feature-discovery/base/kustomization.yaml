@@ -9,6 +9,6 @@ helmCharts:
     releaseName: node-feature-discovery
     includeCRDs: true
     namespace: nfd
-    version: 0.17.3
+    version: 0.17.4
     repo: https://kubernetes-sigs.github.io/node-feature-discovery/charts
     valuesFile: values.yaml

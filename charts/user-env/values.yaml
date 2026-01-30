@@ -11,9 +11,9 @@ cluster_domain: cluster.acend.ch
 
 createNamespaces:
   default: true
-  vmimages: true
+  vmimages: false
   quota: true
-  monitoring: true
+  monitoring: false
   argoCD: true
 
 createSecrets:

@@ -16,7 +16,7 @@ resources:
   - welcome.yaml
   - oauth-proxy.yaml
   - external-secrets.yaml
-  - kubevirt.yaml
-  - goldpinger.yaml
-  - node-feature-discovery.yaml
-  - komoplane.yaml
+  # - kubevirt.yaml
+  # - goldpinger.yaml
+  # - node-feature-discovery.yaml
+  # - komoplane.yaml

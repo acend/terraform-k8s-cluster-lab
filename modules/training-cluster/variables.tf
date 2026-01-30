@@ -72,13 +72,13 @@ variable "lb_type" {
 
 variable "controlplane_type" {
   type        = string
-  default     = "cpx31"
+  default     = "cx33"
   description = "machine type to use for the controlplanes"
 }
 
 variable "worker_type" {
   type        = string
-  default     = "cpx41"
+  default     = "cx43"
   description = "machine type to use for the controlplanes"
 }
 

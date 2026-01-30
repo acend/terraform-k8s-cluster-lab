@@ -19,3 +19,6 @@ createNamespaces:
 createSecrets:
   userConfig: true
   basicAuth: true
+
+rbac:
+  kubevirt: false

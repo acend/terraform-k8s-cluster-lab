@@ -54,7 +54,7 @@ write_files:
       targetNamespace: kube-system
       repo: https://charts.hetzner.cloud
       bootstrap: true
-      version: v1.20.0
+      version: v1.29.2
       valuesContent: |-
         env:
           HCLOUD_LOAD_BALANCERS_LOCATION: 

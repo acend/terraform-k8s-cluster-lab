@@ -38,7 +38,7 @@ variable "cluster_domain" {
 
 variable "rke2_version" {
   type        = string
-  default     = "v1.31.2+rke2r1"
+  default     = "v1.35.0+rke2r1"
   description = "Version of rke2 to install"
 }
 
@@ -84,7 +84,7 @@ variable "worker_type" {
 
 variable "node_image_type" {
   type        = string
-  default     = "ubuntu-22.04"
+  default     = "ubuntu-24.04"
   description = "Image Type for all Nodes"
 }
 

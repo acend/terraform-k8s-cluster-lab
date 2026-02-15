@@ -24,6 +24,17 @@ runcmd:
 - /opt/rke2/run_rke2.sh
 - rm /opt/rke2/run_rke2.sh
 write_files:
+- path: /etc/multipath.conf
+  permission: "0644"
+  owner: root:root
+  content: |
+    defaults {
+      user_friendly_names yes
+    }
+
+    blacklist {
+        devnode "^sd[a-z0-9]+"
+    }
 - path: /var/lib/rancher/rke2/server/manifests/hcloud-secret.yaml
   permission: "0600"
   owner: root:root

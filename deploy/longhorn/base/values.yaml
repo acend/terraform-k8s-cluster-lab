@@ -2,7 +2,21 @@
 defaultSettings:
   deletingConfirmationFlag: "true"
   taintToleration: cattle.io/os=linux:NoSchedule;node-role.kubernetes.io/control-plane=true:NoSchedule
+  autoSalvage: true
+  autoDeletePodWhenVolumeDetachedUnexpectedly: true
+  snapshotMaxCount: "2"
+  autoCleanupSnapshotWhenDeleteBackup: true
+  replicaAutoBalance: "best-effort"
+  storageMinimalAvailablePercentage: "10"
+  storageOverProvisioningPercentage: "200"
+  nodeDownPodDeletionPolicy: "delete-both-statefulset-and-deployment-pod"
 
+persistence:
+  volumeBindingMode: "WaitForFirstConsumer"
+  defaultClass: true
+  reclaimPolicy: Delete
+  defaultClassReplicaCount: 2
+  defaultDataLocality: "best-effort"
 
 preUpgradeChecker:
   jobEnabled: false

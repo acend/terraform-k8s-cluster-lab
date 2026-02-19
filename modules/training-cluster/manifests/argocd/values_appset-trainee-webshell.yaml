@@ -55,6 +55,7 @@ applicationsets:
                 persistence:
                   enabled: ${tostring(theia-persistence-enabled)}
                   storageclass: longhorn
+                  pvcsize: 2Gi
                 resources: ${jsonencode(theia_resources)}
               dind:
                 persistence:

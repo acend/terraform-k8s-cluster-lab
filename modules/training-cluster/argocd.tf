@@ -4,7 +4,8 @@ resource "kubernetes_namespace" "argocd" {
   provider = kubernetes.local
 
   depends_on = [
-    ssh_resource.getkubeconfig
+    ssh_resource.getkubeconfig,
+    hcloud_server.controlplane
   ]
 
   metadata {
@@ -69,6 +70,9 @@ resource "helm_release" "argocd" {
     templatefile("${path.module}/manifests/argocd/values.yaml", { cluster_name = var.cluster_name, cluster_domain = var.cluster_domain }),
   ]
 
+  depends_on = [
+    kubernetes_namespace.argocd
+  ]
 }
 
 resource "null_resource" "cleanup-before-destroy" {

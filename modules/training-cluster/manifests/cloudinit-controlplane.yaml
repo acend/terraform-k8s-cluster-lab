@@ -23,6 +23,9 @@ runcmd:
 - sysctl -p
 - /opt/rke2/run_rke2.sh
 - rm /opt/rke2/run_rke2.sh
+- apt update
+- apt upgrade -y
+- reboot
 write_files:
 - path: /etc/multipath.conf
   permission: "0644"
@@ -206,7 +209,7 @@ write_files:
       if [ "$?" == 0 ] && [ "$res" -ge ${controlplane_index} ]; then
         break
       fi
-      echo "not enought controlplanes ready to join next ($res / ${controlplane_index})"
+      echo "not enough controlplanes ready to join next ($res / ${controlplane_index})"
       sleep 10
     done
     %{ endif }
@@ -214,7 +217,7 @@ write_files:
     chmod u+x install.sh
     while true; do
       NODE_IP=$(curl -s http://169.254.169.254/hetzner/v1/metadata/private-networks | grep "ip:" | cut -f 3 -d" ")
-      
+
       if [[ -n $NODE_IP ]]; then
         break
       fi

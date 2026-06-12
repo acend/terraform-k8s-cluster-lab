@@ -32,6 +32,10 @@ resource "hcloud_load_balancer_network" "lb" {
   load_balancer_id = hcloud_load_balancer.lb.id
   network_id       = hcloud_network.network.id
   ip               = var.internalbalancerip
+
+  depends_on = [
+    hcloud_network_subnet.subnet
+  ]
 }
 
 resource "hcloud_load_balancer_service" "rke2" {

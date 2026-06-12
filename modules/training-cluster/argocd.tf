@@ -16,7 +16,10 @@ resource "kubernetes_namespace" "argocd" {
       "kubernetes.io/metadata.name" = "argocd"
     }
   }
-  skip_destroy = true
+
+  timeouts {
+    delete = "0s"
+  }
 }
 
 resource "random_password" "argocd-admin-password" {

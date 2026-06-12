@@ -8,5 +8,5 @@ helmCharts:
   - name: komoplane
     releaseName: komoplane
     namespace: komoplane
-    version: 0.1.6
+    version: 0.1.8
     repo: https://helm-charts.komodor.io

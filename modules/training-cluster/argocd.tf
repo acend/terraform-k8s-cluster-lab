@@ -1,5 +1,5 @@
 
-resource "kubernetes_namespace" "argocd" {
+resource "kubernetes_namespace_v1" "argocd" {
 
   provider = kubernetes.local
 
@@ -33,7 +33,7 @@ resource "helm_release" "argocd" {
   name        = "argocd"
   repository  = "https://argoproj.github.io/argo-helm"
   chart       = "argo-cd"
-  namespace   = kubernetes_namespace.argocd.metadata.0.name
+  namespace   = kubernetes_namespace_v1.argocd.metadata.0.name
   version     = "9.5.21"
   wait        = true
   max_history = 2
@@ -75,7 +75,7 @@ resource "helm_release" "argocd" {
   ]
 
   depends_on = [
-    kubernetes_namespace.argocd
+    kubernetes_namespace_v1.argocd
   ]
 }
 

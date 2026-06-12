@@ -9,7 +9,7 @@ resource "helm_release" "appset-trainee-env" {
   name        = "trainee-env"
   repository  = "https://argoproj.github.io/argo-helm"
   chart       = "argocd-apps"
-  namespace   = kubernetes_namespace.argocd.metadata.0.name
+  namespace   = kubernetes_namespace_v1.argocd.metadata.0.name
   version     = "2.0.5"
   max_history = 2
 
@@ -38,7 +38,7 @@ resource "helm_release" "appset-trainee-webshell" {
   name        = "trainee-webshell"
   repository  = "https://argoproj.github.io/argo-helm"
   chart       = "argocd-apps"
-  namespace   = kubernetes_namespace.argocd.metadata.0.name
+  namespace   = kubernetes_namespace_v1.argocd.metadata.0.name
   version     = "2.0.5"
   max_history = 2
 
@@ -65,4 +65,4 @@ resource "helm_release" "appset-trainee-webshell" {
     }),
   ]
 
-} 
+}

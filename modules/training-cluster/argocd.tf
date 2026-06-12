@@ -16,6 +16,7 @@ resource "kubernetes_namespace" "argocd" {
       "kubernetes.io/metadata.name" = "argocd"
     }
   }
+  skip_destroy = true
 }
 
 resource "random_password" "argocd-admin-password" {

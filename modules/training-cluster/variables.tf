@@ -101,11 +101,6 @@ variable "controlplane_count" {
 variable "worker_count" {
   default     = 3
   description = "Count of rke2 workers"
-
-  validation {
-    condition     = var.worker_count >= 3
-    error_message = "You must have at least 3 worker nodes."
-  }
 }
 
 variable "letsencrypt_email" {

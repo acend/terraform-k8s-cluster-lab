@@ -1,4 +1,3 @@
-
 resource "kubernetes_namespace_v1" "argocd" {
 
   provider = kubernetes.local
@@ -15,10 +14,6 @@ resource "kubernetes_namespace_v1" "argocd" {
       certificate-wildcard          = "true"
       "kubernetes.io/metadata.name" = "argocd"
     }
-  }
-
-  timeouts {
-    delete = "0s"
   }
 }
 

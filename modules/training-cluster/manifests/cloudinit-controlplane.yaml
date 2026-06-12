@@ -24,9 +24,6 @@ runcmd:
 - systemctl restart networking
 - /opt/rke2/run_rke2.sh
 - rm /opt/rke2/run_rke2.sh
-- apt update
-- apt upgrade -y
-- reboot
 write_files:
 - path: /etc/multipath.conf
   permission: "0644"

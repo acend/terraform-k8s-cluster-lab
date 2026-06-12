@@ -23,6 +23,9 @@ resource "hcloud_load_balancer" "lb" {
   labels = {
     cluster : var.cluster_name,
   }
+  depends_on = [
+    hcloud_network_subnet.subnet
+  ]
 }
 
 resource "hcloud_load_balancer_network" "lb" {
